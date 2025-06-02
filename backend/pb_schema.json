@@ -1,0 +1,236 @@
+[
+  {
+    "id": "market_categories",
+    "name": "market_categories",
+    "type": "base",
+    "system": false,
+    "schema": [
+      {
+        "id": "name",
+        "name": "name",
+        "type": "text",
+        "system": false,
+        "required": true,
+        "options": {
+          "min": 2,
+          "max": 50
+        }
+      },
+      {
+        "id": "description",
+        "name": "description",
+        "type": "text",
+        "system": false,
+        "required": false,
+        "options": {
+          "max": 500
+        }
+      },
+      {
+        "id": "color",
+        "name": "color",
+        "type": "text",
+        "system": false,
+        "required": false
+      },
+      {
+        "id": "active",
+        "name": "active",
+        "type": "bool",
+        "system": false,
+        "required": true
+      }
+    ],
+    "indexes": [],
+    "listRule": "active = true",
+    "viewRule": "active = true",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null
+  },
+  {
+    "id": "markets",
+    "name": "markets",
+    "type": "base",
+    "system": false,
+    "schema": [
+      {
+        "id": "name",
+        "name": "name",
+        "type": "text",
+        "system": false,
+        "required": true,
+        "options": {
+          "min": 3,
+          "max": 100
+        }
+      },
+      {
+        "id": "slug",
+        "name": "slug",
+        "type": "text",
+        "system": false,
+        "required": true,
+        "options": {
+          "pattern": "^[a-z0-9-]+$"
+        }
+      },
+      {
+        "id": "category",
+        "name": "category",
+        "type": "relation",
+        "system": false,
+        "required": false,
+        "options": {
+          "collectionId": "market_categories",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": ["name"]
+        }
+      },
+      {
+        "id": "state",
+        "name": "state",
+        "type": "select",
+        "system": false,
+        "required": true,
+        "options": {
+          "maxSelect": 1,
+          "values": ["SA", "VIC", "NSW", "QLD", "WA", "TAS", "NT", "ACT"]
+        }
+      },
+      {
+        "id": "suburb",
+        "name": "suburb",
+        "type": "text",
+        "system": false,
+        "required": true,
+        "options": {
+          "min": 2,
+          "max": 50
+        }
+      },
+      {
+        "id": "address",
+        "name": "address",
+        "type": "text",
+        "system": false,
+        "required": true,
+        "options": {
+          "min": 10,
+          "max": 200
+        }
+      },
+      {
+        "id": "postcode",
+        "name": "postcode",
+        "type": "text",
+        "system": false,
+        "required": false,
+        "options": {
+          "pattern": "^[0-9]{4}$"
+        }
+      },
+      {
+        "id": "latitude",
+        "name": "latitude",
+        "type": "number",
+        "system": false,
+        "required": false
+      },
+      {
+        "id": "longitude",
+        "name": "longitude",
+        "type": "number",
+        "system": false,
+        "required": false
+      },
+      {
+        "id": "frequency",
+        "name": "frequency",
+        "type": "text",
+        "system": false,
+        "required": true
+      },
+      {
+        "id": "operating_hours",
+        "name": "operating_hours",
+        "type": "text",
+        "system": false,
+        "required": false
+      },
+      {
+        "id": "upcoming_dates",
+        "name": "upcoming_dates",
+        "type": "json",
+        "system": false,
+        "required": false
+      },
+      {
+        "id": "contact_email",
+        "name": "contact_email",
+        "type": "email",
+        "system": false,
+        "required": false
+      },
+      {
+        "id": "contact_phone",
+        "name": "contact_phone",
+        "type": "text",
+        "system": false,
+        "required": false
+      },
+      {
+        "id": "website",
+        "name": "website",
+        "type": "url",
+        "system": false,
+        "required": false
+      },
+      {
+        "id": "description",
+        "name": "description",
+        "type": "editor",
+        "system": false,
+        "required": false
+      },
+      {
+        "id": "images",
+        "name": "images",
+        "type": "file",
+        "system": false,
+        "required": false,
+        "options": {
+          "maxSelect": 10,
+          "maxSize": 5242880,
+          "mimeTypes": ["image/jpeg", "image/png", "image/webp"]
+        }
+      },
+      {
+        "id": "active",
+        "name": "active",
+        "type": "bool",
+        "system": false,
+        "required": true
+      },
+      {
+        "id": "verification_status",
+        "name": "verification_status",
+        "type": "select",
+        "system": false,
+        "required": true,
+        "options": {
+          "maxSelect": 1,
+          "values": ["pending", "verified", "rejected"]
+        }
+      }
+    ],
+    "indexes": ["CREATE UNIQUE INDEX idx_markets_slug ON markets (slug)"],
+    "listRule": "active = true",
+    "viewRule": "active = true",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null
+  }
+]

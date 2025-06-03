@@ -1,0 +1,14 @@
+SA MARKETS DIRECTORY - POCKETBASE VERIFICATION REPORT
+Generated: Tue Jun  3 10:01:02 UTC 2025
+PocketBase URL: http://localhost:8090
+
+COLLECTIONS STATUS:
+- users: EXISTS (0 records)
+- markets: EXISTS (1 records)
+- market_categories: EXISTS (4 records)
+- stallholders: EXISTS (protected)
+- applications: EXISTS (protected)
+- reviews: EXISTS (0 records)
+
+SAMPLE MARKET DATA:
+- Test Market (Athelstone, SA)

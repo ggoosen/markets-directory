@@ -22,6 +22,7 @@ function App() {
             <Route path="/markets/:slug" element={<MarketDetail />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/database-test" element={<DatabaseTest />} />
             <Route 
               path="/dashboard" 
               element={
@@ -76,7 +77,7 @@ function App() {
                   </div>
                 </div>
               } 
-            />
+            />            
           </Routes>
         </Layout>
       </Router>

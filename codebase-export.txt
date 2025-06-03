@@ -2,7 +2,7 @@
      SA MARKETS DIRECTORY - COMPLETE ANALYSIS
      CODE + DATABASE + INFRASTRUCTURE
 ===============================================
-Generated on: Mon Jun  2 13:13:13 UTC 2025
+Generated on: Tue Jun  3 10:01:29 UTC 2025
 Project: SA Markets Directory
 Analysis Type: Full Stack Review
 
@@ -10,7 +10,7 @@ Analysis Type: Full Stack Review
 =============================================
 
 PocketBase URL: http://localhost:8090
-Analysis Time: Mon Jun  2 13:13:13 UTC 2025
+Analysis Time: Tue Jun  3 10:01:29 UTC 2025
 
 ✅ PocketBase Status: ONLINE
 
@@ -46,7 +46,7 @@ File Type Analysis:
 -------------------
 css       :   2 files (1.4K)
 js        :   8 files (25K)
-jsx       :  13 files (55K)
+jsx       :  14 files (62K)
 svg       :   1 files (4.1K)
 
 🔍 CRITICAL FILES CHECK
@@ -117,8 +117,8 @@ Development Dependencies:
 
 Environment file (.env) found:
 ------------------------------
-# PocketBase Configuration
 VITE_POCKETBASE_URL=http://localhost:8090
+# PocketBase Configuration
 
 # Google Maps (we'll add this later)
 VITE_GOOGLE_MAPS_API_KEY=***MASKED***
@@ -151,7 +151,7 @@ VITE_ENABLE_AUDIT_LOGGING=true
 =============================================
 
 📁 FILE: package.json
-   Size: 1.1K | Modified: 2025-06-02
+   Size: 1.5K | Modified: 2025-06-03
 ----------------------------------------
      1	{
      2	  "name": "markets-directory",
@@ -162,47 +162,54 @@ VITE_ENABLE_AUDIT_LOGGING=true
      7	    "dev": "vite",
      8	    "build": "vite build",
      9	    "lint": "eslint .",
-    10	    "preview": "vite preview"
-    11	  },
-    12	  "dependencies": {
-    13	    "@tanstack/react-query": "^5.79.0",
-    14	    "axios": "^1.9.0",
-    15	    "crypto-js": "^4.2.0",
-    16	    "dompurify": "^3.2.6",
-    17	    "lucide-react": "^0.511.0",
-    18	    "pocketbase": "^0.26.0",
-    19	    "react": "^19.1.0",
-    20	    "react-dom": "^19.1.0",
-    21	    "react-router-dom": "^7.6.1",
-    22	    "resend": "^4.5.1",
-    23	    "validator": "^13.15.15",
-    24	    "zxcvbn": "^4.4.2"
-    25	  },
-    26	  "devDependencies": {
-    27	    "@eslint/js": "^9.25.0",
-    28	    "@types/crypto-js": "^4.2.2",
-    29	    "@types/node": "^22.15.29",
-    30	    "@types/react": "^19.1.2",
-    31	    "@types/react-dom": "^19.1.2",
-    32	    "@vitejs/plugin-react": "^4.4.1",
-    33	    "autoprefixer": "^10.4.21",
-    34	    "eslint": "^9.25.0",
-    35	    "eslint-plugin-react-hooks": "^5.2.0",
-    36	    "eslint-plugin-react-refresh": "^0.4.19",
-    37	    "globals": "^16.0.0",
-    38	    "postcss": "^8.5.4",
-    39	    "tailwindcss": "^3.4.17",
-    40	    "vite": "^6.3.5"
-    41	  }
-    42	}
+    10	    "preview": "vite preview",
+    11	    "backend": "cd backend && ./pocketbase serve",
+    12	    "backend:windows": "cd backend && ./pocketbase.exe serve",
+    13	    "start:dev": "concurrently \"npm run backend\" \"npm run dev\"",
+    14	    "db:admin": "open http://localhost:8090/_/",
+    15	    "db:backup": "cp -r backend/pb_data backend/pb_data_backup_$(date +%Y%m%d_%H%M%S)",
+    16	    "db:status": "curl -s http://localhost:8090/api/health || echo 'PocketBase not running'"
+    17	  },
+    18	  "dependencies": {
+    19	    "@tanstack/react-query": "^5.79.0",
+    20	    "axios": "^1.9.0",
+    21	    "crypto-js": "^4.2.0",
+    22	    "dompurify": "^3.2.6",
+    23	    "lucide-react": "^0.511.0",
+    24	    "pocketbase": "^0.26.0",
+    25	    "react": "^19.1.0",
+    26	    "react-dom": "^19.1.0",
+    27	    "react-router-dom": "^7.6.1",
+    28	    "resend": "^4.5.1",
+    29	    "validator": "^13.15.15",
+    30	    "zxcvbn": "^4.4.2"
+    31	  },
+    32	  "devDependencies": {
+    33	    "@eslint/js": "^9.25.0",
+    34	    "@types/crypto-js": "^4.2.2",
+    35	    "@types/node": "^22.15.29",
+    36	    "@types/react": "^19.1.2",
+    37	    "@types/react-dom": "^19.1.2",
+    38	    "@vitejs/plugin-react": "^4.4.1",
+    39	    "autoprefixer": "^10.4.21",
+    40	    "eslint": "^9.25.0",
+    41	    "eslint-plugin-react-hooks": "^5.2.0",
+    42	    "eslint-plugin-react-refresh": "^0.4.19",
+    43	    "globals": "^16.0.0",
+    44	    "postcss": "^8.5.4",
+    45	    "tailwindcss": "^3.4.17",
+    46	    "vite": "^6.3.5"
+    47	  }
+    48	  
+    49	}
 
 ========================================
 
 📁 FILE: .env
-   Size: 672 | Modified: 2025-06-02
+   Size: 672 | Modified: 2025-06-03
 ----------------------------------------
-     1	# PocketBase Configuration
-     2	VITE_POCKETBASE_URL=http://localhost:8090
+     1	VITE_POCKETBASE_URL=http://localhost:8090
+     2	# PocketBase Configuration
      3	
      4	# Google Maps (we'll add this later)
      5	VITE_GOOGLE_MAPS_API_KEY=your_google_maps_api_key_here
@@ -356,7 +363,7 @@ VITE_ENABLE_AUDIT_LOGGING=true
 ========================================
 
 📁 FILE: src/App.jsx
-   Size: 3.3K | Modified: 2025-06-02
+   Size: 3.4K | Modified: 2025-06-03
 ----------------------------------------
      1	// src/App.jsx - ONLY this content (clean version)
      2	import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
@@ -382,69 +389,70 @@ VITE_ENABLE_AUDIT_LOGGING=true
     22	            <Route path="/markets/:slug" element={<MarketDetail />} />
     23	            <Route path="/login" element={<Login />} />
     24	            <Route path="/register" element={<Register />} />
-    25	            <Route 
-    26	              path="/dashboard" 
-    27	              element={
-    28	                <ProtectedRoute>
-    29	                  <Dashboard />
-    30	                </ProtectedRoute>
-    31	              } 
-    32	            />
-    33	            {/* Placeholder routes for future features */}
-    34	            <Route 
-    35	              path="/profile" 
-    36	              element={
-    37	                <ProtectedRoute>
-    38	                  <div className="min-h-screen bg-gray-50 py-8">
-    39	                    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-    40	                      <h1 className="text-3xl font-bold text-gray-900 mb-4">Profile</h1>
-    41	                      <p className="text-gray-600">Profile management coming soon...</p>
-    42	                    </div>
-    43	                  </div>
-    44	                </ProtectedRoute>
-    45	              } 
-    46	            />
-    47	            <Route 
-    48	              path="/stallholders" 
-    49	              element={
-    50	                <div className="min-h-screen bg-gray-50 py-8">
-    51	                  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    52	                    <h1 className="text-3xl font-bold text-gray-900 mb-4">For Stallholders</h1>
-    53	                    <p className="text-gray-600">Stallholder directory coming soon...</p>
-    54	                  </div>
-    55	                </div>
-    56	              } 
-    57	            />
-    58	            <Route 
-    59	              path="/organizers" 
-    60	              element={
-    61	                <div className="min-h-screen bg-gray-50 py-8">
-    62	                  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    63	                    <h1 className="text-3xl font-bold text-gray-900 mb-4">For Market Organizers</h1>
-    64	                    <p className="text-gray-600">Market organizer tools coming soon...</p>
-    65	                  </div>
-    66	                </div>
-    67	              } 
-    68	            />
-    69	            <Route 
-    70	              path="/about" 
-    71	              element={
-    72	                <div className="min-h-screen bg-gray-50 py-8">
-    73	                  <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-    74	                    <h1 className="text-3xl font-bold text-gray-900 mb-4">About SA Markets</h1>
-    75	                    <p className="text-gray-600">About page coming soon...</p>
-    76	                  </div>
-    77	                </div>
-    78	              } 
-    79	            />
-    80	          </Routes>
-    81	        </Layout>
-    82	      </Router>
-    83	    </AuthProvider>
-    84	  )
-    85	}
-    86	
-    87	export default App
+    25	            <Route path="/database-test" element={<DatabaseTest />} />
+    26	            <Route 
+    27	              path="/dashboard" 
+    28	              element={
+    29	                <ProtectedRoute>
+    30	                  <Dashboard />
+    31	                </ProtectedRoute>
+    32	              } 
+    33	            />
+    34	            {/* Placeholder routes for future features */}
+    35	            <Route 
+    36	              path="/profile" 
+    37	              element={
+    38	                <ProtectedRoute>
+    39	                  <div className="min-h-screen bg-gray-50 py-8">
+    40	                    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    41	                      <h1 className="text-3xl font-bold text-gray-900 mb-4">Profile</h1>
+    42	                      <p className="text-gray-600">Profile management coming soon...</p>
+    43	                    </div>
+    44	                  </div>
+    45	                </ProtectedRoute>
+    46	              } 
+    47	            />
+    48	            <Route 
+    49	              path="/stallholders" 
+    50	              element={
+    51	                <div className="min-h-screen bg-gray-50 py-8">
+    52	                  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    53	                    <h1 className="text-3xl font-bold text-gray-900 mb-4">For Stallholders</h1>
+    54	                    <p className="text-gray-600">Stallholder directory coming soon...</p>
+    55	                  </div>
+    56	                </div>
+    57	              } 
+    58	            />
+    59	            <Route 
+    60	              path="/organizers" 
+    61	              element={
+    62	                <div className="min-h-screen bg-gray-50 py-8">
+    63	                  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    64	                    <h1 className="text-3xl font-bold text-gray-900 mb-4">For Market Organizers</h1>
+    65	                    <p className="text-gray-600">Market organizer tools coming soon...</p>
+    66	                  </div>
+    67	                </div>
+    68	              } 
+    69	            />
+    70	            <Route 
+    71	              path="/about" 
+    72	              element={
+    73	                <div className="min-h-screen bg-gray-50 py-8">
+    74	                  <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    75	                    <h1 className="text-3xl font-bold text-gray-900 mb-4">About SA Markets</h1>
+    76	                    <p className="text-gray-600">About page coming soon...</p>
+    77	                  </div>
+    78	                </div>
+    79	              } 
+    80	            />            
+    81	          </Routes>
+    82	        </Layout>
+    83	      </Router>
+    84	    </AuthProvider>
+    85	  )
+    86	}
+    87	
+    88	export default App
 
 ========================================
 
@@ -2372,6 +2380,223 @@ VITE_ENABLE_AUDIT_LOGGING=true
 
 ========================================
 
+📁 FILE: src/pages/DatabaseTest.jsx
+   Size: 7.7K | Modified: 2025-06-03
+----------------------------------------
+     1	// PocketBase Verification Component
+     2	// Add this to src/pages/DatabaseTest.jsx for internal verification
+     3	
+     4	import { useState, useEffect } from 'react'
+     5	import pb from '../lib/pocketbase'
+     6	import { CheckCircle, XCircle, AlertCircle, RefreshCw } from 'lucide-react'
+     7	
+     8	export default function DatabaseTest() {
+     9	  const [status, setStatus] = useState({
+    10	    loading: true,
+    11	    pocketbaseOnline: false,
+    12	    collections: {},
+    13	    dataCounts: {},
+    14	    errors: []
+    15	  })
+    16	
+    17	  const checkDatabase = async () => {
+    18	    setStatus(prev => ({ ...prev, loading: true, errors: [] }))
+    19	    
+    20	    try {
+    21	      const collections = ['users', 'markets', 'market_categories', 'stallholders', 'applications', 'reviews']
+    22	      const collectionStatus = {}
+    23	      const dataStatus = {}
+    24	      const errors = []
+    25	
+    26	      // Check PocketBase health
+    27	      const healthCheck = await fetch(`${pb.baseUrl}/api/health`)
+    28	      const pocketbaseOnline = healthCheck.ok
+    29	
+    30	      // Check each collection
+    31	      for (const collection of collections) {
+    32	        try {
+    33	          const result = await pb.collection(collection).getList(1, 1)
+    34	          collectionStatus[collection] = true
+    35	          dataStatus[collection] = result.totalItems
+    36	        } catch (error) {
+    37	          collectionStatus[collection] = false
+    38	          dataStatus[collection] = 0
+    39	          errors.push(`${collection}: ${error.message}`)
+    40	        }
+    41	      }
+    42	
+    43	      // Test market query specifically
+    44	      try {
+    45	        const markets = await pb.collection('markets').getList(1, 3, {
+    46	          expand: 'category'
+    47	        })
+    48	        console.log('Sample markets found:', markets.items)
+    49	      } catch (error) {
+    50	        errors.push(`Market query failed: ${error.message}`)
+    51	      }
+    52	
+    53	      setStatus({
+    54	        loading: false,
+    55	        pocketbaseOnline,
+    56	        collections: collectionStatus,
+    57	        dataCounts: dataStatus,
+    58	        errors
+    59	      })
+    60	
+    61	    } catch (error) {
+    62	      setStatus(prev => ({
+    63	        ...prev,
+    64	        loading: false,
+    65	        pocketbaseOnline: false,
+    66	        errors: [`General error: ${error.message}`]
+    67	      }))
+    68	    }
+    69	  }
+    70	
+    71	  useEffect(() => {
+    72	    checkDatabase()
+    73	  }, [])
+    74	
+    75	  const StatusIcon = ({ status }) => {
+    76	    if (status === true) return <CheckCircle className="h-5 w-5 text-green-500" />
+    77	    if (status === false) return <XCircle className="h-5 w-5 text-red-500" />
+    78	    return <AlertCircle className="h-5 w-5 text-yellow-500" />
+    79	  }
+    80	
+    81	  return (
+    82	    <div className="min-h-screen bg-gray-50 py-8">
+    83	      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    84	        <div className="mb-8">
+    85	          <h1 className="text-3xl font-bold text-gray-900 mb-4">Database Verification</h1>
+    86	          <p className="text-gray-600">
+    87	            Checking PocketBase collections and data integrity
+    88	          </p>
+    89	          <button 
+    90	            onClick={checkDatabase}
+    91	            className="mt-4 btn-primary inline-flex items-center"
+    92	            disabled={status.loading}
+    93	          >
+    94	            <RefreshCw className={`h-4 w-4 mr-2 ${status.loading ? 'animate-spin' : ''}`} />
+    95	            Refresh Check
+    96	          </button>
+    97	        </div>
+    98	
+    99	        {/* PocketBase Status */}
+   100	        <div className="bg-white rounded-lg shadow p-6 mb-6">
+   101	          <h2 className="text-xl font-semibold mb-4">PocketBase Status</h2>
+   102	          <div className="flex items-center">
+   103	            <StatusIcon status={status.pocketbaseOnline} />
+   104	            <span className="ml-2">
+   105	              {status.pocketbaseOnline ? 'Online and responding' : 'Offline or not responding'}
+   106	            </span>
+   107	          </div>
+   108	          <p className="text-sm text-gray-500 mt-2">URL: {pb.baseUrl}</p>
+   109	        </div>
+   110	
+   111	        {/* Collections Status */}
+   112	        <div className="bg-white rounded-lg shadow p-6 mb-6">
+   113	          <h2 className="text-xl font-semibold mb-4">Collections Status</h2>
+   114	          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+   115	            {Object.entries(status.collections).map(([collection, exists]) => (
+   116	              <div key={collection} className="flex items-center justify-between p-3 border rounded">
+   117	                <div className="flex items-center">
+   118	                  <StatusIcon status={exists} />
+   119	                  <span className="ml-2 font-medium">{collection}</span>
+   120	                </div>
+   121	                <span className="text-sm text-gray-500">
+   122	                  {status.dataCounts[collection]} records
+   123	                </span>
+   124	              </div>
+   125	            ))}
+   126	          </div>
+   127	        </div>
+   128	
+   129	        {/* Data Summary */}
+   130	        <div className="bg-white rounded-lg shadow p-6 mb-6">
+   131	          <h2 className="text-xl font-semibold mb-4">Data Summary</h2>
+   132	          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+   133	            <div className="text-center p-4 bg-blue-50 rounded">
+   134	              <div className="text-2xl font-bold text-blue-600">
+   135	                {status.dataCounts.markets || 0}
+   136	              </div>
+   137	              <div className="text-sm text-blue-800">Markets</div>
+   138	            </div>
+   139	            <div className="text-center p-4 bg-green-50 rounded">
+   140	              <div className="text-2xl font-bold text-green-600">
+   141	                {status.dataCounts.stallholders || 0}
+   142	              </div>
+   143	              <div className="text-sm text-green-800">Stallholders</div>
+   144	            </div>
+   145	            <div className="text-center p-4 bg-purple-50 rounded">
+   146	              <div className="text-2xl font-bold text-purple-600">
+   147	                {status.dataCounts.applications || 0}
+   148	              </div>
+   149	              <div className="text-sm text-purple-800">Applications</div>
+   150	            </div>
+   151	            <div className="text-center p-4 bg-yellow-50 rounded">
+   152	              <div className="text-2xl font-bold text-yellow-600">
+   153	                {status.dataCounts.users || 0}
+   154	              </div>
+   155	              <div className="text-sm text-yellow-800">Users</div>
+   156	            </div>
+   157	            <div className="text-center p-4 bg-red-50 rounded">
+   158	              <div className="text-2xl font-bold text-red-600">
+   159	                {status.dataCounts.reviews || 0}
+   160	              </div>
+   161	              <div className="text-sm text-red-800">Reviews</div>
+   162	            </div>
+   163	            <div className="text-center p-4 bg-indigo-50 rounded">
+   164	              <div className="text-2xl font-bold text-indigo-600">
+   165	                {status.dataCounts.market_categories || 0}
+   166	              </div>
+   167	              <div className="text-sm text-indigo-800">Categories</div>
+   168	            </div>
+   169	          </div>
+   170	        </div>
+   171	
+   172	        {/* Errors */}
+   173	        {status.errors.length > 0 && (
+   174	          <div className="bg-white rounded-lg shadow p-6 mb-6">
+   175	            <h2 className="text-xl font-semibold mb-4 text-red-600">Issues Detected</h2>
+   176	            <div className="space-y-2">
+   177	              {status.errors.map((error, index) => (
+   178	                <div key={index} className="flex items-start">
+   179	                  <XCircle className="h-5 w-5 text-red-500 mt-0.5 mr-2 flex-shrink-0" />
+   180	                  <span className="text-sm text-red-700">{error}</span>
+   181	                </div>
+   182	              ))}
+   183	            </div>
+   184	          </div>
+   185	        )}
+   186	
+   187	        {/* Quick Actions */}
+   188	        <div className="bg-white rounded-lg shadow p-6">
+   189	          <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
+   190	          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+   191	            <button 
+   192	              onClick={() => window.open(`${pb.baseUrl}/_/`, '_blank')}
+   193	              className="btn-secondary"
+   194	            >
+   195	              Open PocketBase Admin
+   196	            </button>
+   197	            <button 
+   198	              onClick={() => window.location.href = '/markets'}
+   199	              className="btn-primary"
+   200	            >
+   201	              Test Market Listing
+   202	            </button>
+   203	          </div>
+   204	        </div>
+   205	      </div>
+   206	    </div>
+   207	  )
+   208	}
+   209	
+   210	// Add this route to your App.jsx for testing:
+   211	// <Route path="/database-test" element={<DatabaseTest />} />
+
+========================================
+
 📁 FILE: src/pages/Home.jsx
    Size: 4.4K | Modified: 2025-06-02
 ----------------------------------------
@@ -3154,7 +3379,7 @@ VITE_ENABLE_AUDIT_LOGGING=true
 ========================================
 
 📁 FILE: src/App.jsx
-   Size: 3.3K | Modified: 2025-06-02
+   Size: 3.4K | Modified: 2025-06-03
 ----------------------------------------
      1	// src/App.jsx - ONLY this content (clean version)
      2	import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
@@ -3180,69 +3405,70 @@ VITE_ENABLE_AUDIT_LOGGING=true
     22	            <Route path="/markets/:slug" element={<MarketDetail />} />
     23	            <Route path="/login" element={<Login />} />
     24	            <Route path="/register" element={<Register />} />
-    25	            <Route 
-    26	              path="/dashboard" 
-    27	              element={
-    28	                <ProtectedRoute>
-    29	                  <Dashboard />
-    30	                </ProtectedRoute>
-    31	              } 
-    32	            />
-    33	            {/* Placeholder routes for future features */}
-    34	            <Route 
-    35	              path="/profile" 
-    36	              element={
-    37	                <ProtectedRoute>
-    38	                  <div className="min-h-screen bg-gray-50 py-8">
-    39	                    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-    40	                      <h1 className="text-3xl font-bold text-gray-900 mb-4">Profile</h1>
-    41	                      <p className="text-gray-600">Profile management coming soon...</p>
-    42	                    </div>
-    43	                  </div>
-    44	                </ProtectedRoute>
-    45	              } 
-    46	            />
-    47	            <Route 
-    48	              path="/stallholders" 
-    49	              element={
-    50	                <div className="min-h-screen bg-gray-50 py-8">
-    51	                  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    52	                    <h1 className="text-3xl font-bold text-gray-900 mb-4">For Stallholders</h1>
-    53	                    <p className="text-gray-600">Stallholder directory coming soon...</p>
-    54	                  </div>
-    55	                </div>
-    56	              } 
-    57	            />
-    58	            <Route 
-    59	              path="/organizers" 
-    60	              element={
-    61	                <div className="min-h-screen bg-gray-50 py-8">
-    62	                  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    63	                    <h1 className="text-3xl font-bold text-gray-900 mb-4">For Market Organizers</h1>
-    64	                    <p className="text-gray-600">Market organizer tools coming soon...</p>
-    65	                  </div>
-    66	                </div>
-    67	              } 
-    68	            />
-    69	            <Route 
-    70	              path="/about" 
-    71	              element={
-    72	                <div className="min-h-screen bg-gray-50 py-8">
-    73	                  <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-    74	                    <h1 className="text-3xl font-bold text-gray-900 mb-4">About SA Markets</h1>
-    75	                    <p className="text-gray-600">About page coming soon...</p>
-    76	                  </div>
-    77	                </div>
-    78	              } 
-    79	            />
-    80	          </Routes>
-    81	        </Layout>
-    82	      </Router>
-    83	    </AuthProvider>
-    84	  )
-    85	}
-    86	
-    87	export default App
+    25	            <Route path="/database-test" element={<DatabaseTest />} />
+    26	            <Route 
+    27	              path="/dashboard" 
+    28	              element={
+    29	                <ProtectedRoute>
+    30	                  <Dashboard />
+    31	                </ProtectedRoute>
+    32	              } 
+    33	            />
+    34	            {/* Placeholder routes for future features */}
+    35	            <Route 
+    36	              path="/profile" 
+    37	              element={
+    38	                <ProtectedRoute>
+    39	                  <div className="min-h-screen bg-gray-50 py-8">
+    40	                    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    41	                      <h1 className="text-3xl font-bold text-gray-900 mb-4">Profile</h1>
+    42	                      <p className="text-gray-600">Profile management coming soon...</p>
+    43	                    </div>
+    44	                  </div>
+    45	                </ProtectedRoute>
+    46	              } 
+    47	            />
+    48	            <Route 
+    49	              path="/stallholders" 
+    50	              element={
+    51	                <div className="min-h-screen bg-gray-50 py-8">
+    52	                  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    53	                    <h1 className="text-3xl font-bold text-gray-900 mb-4">For Stallholders</h1>
+    54	                    <p className="text-gray-600">Stallholder directory coming soon...</p>
+    55	                  </div>
+    56	                </div>
+    57	              } 
+    58	            />
+    59	            <Route 
+    60	              path="/organizers" 
+    61	              element={
+    62	                <div className="min-h-screen bg-gray-50 py-8">
+    63	                  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    64	                    <h1 className="text-3xl font-bold text-gray-900 mb-4">For Market Organizers</h1>
+    65	                    <p className="text-gray-600">Market organizer tools coming soon...</p>
+    66	                  </div>
+    67	                </div>
+    68	              } 
+    69	            />
+    70	            <Route 
+    71	              path="/about" 
+    72	              element={
+    73	                <div className="min-h-screen bg-gray-50 py-8">
+    74	                  <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    75	                    <h1 className="text-3xl font-bold text-gray-900 mb-4">About SA Markets</h1>
+    76	                    <p className="text-gray-600">About page coming soon...</p>
+    77	                  </div>
+    78	                </div>
+    79	              } 
+    80	            />            
+    81	          </Routes>
+    82	        </Layout>
+    83	      </Router>
+    84	    </AuthProvider>
+    85	  )
+    86	}
+    87	
+    88	export default App
 
 ========================================
 
@@ -4293,6 +4519,223 @@ VITE_ENABLE_AUDIT_LOGGING=true
 
 ========================================
 
+📁 FILE: src/pages/DatabaseTest.jsx
+   Size: 7.7K | Modified: 2025-06-03
+----------------------------------------
+     1	// PocketBase Verification Component
+     2	// Add this to src/pages/DatabaseTest.jsx for internal verification
+     3	
+     4	import { useState, useEffect } from 'react'
+     5	import pb from '../lib/pocketbase'
+     6	import { CheckCircle, XCircle, AlertCircle, RefreshCw } from 'lucide-react'
+     7	
+     8	export default function DatabaseTest() {
+     9	  const [status, setStatus] = useState({
+    10	    loading: true,
+    11	    pocketbaseOnline: false,
+    12	    collections: {},
+    13	    dataCounts: {},
+    14	    errors: []
+    15	  })
+    16	
+    17	  const checkDatabase = async () => {
+    18	    setStatus(prev => ({ ...prev, loading: true, errors: [] }))
+    19	    
+    20	    try {
+    21	      const collections = ['users', 'markets', 'market_categories', 'stallholders', 'applications', 'reviews']
+    22	      const collectionStatus = {}
+    23	      const dataStatus = {}
+    24	      const errors = []
+    25	
+    26	      // Check PocketBase health
+    27	      const healthCheck = await fetch(`${pb.baseUrl}/api/health`)
+    28	      const pocketbaseOnline = healthCheck.ok
+    29	
+    30	      // Check each collection
+    31	      for (const collection of collections) {
+    32	        try {
+    33	          const result = await pb.collection(collection).getList(1, 1)
+    34	          collectionStatus[collection] = true
+    35	          dataStatus[collection] = result.totalItems
+    36	        } catch (error) {
+    37	          collectionStatus[collection] = false
+    38	          dataStatus[collection] = 0
+    39	          errors.push(`${collection}: ${error.message}`)
+    40	        }
+    41	      }
+    42	
+    43	      // Test market query specifically
+    44	      try {
+    45	        const markets = await pb.collection('markets').getList(1, 3, {
+    46	          expand: 'category'
+    47	        })
+    48	        console.log('Sample markets found:', markets.items)
+    49	      } catch (error) {
+    50	        errors.push(`Market query failed: ${error.message}`)
+    51	      }
+    52	
+    53	      setStatus({
+    54	        loading: false,
+    55	        pocketbaseOnline,
+    56	        collections: collectionStatus,
+    57	        dataCounts: dataStatus,
+    58	        errors
+    59	      })
+    60	
+    61	    } catch (error) {
+    62	      setStatus(prev => ({
+    63	        ...prev,
+    64	        loading: false,
+    65	        pocketbaseOnline: false,
+    66	        errors: [`General error: ${error.message}`]
+    67	      }))
+    68	    }
+    69	  }
+    70	
+    71	  useEffect(() => {
+    72	    checkDatabase()
+    73	  }, [])
+    74	
+    75	  const StatusIcon = ({ status }) => {
+    76	    if (status === true) return <CheckCircle className="h-5 w-5 text-green-500" />
+    77	    if (status === false) return <XCircle className="h-5 w-5 text-red-500" />
+    78	    return <AlertCircle className="h-5 w-5 text-yellow-500" />
+    79	  }
+    80	
+    81	  return (
+    82	    <div className="min-h-screen bg-gray-50 py-8">
+    83	      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    84	        <div className="mb-8">
+    85	          <h1 className="text-3xl font-bold text-gray-900 mb-4">Database Verification</h1>
+    86	          <p className="text-gray-600">
+    87	            Checking PocketBase collections and data integrity
+    88	          </p>
+    89	          <button 
+    90	            onClick={checkDatabase}
+    91	            className="mt-4 btn-primary inline-flex items-center"
+    92	            disabled={status.loading}
+    93	          >
+    94	            <RefreshCw className={`h-4 w-4 mr-2 ${status.loading ? 'animate-spin' : ''}`} />
+    95	            Refresh Check
+    96	          </button>
+    97	        </div>
+    98	
+    99	        {/* PocketBase Status */}
+   100	        <div className="bg-white rounded-lg shadow p-6 mb-6">
+   101	          <h2 className="text-xl font-semibold mb-4">PocketBase Status</h2>
+   102	          <div className="flex items-center">
+   103	            <StatusIcon status={status.pocketbaseOnline} />
+   104	            <span className="ml-2">
+   105	              {status.pocketbaseOnline ? 'Online and responding' : 'Offline or not responding'}
+   106	            </span>
+   107	          </div>
+   108	          <p className="text-sm text-gray-500 mt-2">URL: {pb.baseUrl}</p>
+   109	        </div>
+   110	
+   111	        {/* Collections Status */}
+   112	        <div className="bg-white rounded-lg shadow p-6 mb-6">
+   113	          <h2 className="text-xl font-semibold mb-4">Collections Status</h2>
+   114	          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+   115	            {Object.entries(status.collections).map(([collection, exists]) => (
+   116	              <div key={collection} className="flex items-center justify-between p-3 border rounded">
+   117	                <div className="flex items-center">
+   118	                  <StatusIcon status={exists} />
+   119	                  <span className="ml-2 font-medium">{collection}</span>
+   120	                </div>
+   121	                <span className="text-sm text-gray-500">
+   122	                  {status.dataCounts[collection]} records
+   123	                </span>
+   124	              </div>
+   125	            ))}
+   126	          </div>
+   127	        </div>
+   128	
+   129	        {/* Data Summary */}
+   130	        <div className="bg-white rounded-lg shadow p-6 mb-6">
+   131	          <h2 className="text-xl font-semibold mb-4">Data Summary</h2>
+   132	          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+   133	            <div className="text-center p-4 bg-blue-50 rounded">
+   134	              <div className="text-2xl font-bold text-blue-600">
+   135	                {status.dataCounts.markets || 0}
+   136	              </div>
+   137	              <div className="text-sm text-blue-800">Markets</div>
+   138	            </div>
+   139	            <div className="text-center p-4 bg-green-50 rounded">
+   140	              <div className="text-2xl font-bold text-green-600">
+   141	                {status.dataCounts.stallholders || 0}
+   142	              </div>
+   143	              <div className="text-sm text-green-800">Stallholders</div>
+   144	            </div>
+   145	            <div className="text-center p-4 bg-purple-50 rounded">
+   146	              <div className="text-2xl font-bold text-purple-600">
+   147	                {status.dataCounts.applications || 0}
+   148	              </div>
+   149	              <div className="text-sm text-purple-800">Applications</div>
+   150	            </div>
+   151	            <div className="text-center p-4 bg-yellow-50 rounded">
+   152	              <div className="text-2xl font-bold text-yellow-600">
+   153	                {status.dataCounts.users || 0}
+   154	              </div>
+   155	              <div className="text-sm text-yellow-800">Users</div>
+   156	            </div>
+   157	            <div className="text-center p-4 bg-red-50 rounded">
+   158	              <div className="text-2xl font-bold text-red-600">
+   159	                {status.dataCounts.reviews || 0}
+   160	              </div>
+   161	              <div className="text-sm text-red-800">Reviews</div>
+   162	            </div>
+   163	            <div className="text-center p-4 bg-indigo-50 rounded">
+   164	              <div className="text-2xl font-bold text-indigo-600">
+   165	                {status.dataCounts.market_categories || 0}
+   166	              </div>
+   167	              <div className="text-sm text-indigo-800">Categories</div>
+   168	            </div>
+   169	          </div>
+   170	        </div>
+   171	
+   172	        {/* Errors */}
+   173	        {status.errors.length > 0 && (
+   174	          <div className="bg-white rounded-lg shadow p-6 mb-6">
+   175	            <h2 className="text-xl font-semibold mb-4 text-red-600">Issues Detected</h2>
+   176	            <div className="space-y-2">
+   177	              {status.errors.map((error, index) => (
+   178	                <div key={index} className="flex items-start">
+   179	                  <XCircle className="h-5 w-5 text-red-500 mt-0.5 mr-2 flex-shrink-0" />
+   180	                  <span className="text-sm text-red-700">{error}</span>
+   181	                </div>
+   182	              ))}
+   183	            </div>
+   184	          </div>
+   185	        )}
+   186	
+   187	        {/* Quick Actions */}
+   188	        <div className="bg-white rounded-lg shadow p-6">
+   189	          <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
+   190	          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+   191	            <button 
+   192	              onClick={() => window.open(`${pb.baseUrl}/_/`, '_blank')}
+   193	              className="btn-secondary"
+   194	            >
+   195	              Open PocketBase Admin
+   196	            </button>
+   197	            <button 
+   198	              onClick={() => window.location.href = '/markets'}
+   199	              className="btn-primary"
+   200	            >
+   201	              Test Market Listing
+   202	            </button>
+   203	          </div>
+   204	        </div>
+   205	      </div>
+   206	    </div>
+   207	  )
+   208	}
+   209	
+   210	// Add this route to your App.jsx for testing:
+   211	// <Route path="/database-test" element={<DatabaseTest />} />
+
+========================================
+
 📁 FILE: src/pages/Home.jsx
    Size: 4.4K | Modified: 2025-06-02
 ----------------------------------------
@@ -5758,7 +6201,7 @@ VITE_ENABLE_AUDIT_LOGGING=true
 ========================================
 
 📁 FILE: src/App.jsx
-   Size: 3.3K | Modified: 2025-06-02
+   Size: 3.4K | Modified: 2025-06-03
 ----------------------------------------
      1	// src/App.jsx - ONLY this content (clean version)
      2	import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
@@ -5784,69 +6227,70 @@ VITE_ENABLE_AUDIT_LOGGING=true
     22	            <Route path="/markets/:slug" element={<MarketDetail />} />
     23	            <Route path="/login" element={<Login />} />
     24	            <Route path="/register" element={<Register />} />
-    25	            <Route 
-    26	              path="/dashboard" 
-    27	              element={
-    28	                <ProtectedRoute>
-    29	                  <Dashboard />
-    30	                </ProtectedRoute>
-    31	              } 
-    32	            />
-    33	            {/* Placeholder routes for future features */}
-    34	            <Route 
-    35	              path="/profile" 
-    36	              element={
-    37	                <ProtectedRoute>
-    38	                  <div className="min-h-screen bg-gray-50 py-8">
-    39	                    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-    40	                      <h1 className="text-3xl font-bold text-gray-900 mb-4">Profile</h1>
-    41	                      <p className="text-gray-600">Profile management coming soon...</p>
-    42	                    </div>
-    43	                  </div>
-    44	                </ProtectedRoute>
-    45	              } 
-    46	            />
-    47	            <Route 
-    48	              path="/stallholders" 
-    49	              element={
-    50	                <div className="min-h-screen bg-gray-50 py-8">
-    51	                  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    52	                    <h1 className="text-3xl font-bold text-gray-900 mb-4">For Stallholders</h1>
-    53	                    <p className="text-gray-600">Stallholder directory coming soon...</p>
-    54	                  </div>
-    55	                </div>
-    56	              } 
-    57	            />
-    58	            <Route 
-    59	              path="/organizers" 
-    60	              element={
-    61	                <div className="min-h-screen bg-gray-50 py-8">
-    62	                  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    63	                    <h1 className="text-3xl font-bold text-gray-900 mb-4">For Market Organizers</h1>
-    64	                    <p className="text-gray-600">Market organizer tools coming soon...</p>
-    65	                  </div>
-    66	                </div>
-    67	              } 
-    68	            />
-    69	            <Route 
-    70	              path="/about" 
-    71	              element={
-    72	                <div className="min-h-screen bg-gray-50 py-8">
-    73	                  <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-    74	                    <h1 className="text-3xl font-bold text-gray-900 mb-4">About SA Markets</h1>
-    75	                    <p className="text-gray-600">About page coming soon...</p>
-    76	                  </div>
-    77	                </div>
-    78	              } 
-    79	            />
-    80	          </Routes>
-    81	        </Layout>
-    82	      </Router>
-    83	    </AuthProvider>
-    84	  )
-    85	}
-    86	
-    87	export default App
+    25	            <Route path="/database-test" element={<DatabaseTest />} />
+    26	            <Route 
+    27	              path="/dashboard" 
+    28	              element={
+    29	                <ProtectedRoute>
+    30	                  <Dashboard />
+    31	                </ProtectedRoute>
+    32	              } 
+    33	            />
+    34	            {/* Placeholder routes for future features */}
+    35	            <Route 
+    36	              path="/profile" 
+    37	              element={
+    38	                <ProtectedRoute>
+    39	                  <div className="min-h-screen bg-gray-50 py-8">
+    40	                    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    41	                      <h1 className="text-3xl font-bold text-gray-900 mb-4">Profile</h1>
+    42	                      <p className="text-gray-600">Profile management coming soon...</p>
+    43	                    </div>
+    44	                  </div>
+    45	                </ProtectedRoute>
+    46	              } 
+    47	            />
+    48	            <Route 
+    49	              path="/stallholders" 
+    50	              element={
+    51	                <div className="min-h-screen bg-gray-50 py-8">
+    52	                  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    53	                    <h1 className="text-3xl font-bold text-gray-900 mb-4">For Stallholders</h1>
+    54	                    <p className="text-gray-600">Stallholder directory coming soon...</p>
+    55	                  </div>
+    56	                </div>
+    57	              } 
+    58	            />
+    59	            <Route 
+    60	              path="/organizers" 
+    61	              element={
+    62	                <div className="min-h-screen bg-gray-50 py-8">
+    63	                  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    64	                    <h1 className="text-3xl font-bold text-gray-900 mb-4">For Market Organizers</h1>
+    65	                    <p className="text-gray-600">Market organizer tools coming soon...</p>
+    66	                  </div>
+    67	                </div>
+    68	              } 
+    69	            />
+    70	            <Route 
+    71	              path="/about" 
+    72	              element={
+    73	                <div className="min-h-screen bg-gray-50 py-8">
+    74	                  <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    75	                    <h1 className="text-3xl font-bold text-gray-900 mb-4">About SA Markets</h1>
+    76	                    <p className="text-gray-600">About page coming soon...</p>
+    77	                  </div>
+    78	                </div>
+    79	              } 
+    80	            />            
+    81	          </Routes>
+    82	        </Layout>
+    83	      </Router>
+    84	    </AuthProvider>
+    85	  )
+    86	}
+    87	
+    88	export default App
 
 ========================================
 
@@ -6887,6 +7331,223 @@ VITE_ENABLE_AUDIT_LOGGING=true
    385	    </div>
    386	  )
    387	}
+
+========================================
+
+📁 FILE: src/pages/DatabaseTest.jsx
+   Size: 7.7K | Modified: 2025-06-03
+----------------------------------------
+     1	// PocketBase Verification Component
+     2	// Add this to src/pages/DatabaseTest.jsx for internal verification
+     3	
+     4	import { useState, useEffect } from 'react'
+     5	import pb from '../lib/pocketbase'
+     6	import { CheckCircle, XCircle, AlertCircle, RefreshCw } from 'lucide-react'
+     7	
+     8	export default function DatabaseTest() {
+     9	  const [status, setStatus] = useState({
+    10	    loading: true,
+    11	    pocketbaseOnline: false,
+    12	    collections: {},
+    13	    dataCounts: {},
+    14	    errors: []
+    15	  })
+    16	
+    17	  const checkDatabase = async () => {
+    18	    setStatus(prev => ({ ...prev, loading: true, errors: [] }))
+    19	    
+    20	    try {
+    21	      const collections = ['users', 'markets', 'market_categories', 'stallholders', 'applications', 'reviews']
+    22	      const collectionStatus = {}
+    23	      const dataStatus = {}
+    24	      const errors = []
+    25	
+    26	      // Check PocketBase health
+    27	      const healthCheck = await fetch(`${pb.baseUrl}/api/health`)
+    28	      const pocketbaseOnline = healthCheck.ok
+    29	
+    30	      // Check each collection
+    31	      for (const collection of collections) {
+    32	        try {
+    33	          const result = await pb.collection(collection).getList(1, 1)
+    34	          collectionStatus[collection] = true
+    35	          dataStatus[collection] = result.totalItems
+    36	        } catch (error) {
+    37	          collectionStatus[collection] = false
+    38	          dataStatus[collection] = 0
+    39	          errors.push(`${collection}: ${error.message}`)
+    40	        }
+    41	      }
+    42	
+    43	      // Test market query specifically
+    44	      try {
+    45	        const markets = await pb.collection('markets').getList(1, 3, {
+    46	          expand: 'category'
+    47	        })
+    48	        console.log('Sample markets found:', markets.items)
+    49	      } catch (error) {
+    50	        errors.push(`Market query failed: ${error.message}`)
+    51	      }
+    52	
+    53	      setStatus({
+    54	        loading: false,
+    55	        pocketbaseOnline,
+    56	        collections: collectionStatus,
+    57	        dataCounts: dataStatus,
+    58	        errors
+    59	      })
+    60	
+    61	    } catch (error) {
+    62	      setStatus(prev => ({
+    63	        ...prev,
+    64	        loading: false,
+    65	        pocketbaseOnline: false,
+    66	        errors: [`General error: ${error.message}`]
+    67	      }))
+    68	    }
+    69	  }
+    70	
+    71	  useEffect(() => {
+    72	    checkDatabase()
+    73	  }, [])
+    74	
+    75	  const StatusIcon = ({ status }) => {
+    76	    if (status === true) return <CheckCircle className="h-5 w-5 text-green-500" />
+    77	    if (status === false) return <XCircle className="h-5 w-5 text-red-500" />
+    78	    return <AlertCircle className="h-5 w-5 text-yellow-500" />
+    79	  }
+    80	
+    81	  return (
+    82	    <div className="min-h-screen bg-gray-50 py-8">
+    83	      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    84	        <div className="mb-8">
+    85	          <h1 className="text-3xl font-bold text-gray-900 mb-4">Database Verification</h1>
+    86	          <p className="text-gray-600">
+    87	            Checking PocketBase collections and data integrity
+    88	          </p>
+    89	          <button 
+    90	            onClick={checkDatabase}
+    91	            className="mt-4 btn-primary inline-flex items-center"
+    92	            disabled={status.loading}
+    93	          >
+    94	            <RefreshCw className={`h-4 w-4 mr-2 ${status.loading ? 'animate-spin' : ''}`} />
+    95	            Refresh Check
+    96	          </button>
+    97	        </div>
+    98	
+    99	        {/* PocketBase Status */}
+   100	        <div className="bg-white rounded-lg shadow p-6 mb-6">
+   101	          <h2 className="text-xl font-semibold mb-4">PocketBase Status</h2>
+   102	          <div className="flex items-center">
+   103	            <StatusIcon status={status.pocketbaseOnline} />
+   104	            <span className="ml-2">
+   105	              {status.pocketbaseOnline ? 'Online and responding' : 'Offline or not responding'}
+   106	            </span>
+   107	          </div>
+   108	          <p className="text-sm text-gray-500 mt-2">URL: {pb.baseUrl}</p>
+   109	        </div>
+   110	
+   111	        {/* Collections Status */}
+   112	        <div className="bg-white rounded-lg shadow p-6 mb-6">
+   113	          <h2 className="text-xl font-semibold mb-4">Collections Status</h2>
+   114	          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+   115	            {Object.entries(status.collections).map(([collection, exists]) => (
+   116	              <div key={collection} className="flex items-center justify-between p-3 border rounded">
+   117	                <div className="flex items-center">
+   118	                  <StatusIcon status={exists} />
+   119	                  <span className="ml-2 font-medium">{collection}</span>
+   120	                </div>
+   121	                <span className="text-sm text-gray-500">
+   122	                  {status.dataCounts[collection]} records
+   123	                </span>
+   124	              </div>
+   125	            ))}
+   126	          </div>
+   127	        </div>
+   128	
+   129	        {/* Data Summary */}
+   130	        <div className="bg-white rounded-lg shadow p-6 mb-6">
+   131	          <h2 className="text-xl font-semibold mb-4">Data Summary</h2>
+   132	          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+   133	            <div className="text-center p-4 bg-blue-50 rounded">
+   134	              <div className="text-2xl font-bold text-blue-600">
+   135	                {status.dataCounts.markets || 0}
+   136	              </div>
+   137	              <div className="text-sm text-blue-800">Markets</div>
+   138	            </div>
+   139	            <div className="text-center p-4 bg-green-50 rounded">
+   140	              <div className="text-2xl font-bold text-green-600">
+   141	                {status.dataCounts.stallholders || 0}
+   142	              </div>
+   143	              <div className="text-sm text-green-800">Stallholders</div>
+   144	            </div>
+   145	            <div className="text-center p-4 bg-purple-50 rounded">
+   146	              <div className="text-2xl font-bold text-purple-600">
+   147	                {status.dataCounts.applications || 0}
+   148	              </div>
+   149	              <div className="text-sm text-purple-800">Applications</div>
+   150	            </div>
+   151	            <div className="text-center p-4 bg-yellow-50 rounded">
+   152	              <div className="text-2xl font-bold text-yellow-600">
+   153	                {status.dataCounts.users || 0}
+   154	              </div>
+   155	              <div className="text-sm text-yellow-800">Users</div>
+   156	            </div>
+   157	            <div className="text-center p-4 bg-red-50 rounded">
+   158	              <div className="text-2xl font-bold text-red-600">
+   159	                {status.dataCounts.reviews || 0}
+   160	              </div>
+   161	              <div className="text-sm text-red-800">Reviews</div>
+   162	            </div>
+   163	            <div className="text-center p-4 bg-indigo-50 rounded">
+   164	              <div className="text-2xl font-bold text-indigo-600">
+   165	                {status.dataCounts.market_categories || 0}
+   166	              </div>
+   167	              <div className="text-sm text-indigo-800">Categories</div>
+   168	            </div>
+   169	          </div>
+   170	        </div>
+   171	
+   172	        {/* Errors */}
+   173	        {status.errors.length > 0 && (
+   174	          <div className="bg-white rounded-lg shadow p-6 mb-6">
+   175	            <h2 className="text-xl font-semibold mb-4 text-red-600">Issues Detected</h2>
+   176	            <div className="space-y-2">
+   177	              {status.errors.map((error, index) => (
+   178	                <div key={index} className="flex items-start">
+   179	                  <XCircle className="h-5 w-5 text-red-500 mt-0.5 mr-2 flex-shrink-0" />
+   180	                  <span className="text-sm text-red-700">{error}</span>
+   181	                </div>
+   182	              ))}
+   183	            </div>
+   184	          </div>
+   185	        )}
+   186	
+   187	        {/* Quick Actions */}
+   188	        <div className="bg-white rounded-lg shadow p-6">
+   189	          <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
+   190	          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+   191	            <button 
+   192	              onClick={() => window.open(`${pb.baseUrl}/_/`, '_blank')}
+   193	              className="btn-secondary"
+   194	            >
+   195	              Open PocketBase Admin
+   196	            </button>
+   197	            <button 
+   198	              onClick={() => window.location.href = '/markets'}
+   199	              className="btn-primary"
+   200	            >
+   201	              Test Market Listing
+   202	            </button>
+   203	          </div>
+   204	        </div>
+   205	      </div>
+   206	    </div>
+   207	  )
+   208	}
+   209	
+   210	// Add this route to your App.jsx for testing:
+   211	// <Route path="/database-test" element={<DatabaseTest />} />
 
 ========================================
 
@@ -8309,10 +8970,10 @@ VITE_ENABLE_AUDIT_LOGGING=true
 
 📊 COMPLETE ANALYSIS SUMMARY
 =============================================
-Export completed: Mon Jun  2 13:13:16 UTC 2025
+Export completed: Tue Jun  3 10:01:31 UTC 2025
 Output file: codebase-export.txt
-Total size: 324K
-Total lines: 8311
+Total size: 353K
+Total lines: 8972
 PocketBase URL: http://localhost:8090
 PocketBase analysis: ✅ Included
 Sample data included: false

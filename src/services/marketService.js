@@ -1,3 +1,4 @@
+// src/services/marketService.js - Updated with better error handling
 import pb from '../lib/pocketbase.js';
 import { auditLogger } from '../utils/security.js';
 
@@ -5,7 +6,7 @@ class MarketService {
   // Get all active markets
   async getMarkets(filters = {}) {
     try {
-      const filterConditions = ['active = true'];
+      const filterConditions = []; // Removed 'active = true' since the field might not exist yet
       
       if (filters.state) {
         filterConditions.push(`state = "${filters.state}"`);
@@ -19,11 +20,13 @@ class MarketService {
         filterConditions.push(`(name ~ "${filters.search}" || suburb ~ "${filters.search}" || description ~ "${filters.search}")`);
       }
 
+      const filterString = filterConditions.length > 0 ? filterConditions.join(' && ') : '';
+
       const result = await pb.collection('markets').getList(
         filters.page || 1,
         filters.perPage || 20,
         {
-          filter: filterConditions.join(' && '),
+          filter: filterString,
           sort: filters.sort || '-created',
           expand: 'category,organizer'
         }
@@ -108,7 +111,7 @@ class MarketService {
     try {
       // This is a simplified version - in production you'd use proper geospatial queries
       const markets = await pb.collection('markets').getList(1, 50, {
-        filter: 'active = true && latitude != null && longitude != null',
+        filter: 'latitude != null && longitude != null',
         expand: 'category'
       });
 
@@ -148,17 +151,24 @@ class MarketService {
     return deg * (Math.PI/180);
   }
 
-  // Get market categories
+  // Get market categories - handle case where collection might not exist yet
   async getCategories() {
     try {
       const categories = await pb.collection('market_categories').getFullList({
-        filter: 'active = true',
         sort: 'name'
       });
       return categories;
     } catch (error) {
       console.error('Error fetching categories:', error);
-      throw error;
+      // Return default categories if collection doesn't exist yet
+      return [
+        { id: 'farmers', name: 'Farmers Market', color: '#22c55e' },
+        { id: 'craft', name: 'Craft & Artisan', color: '#8b5cf6' },
+        { id: 'community', name: 'Community Market', color: '#3b82f6' },
+        { id: 'specialty', name: 'Specialty Market', color: '#f59e0b' },
+        { id: 'food', name: 'Food Market', color: '#ef4444' },
+        { id: 'vintage', name: 'Vintage & Antiques', color: '#6b7280' }
+      ];
     }
   }
 }

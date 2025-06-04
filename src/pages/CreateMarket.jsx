@@ -1,14 +1,22 @@
-// src/pages/CreateMarket.jsx - Market Creation Form
+// src/pages/CreateMarket.jsx - Complete with Requirements System
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Save, ArrowLeft, MapPin, Clock, Calendar, DollarSign } from 'lucide-react'
+import { Save, ArrowLeft, MapPin, Clock, Calendar, DollarSign, Shield, Settings } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import marketService from '../services/marketService'
+import AddressInput from '../components/market/AddressInput'
+import AmenitySelector from '../components/market/AmenitySelector'
+import ScheduleBuilder from '../components/market/ScheduleBuilder'
+import FeeBuilder from '../components/market/FeeBuilder'
+import RequirementsBuilder from '../components/market/RequirementsBuilder'
 
 export default function CreateMarket() {
   const [loading, setLoading] = useState(false)
   const [categories, setCategories] = useState([])
   const [error, setError] = useState(null)
+  const [currentStep, setCurrentStep] = useState(1)
+
+  // Main market data
   const [formData, setFormData] = useState({
     name: '',
     category: '',
@@ -17,29 +25,43 @@ export default function CreateMarket() {
     suburb: '',
     state: 'SA',
     postcode: '',
-    frequency: '',
-    operating_hours: '',
+    latitude: null,
+    longitude: null,
     contact_email: '',
     contact_phone: '',
     website: '',
-    facilities: [],
-    stall_fee: '',
-    application_fee: '',
-    bond_required: false,
-    bond_amount: '',
-    insurance_required: true,
-    power_available: false,
-    parking_available: true,
-    accessibility_notes: ''
+    venue_type: '',
+    max_stalls: null,
+    waiting_list_enabled: false
   })
+
+  // Normalized data
+  const [requirements, setRequirements] = useState([])
+  const [selectedAmenities, setSelectedAmenities] = useState([])
+  const [schedules, setSchedules] = useState([])
+  const [fees, setFees] = useState([])
 
   const { user } = useAuth()
   const navigate = useNavigate()
 
+  const steps = [
+    { id: 1, name: 'Basic Info', icon: MapPin },
+    { id: 2, name: 'Requirements', icon: Shield },
+    { id: 3, name: 'Schedule', icon: Calendar },
+    { id: 4, name: 'Details', icon: Settings }
+  ]
+
   // Redirect if not organizer
+  // In CreateMarket.jsx, update the role check:
   useEffect(() => {
     if (user && user.role !== 'organizer') {
-      navigate('/dashboard')
+      console.log('User role:', user.role, 'Expected: organizer')
+      // If role is empty, don't redirect immediately - they might need to set it
+      if (user.role === '') {
+        console.warn('User role is empty - this will cause permission issues')
+      } else {
+        navigate('/dashboard')
+      }
     }
   }, [user, navigate])
 
@@ -64,12 +86,15 @@ export default function CreateMarket() {
     }))
   }
 
-  const handleFacilitiesChange = (facility) => {
+  const handleAddressChange = (addressData) => {
     setFormData(prev => ({
       ...prev,
-      facilities: prev.facilities.includes(facility)
-        ? prev.facilities.filter(f => f !== facility)
-        : [...prev.facilities, facility]
+      address: addressData.address,
+      suburb: addressData.suburb,
+      state: addressData.state,
+      postcode: addressData.postcode,
+      latitude: addressData.latitude,
+      longitude: addressData.longitude
     }))
   }
 
@@ -82,44 +107,154 @@ export default function CreateMarket() {
       .trim()
   }
 
+  const validateStep = (step) => {
+    const errors = []
+
+    switch (step) {
+      case 1: // Basic Info
+        if (!formData.name.trim()) errors.push('Market name is required')
+        if (!formData.category) errors.push('Market category is required')
+        if (!formData.address.trim()) errors.push('Address is required')
+        if (!formData.suburb.trim()) errors.push('Suburb is required')
+        if (!formData.postcode.trim()) errors.push('Postcode is required')
+        if (!formData.contact_email.trim()) errors.push('Contact email is required')
+        break
+
+      case 2: // Requirements - no validation needed, optional
+        break
+
+      case 3: // Schedule
+        if (schedules.length === 0) {
+          errors.push('At least one schedule is required')
+        }
+        schedules.forEach((schedule, index) => {
+          if (!schedule.start_time) errors.push(`Schedule ${index + 1}: Start time is required`)
+          if (!schedule.end_time) errors.push(`Schedule ${index + 1}: End time is required`)
+          if (schedule.start_time >= schedule.end_time) {
+            errors.push(`Schedule ${index + 1}: End time must be after start time`)
+          }
+        })
+        break
+
+      case 4: // Details - validate fees
+        fees.forEach((fee, index) => {
+          if (!fee.amount || parseFloat(fee.amount) < 0) {
+            errors.push(`Fee ${index + 1}: Valid amount is required`)
+          }
+          if (!fee.fee_name) {
+            errors.push(`Fee ${index + 1}: Fee name is required`)
+          }
+        })
+        break
+    }
+
+    return errors
+  }
+
+  const nextStep = () => {
+    const errors = validateStep(currentStep)
+    if (errors.length > 0) {
+      setError(errors.join(', '))
+      return
+    }
+
+    setError(null)
+    if (currentStep < steps.length) {
+      setCurrentStep(currentStep + 1)
+    }
+  }
+
+  const prevStep = () => {
+    setError(null)
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1)
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
     setError(null)
 
+    // Validate all steps
+    for (let step = 1; step <= steps.length; step++) {
+      const stepErrors = validateStep(step)
+      if (stepErrors.length > 0) {
+        setError(`Step ${step}: ${stepErrors.join(', ')}`)
+        setCurrentStep(step)
+        setLoading(false)
+        return
+      }
+    }
+
     try {
+      // Prepare market data
       const marketData = {
-        ...formData,
+        name: formData.name,
         slug: createSlug(formData.name),
+        category: formData.category,
         organizer: user.id,
-        active: true,
-        stall_fee: formData.stall_fee ? parseFloat(formData.stall_fee) : null,
-        application_fee: formData.application_fee ? parseFloat(formData.application_fee) : null,
-        bond_amount: formData.bond_amount ? parseFloat(formData.bond_amount) : null
+        description: formData.description || '',
+        address: formData.address,
+        suburb: formData.suburb,
+        state: formData.state,
+        postcode: formData.postcode,
+        latitude: formData.latitude,
+        longitude: formData.longitude,
+        venue_type: formData.venue_type || null,
+        contact_email: formData.contact_email,
+        contact_phone: formData.contact_phone || '',
+        website: formData.website || '',
+        max_stalls: formData.max_stalls ? parseInt(formData.max_stalls) : null,
+        waiting_list_enabled: formData.waiting_list_enabled,
+        active: true
       }
 
-      const newMarket = await marketService.createMarket(marketData)
-      navigate(`/markets/${newMarket.slug}`)
+      console.log('=== CREATING COMPREHENSIVE MARKET ===')
+      console.log('Market Data:', marketData)
+      console.log('Requirements:', requirements)
+      console.log('Amenities:', selectedAmenities)
+      console.log('Schedules:', schedules)
+      console.log('Fees:', fees)
+
+      const result = await marketService.createMarketWithDetails(
+        marketData,
+        requirements,
+        selectedAmenities,
+        schedules,
+        fees
+      )
+
+      console.log('Market created successfully:', result)
+
+      // Show success message with summary
+      const summary = {
+        market: result.market.name,
+        requirements: result.requirements?.length || 0,
+        amenities: result.amenities?.length || 0,
+        schedules: result.schedules?.length || 0,
+        fees: result.fees?.length || 0
+      }
+
+      console.log('Creation summary:', summary)
+
+      navigate(`/markets/${result.market.slug}`)
     } catch (err) {
-      console.error('Error creating market:', err)
+      console.error('=== ERROR CREATING MARKET ===')
+      console.error('Error:', err)
+
+      if (err.response?.data) {
+        console.error('Detailed errors:', err.response.data)
+        Object.entries(err.response.data).forEach(([field, error]) => {
+          console.error(`❌ Field "${field}" error:`, error)
+        })
+      }
+
       setError(err.message || 'Failed to create market')
     } finally {
       setLoading(false)
     }
   }
-
-  const facilityOptions = [
-    'Toilets', 'Parking', 'Food Court', 'ATM', 'Wheelchair Access',
-    'Children\'s Area', 'Entertainment', 'Seating', 'Shelter/Cover',
-    'Storage', 'Loading Dock', 'Security'
-  ]
-
-  const frequencyOptions = [
-    'Daily', 'Weekly', 'Fortnightly', 'Monthly',
-    'First Saturday', 'First Sunday', 'Second Saturday', 'Second Sunday',
-    'Third Saturday', 'Third Sunday', 'Fourth Saturday', 'Fourth Sunday',
-    'Specific Dates', 'Seasonal'
-  ]
 
   if (user && user.role !== 'organizer') {
     return (
@@ -150,6 +285,40 @@ export default function CreateMarket() {
           </p>
         </div>
 
+        {/* Step Indicator */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between">
+            {steps.map((step, index) => {
+              const Icon = step.icon
+              const isActive = currentStep === step.id
+              const isCompleted = currentStep > step.id
+
+              return (
+                <div key={step.id} className="flex items-center">
+                  <div className={`flex items-center justify-center w-10 h-10 rounded-full ${isCompleted
+                      ? 'bg-primary-600 text-white'
+                      : isActive
+                        ? 'bg-primary-100 text-primary-600 border-2 border-primary-600'
+                        : 'bg-gray-200 text-gray-400'
+                    }`}>
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <div className="ml-3">
+                    <div className={`text-sm font-medium ${isActive ? 'text-primary-600' : isCompleted ? 'text-gray-900' : 'text-gray-400'
+                      }`}>
+                      {step.name}
+                    </div>
+                  </div>
+                  {index < steps.length - 1 && (
+                    <div className={`w-12 h-0.5 mx-4 ${isCompleted ? 'bg-primary-600' : 'bg-gray-200'
+                      }`} />
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-8">
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
@@ -157,416 +326,292 @@ export default function CreateMarket() {
             </div>
           )}
 
-          {/* Basic Information */}
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-              <MapPin className="h-5 w-5 mr-2 text-primary-600" />
-              Basic Information
-            </h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Market Name *
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  required
-                  className="input-field"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="e.g. Adelaide Central Market"
+          {/* Step 1: Basic Information */}
+          {currentStep === 1 && (
+            <div className="space-y-6">
+              <div className="bg-white rounded-lg shadow p-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                  <MapPin className="h-5 w-5 mr-2 text-primary-600" />
+                  Basic Information
+                </h2>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Market Name *
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      required
+                      className="input-field"
+                      value={formData.name}
+                      onChange={handleChange}
+                      placeholder="e.g. Adelaide Central Market"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Category *
+                    </label>
+                    <select
+                      name="category"
+                      required
+                      className="input-field"
+                      value={formData.category}
+                      onChange={handleChange}
+                    >
+                      <option value="">Select a category</option>
+                      {categories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Venue Type
+                    </label>
+                    <select
+                      name="venue_type"
+                      className="input-field"
+                      value={formData.venue_type}
+                      onChange={handleChange}
+                    >
+                      <option value="">Select venue type</option>
+                      <option value="outdoor">Outdoor</option>
+                      <option value="indoor">Indoor</option>
+                      <option value="covered">Covered</option>
+                      <option value="mixed">Mixed</option>
+                    </select>
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Description
+                    </label>
+                    <textarea
+                      name="description"
+                      rows={4}
+                      className="input-field"
+                      value={formData.description}
+                      onChange={handleChange}
+                      placeholder="Describe your market, its atmosphere, and what makes it special..."
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow p-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                  Location Details
+                </h2>
+
+                <AddressInput
+                  address={formData.address}
+                  suburb={formData.suburb}
+                  state={formData.state}
+                  postcode={formData.postcode}
+                  latitude={formData.latitude}
+                  longitude={formData.longitude}
+                  onAddressChange={handleAddressChange}
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Category *
-                </label>
-                <select
-                  name="category"
-                  required
-                  className="input-field"
-                  value={formData.category}
-                  onChange={handleChange}
-                >
-                  <option value="">Select a category</option>
-                  {categories.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <div className="bg-white rounded-lg shadow p-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                  Contact Information
+                </h2>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  State
-                </label>
-                <select
-                  name="state"
-                  className="input-field"
-                  value={formData.state}
-                  onChange={handleChange}
-                >
-                  <option value="SA">South Australia</option>
-                  <option value="VIC">Victoria</option>
-                  <option value="NSW">New South Wales</option>
-                  <option value="QLD">Queensland</option>
-                  <option value="WA">Western Australia</option>
-                  <option value="TAS">Tasmania</option>
-                  <option value="NT">Northern Territory</option>
-                  <option value="ACT">ACT</option>
-                </select>
-              </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Contact Email *
+                    </label>
+                    <input
+                      type="email"
+                      name="contact_email"
+                      required
+                      className="input-field"
+                      value={formData.contact_email}
+                      onChange={handleChange}
+                      placeholder="info@yourmarket.com"
+                    />
+                  </div>
 
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Description
-                </label>
-                <textarea
-                  name="description"
-                  rows={4}
-                  className="input-field"
-                  value={formData.description}
-                  onChange={handleChange}
-                  placeholder="Describe your market, its atmosphere, and what makes it special..."
-                />
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Contact Phone
+                    </label>
+                    <input
+                      type="tel"
+                      name="contact_phone"
+                      className="input-field"
+                      value={formData.contact_phone}
+                      onChange={handleChange}
+                      placeholder="08 1234 5678"
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Website
+                    </label>
+                    <input
+                      type="url"
+                      name="website"
+                      className="input-field"
+                      value={formData.website}
+                      onChange={handleChange}
+                      placeholder="https://yourmarket.com"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Maximum Stalls
+                    </label>
+                    <input
+                      type="number"
+                      name="max_stalls"
+                      min="1"
+                      className="input-field"
+                      value={formData.max_stalls || ''}
+                      onChange={handleChange}
+                      placeholder="e.g. 50"
+                    />
+                  </div>
+
+                  <div className="flex items-center">
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="waiting_list_enabled"
+                        checked={formData.waiting_list_enabled}
+                        onChange={handleChange}
+                        className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                      />
+                      <span className="ml-2 text-sm text-gray-700">
+                        Enable waiting list when full
+                      </span>
+                    </label>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
-          {/* Location Details */}
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              Location Details
-            </h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Street Address *
-                </label>
-                <input
-                  type="text"
-                  name="address"
-                  required
-                  className="input-field"
-                  value={formData.address}
-                  onChange={handleChange}
-                  placeholder="123 Market Street"
-                />
-              </div>
+          {/* Step 2: Requirements */}
+          {currentStep === 2 && (
+            <div className="bg-white rounded-lg shadow p-6">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                <Shield className="h-5 w-5 mr-2 text-primary-600" />
+                Stallholder Requirements
+              </h2>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Suburb *
-                </label>
-                <input
-                  type="text"
-                  name="suburb"
-                  required
-                  className="input-field"
-                  value={formData.suburb}
-                  onChange={handleChange}
-                  placeholder="Adelaide"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Postcode *
-                </label>
-                <input
-                  type="text"
-                  name="postcode"
-                  required
-                  pattern="[0-9]{4}"
-                  className="input-field"
-                  value={formData.postcode}
-                  onChange={handleChange}
-                  placeholder="5000"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Schedule & Operations */}
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-              <Calendar className="h-5 w-5 mr-2 text-primary-600" />
-              Schedule & Operations
-            </h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Frequency *
-                </label>
-                <select
-                  name="frequency"
-                  required
-                  className="input-field"
-                  value={formData.frequency}
-                  onChange={handleChange}
-                >
-                  <option value="">Select frequency</option>
-                  {frequencyOptions.map((freq) => (
-                    <option key={freq} value={freq}>
-                      {freq}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Operating Hours
-                </label>
-                <input
-                  type="text"
-                  name="operating_hours"
-                  className="input-field"
-                  value={formData.operating_hours}
-                  onChange={handleChange}
-                  placeholder="8:00 AM - 2:00 PM"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Contact Information */}
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              Contact Information
-            </h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Contact Email *
-                </label>
-                <input
-                  type="email"
-                  name="contact_email"
-                  required
-                  className="input-field"
-                  value={formData.contact_email}
-                  onChange={handleChange}
-                  placeholder="info@yourmarket.com"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Contact Phone
-                </label>
-                <input
-                  type="tel"
-                  name="contact_phone"
-                  className="input-field"
-                  value={formData.contact_phone}
-                  onChange={handleChange}
-                  placeholder="08 1234 5678"
-                />
-              </div>
-
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Website
-                </label>
-                <input
-                  type="url"
-                  name="website"
-                  className="input-field"
-                  value={formData.website}
-                  onChange={handleChange}
-                  placeholder="https://yourmarket.com"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Facilities */}
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              Facilities & Amenities
-            </h2>
-            
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {facilityOptions.map((facility) => (
-                <label key={facility} className="flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={formData.facilities.includes(facility)}
-                    onChange={() => handleFacilitiesChange(facility)}
-                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
-                  />
-                  <span className="ml-2 text-sm text-gray-700">{facility}</span>
-                </label>
-              ))}
-            </div>
-
-            <div className="mt-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Accessibility Notes
-              </label>
-              <textarea
-                name="accessibility_notes"
-                rows={3}
-                className="input-field"
-                value={formData.accessibility_notes}
-                onChange={handleChange}
-                placeholder="Describe accessibility features, parking, wheelchair access, etc."
+              <RequirementsBuilder
+                requirements={requirements}
+                onChange={setRequirements}
               />
             </div>
-          </div>
+          )}
 
-          {/* Pricing & Requirements */}
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-              <DollarSign className="h-5 w-5 mr-2 text-primary-600" />
-              Pricing & Requirements
-            </h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Stall Fee (per market day)
-                </label>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
-                  <input
-                    type="number"
-                    name="stall_fee"
-                    min="0"
-                    step="0.01"
-                    className="input-field pl-8"
-                    value={formData.stall_fee}
-                    onChange={handleChange}
-                    placeholder="50.00"
-                  />
-                </div>
+          {/* Step 3: Schedule */}
+          {currentStep === 3 && (
+            <div className="bg-white rounded-lg shadow p-6">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                <Calendar className="h-5 w-5 mr-2 text-primary-600" />
+                Market Schedule
+              </h2>
+
+              <ScheduleBuilder
+                schedules={schedules}
+                onChange={setSchedules}
+              />
+            </div>
+          )}
+
+          {/* Step 4: Details (Amenities & Fees) */}
+          {currentStep === 4 && (
+            <div className="space-y-6">
+              <div className="bg-white rounded-lg shadow p-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                  Facilities & Amenities
+                </h2>
+
+                <AmenitySelector
+                  selectedAmenities={selectedAmenities}
+                  onChange={setSelectedAmenities}
+                />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Application Fee
-                </label>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
-                  <input
-                    type="number"
-                    name="application_fee"
-                    min="0"
-                    step="0.01"
-                    className="input-field pl-8"
-                    value={formData.application_fee}
-                    onChange={handleChange}
-                    placeholder="10.00"
-                  />
-                </div>
-              </div>
+              <div className="bg-white rounded-lg shadow p-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                  <DollarSign className="h-5 w-5 mr-2 text-primary-600" />
+                  Pricing & Fees
+                </h2>
 
-              <div className="md:col-span-2">
-                <div className="space-y-4">
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      name="bond_required"
-                      checked={formData.bond_required}
-                      onChange={handleChange}
-                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
-                    />
-                    <span className="ml-2 text-sm text-gray-700">Bond Required</span>
-                  </label>
-
-                  {formData.bond_required && (
-                    <div className="ml-6">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Bond Amount
-                      </label>
-                      <div className="relative max-w-xs">
-                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
-                        <input
-                          type="number"
-                          name="bond_amount"
-                          min="0"
-                          step="0.01"
-                          className="input-field pl-8"
-                          value={formData.bond_amount}
-                          onChange={handleChange}
-                          placeholder="100.00"
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      name="insurance_required"
-                      checked={formData.insurance_required}
-                      onChange={handleChange}
-                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
-                    />
-                    <span className="ml-2 text-sm text-gray-700">Public Liability Insurance Required</span>
-                  </label>
-
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      name="power_available"
-                      checked={formData.power_available}
-                      onChange={handleChange}
-                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
-                    />
-                    <span className="ml-2 text-sm text-gray-700">Power Available for Stalls</span>
-                  </label>
-
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      name="parking_available"
-                      checked={formData.parking_available}
-                      onChange={handleChange}
-                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
-                    />
-                    <span className="ml-2 text-sm text-gray-700">Parking Available</span>
-                  </label>
-                </div>
+                <FeeBuilder
+                  fees={fees}
+                  onChange={setFees}
+                />
               </div>
             </div>
-          </div>
+          )}
 
-          {/* Submit Button */}
-          <div className="flex justify-end space-x-4">
+          {/* Navigation Buttons */}
+          <div className="flex justify-between">
             <button
               type="button"
-              onClick={() => navigate('/dashboard')}
-              className="btn-secondary"
+              onClick={prevStep}
+              className={`btn-secondary ${currentStep === 1 ? 'invisible' : ''}`}
               disabled={loading}
             >
-              Cancel
+              Previous
             </button>
-            <button
-              type="submit"
-              className="btn-primary flex items-center"
-              disabled={loading}
-            >
-              {loading ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Creating Market...
-                </>
+
+            <div className="flex space-x-4">
+              <button
+                type="button"
+                onClick={() => navigate('/dashboard')}
+                className="btn-secondary"
+                disabled={loading}
+              >
+                Cancel
+              </button>
+
+              {currentStep < steps.length ? (
+                <button
+                  type="button"
+                  onClick={nextStep}
+                  className="btn-primary"
+                  disabled={loading}
+                >
+                  Next
+                </button>
               ) : (
-                <>
-                  <Save className="h-4 w-4 mr-2" />
-                  Create Market
-                </>
+                <button
+                  type="submit"
+                  className="btn-primary flex items-center"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Creating Market...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-4 w-4 mr-2" />
+                      Create Market
+                    </>
+                  )}
+                </button>
               )}
-            </button>
+            </div>
           </div>
         </form>
       </div>

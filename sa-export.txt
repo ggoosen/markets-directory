@@ -1,0 +1,4573 @@
+SA MARKETS DIRECTORY - ui MODE (Dynamic)
+Generated: Wed Jun  4 08:18:53 UTC 2025
+Pattern-based file selection - automatically includes new files
+================================================================================
+
+📄 postcss.config.js
+================================================================================
+export default {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+}
+
+
+📄 src/App.css
+================================================================================
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+
+📄 src/components/auth/ProtectedRoute.jsx
+================================================================================
+// src/components/auth/ProtectedRoute.jsx
+import { Navigate, useLocation } from 'react-router-dom'
+import { useAuth } from '../../contexts/AuthContext'
+
+export default function ProtectedRoute({ children, requiredRole = null }) {
+  const { user, loading } = useAuth()
+  const location = useLocation()
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return <Navigate to="/login" state={{ from: location }} replace />
+  }
+
+  if (requiredRole && user.role !== requiredRole) {
+    return <Navigate to="/dashboard" replace />
+  }
+
+  return children
+}
+
+📄 src/components/layout/Footer.jsx
+================================================================================
+import { Link } from 'react-router-dom'
+import { MapPin, Mail, Phone, Facebook, Instagram, Twitter } from 'lucide-react'
+
+export default function Footer() {
+  return (
+    <footer className="bg-gray-900 text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Brand */}
+          <div className="col-span-1 md:col-span-2">
+            <div className="flex items-center space-x-2 mb-4">
+              <MapPin className="h-8 w-8 text-primary-400" />
+              <span className="text-xl font-bold">SA Markets Directory</span>
+            </div>
+            <p className="text-gray-300 mb-4 max-w-md">
+              Connecting communities through vibrant local markets across South Australia. 
+              Discover fresh produce, unique crafts, and local businesses in your area.
+            </p>
+            <div className="flex space-x-4">
+              <Facebook className="h-5 w-5 text-gray-400 hover:text-primary-400 cursor-pointer transition-colors" />
+              <Instagram className="h-5 w-5 text-gray-400 hover:text-primary-400 cursor-pointer transition-colors" />
+              <Twitter className="h-5 w-5 text-gray-400 hover:text-primary-400 cursor-pointer transition-colors" />
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+            <ul className="space-y-2">
+              <li><Link to="/markets" className="text-gray-300 hover:text-primary-400 transition-colors">Browse Markets</Link></li>
+              <li><Link to="/stallholders" className="text-gray-300 hover:text-primary-400 transition-colors">For Stallholders</Link></li>
+              <li><Link to="/organizers" className="text-gray-300 hover:text-primary-400 transition-colors">For Organizers</Link></li>
+              <li><Link to="/about" className="text-gray-300 hover:text-primary-400 transition-colors">About Us</Link></li>
+              <li><Link to="/contact" className="text-gray-300 hover:text-primary-400 transition-colors">Contact</Link></li>
+            </ul>
+          </div>
+
+          {/* Support */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Support</h3>
+            <ul className="space-y-2">
+              <li><Link to="/help" className="text-gray-300 hover:text-primary-400 transition-colors">Help Center</Link></li>
+              <li><Link to="/privacy" className="text-gray-300 hover:text-primary-400 transition-colors">Privacy Policy</Link></li>
+              <li><Link to="/terms" className="text-gray-300 hover:text-primary-400 transition-colors">Terms of Service</Link></li>
+              <li>
+                <div className="flex items-center space-x-2 text-gray-300">
+                  <Mail className="h-4 w-4" />
+                  <span>hello@samarkets.com.au</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <hr className="border-gray-800 my-8" />
+
+        <div className="flex flex-col md:flex-row justify-between items-center">
+          <p className="text-gray-400 text-sm">
+            © 2025 SA Markets Directory. All rights reserved.
+          </p>
+          <p className="text-gray-400 text-sm mt-2 md:mt-0">
+            Built with ❤️ for Australian communities
+          </p>
+        </div>
+      </div>
+    </footer>
+  )
+}
+
+
+📄 src/components/layout/Header.jsx
+================================================================================
+// src/components/layout/Header.jsx - Updated with Auth Integration
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { Menu, X, MapPin, User, LogOut, Settings } from 'lucide-react'
+import { useAuth } from '../../contexts/AuthContext'
+
+export default function Header() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
+  const { user, logout, isAuthenticated } = useAuth()
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    logout()
+    navigate('/')
+    setIsUserMenuOpen(false)
+  }
+
+  const getRoleDisplayName = (role) => {
+    switch(role) {
+      case 'stallholder': return 'Stallholder'
+      case 'organizer': return 'Organizer'
+      default: return 'Customer'
+    }
+  }
+
+  return (
+    <header className="bg-white shadow-sm border-b">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          {/* Logo */}
+          <Link to="/" className="flex items-center space-x-2">
+            <MapPin className="h-8 w-8 text-primary-600" />
+            <span className="text-xl font-bold text-gray-900">SA Markets</span>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex space-x-8">
+            <Link to="/markets" className="text-gray-700 hover:text-primary-600 transition-colors">
+              Browse Markets
+            </Link>
+            <Link to="/stallholders" className="text-gray-700 hover:text-primary-600 transition-colors">
+              For Stallholders
+            </Link>
+            <Link to="/organizers" className="text-gray-700 hover:text-primary-600 transition-colors">
+              For Organizers
+            </Link>
+            <Link to="/about" className="text-gray-700 hover:text-primary-600 transition-colors">
+              About
+            </Link>
+          </nav>
+
+          {/* Desktop Auth Section */}
+          <div className="hidden md:flex items-center space-x-4">
+            {isAuthenticated ? (
+              <div className="relative">
+                <button
+                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                  className="flex items-center space-x-2 text-gray-700 hover:text-primary-600 transition-colors"
+                >
+                  <div className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
+                    <User className="h-5 w-5 text-primary-600" />
+                  </div>
+                  <span className="font-medium">{user?.name || 'User'}</span>
+                </button>
+
+                {/* User Dropdown Menu */}
+                {isUserMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                    <div className="px-4 py-2 border-b border-gray-100">
+                      <p className="text-sm font-medium text-gray-900">{user?.name}</p>
+                      <p className="text-xs text-gray-500">{user?.email}</p>
+                      <span className="inline-block mt-1 px-2 py-1 text-xs bg-primary-100 text-primary-700 rounded-full">
+                        {getRoleDisplayName(user?.role)}
+                      </span>
+                    </div>
+                    
+                    <Link
+                      to="/dashboard"
+                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      onClick={() => setIsUserMenuOpen(false)}
+                    >
+                      <User className="h-4 w-4 mr-3" />
+                      Dashboard
+                    </Link>
+                    
+                    <Link
+                      to="/profile"
+                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      onClick={() => setIsUserMenuOpen(false)}
+                    >
+                      <Settings className="h-4 w-4 mr-3" />
+                      Profile Settings
+                    </Link>
+                    
+                    <hr className="my-1" />
+                    
+                    <button
+                      onClick={handleLogout}
+                      className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                    >
+                      <LogOut className="h-4 w-4 mr-3" />
+                      Sign Out
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <>
+                <Link to="/login" className="text-gray-700 hover:text-primary-600 transition-colors">
+                  Log In
+                </Link>
+                <Link to="/register" className="btn-primary">
+                  Sign Up
+                </Link>
+              </>
+            )}
+          </div>
+
+          {/* Mobile menu button */}
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="md:hidden p-2 rounded-md text-gray-700 hover:text-primary-600 hover:bg-gray-100"
+          >
+            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+        </div>
+
+        {/* Mobile Navigation */}
+        {isMenuOpen && (
+          <div className="md:hidden py-4 border-t">
+            <nav className="flex flex-col space-y-2">
+              <Link 
+                to="/markets" 
+                className="px-3 py-2 text-gray-700 hover:text-primary-600 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Browse Markets
+              </Link>
+              <Link 
+                to="/stallholders" 
+                className="px-3 py-2 text-gray-700 hover:text-primary-600 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                For Stallholders
+              </Link>
+              <Link 
+                to="/organizers" 
+                className="px-3 py-2 text-gray-700 hover:text-primary-600 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                For Organizers
+              </Link>
+              <Link 
+                to="/about" 
+                className="px-3 py-2 text-gray-700 hover:text-primary-600 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                About
+              </Link>
+              
+              <hr className="my-2" />
+              
+              {isAuthenticated ? (
+                <>
+                  <div className="px-3 py-2">
+                    <p className="text-sm font-medium text-gray-900">{user?.name}</p>
+                    <p className="text-xs text-gray-500">{getRoleDisplayName(user?.role)}</p>
+                  </div>
+                  <Link 
+                    to="/dashboard" 
+                    className="px-3 py-2 text-gray-700 hover:text-primary-600 transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Dashboard
+                  </Link>
+                  <Link 
+                    to="/profile" 
+                    className="px-3 py-2 text-gray-700 hover:text-primary-600 transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Profile Settings
+                  </Link>
+                  <button
+                    onClick={() => {
+                      handleLogout()
+                      setIsMenuOpen(false)
+                    }}
+                    className="px-3 py-2 text-left text-red-600 hover:text-red-500 transition-colors"
+                  >
+                    Sign Out
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link 
+                    to="/login" 
+                    className="px-3 py-2 text-gray-700 hover:text-primary-600 transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Log In
+                  </Link>
+                  <Link 
+                    to="/register" 
+                    className="px-3 py-2 btn-primary text-center mx-3"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Sign Up
+                  </Link>
+                </>
+              )}
+            </nav>
+          </div>
+        )}
+      </div>
+      
+      {/* Overlay for user menu */}
+      {isUserMenuOpen && (
+        <div 
+          className="fixed inset-0 z-40" 
+          onClick={() => setIsUserMenuOpen(false)}
+        />
+      )}
+    </header>
+  )
+}
+
+📄 src/components/layout/Layout.jsx
+================================================================================
+import Header from './Header'
+import Footer from './Footer'
+
+export default function Layout({ children }) {
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <main className="flex-grow">
+        {children}
+      </main>
+      <Footer />
+    </div>
+  )
+}
+
+
+📄 src/components/market/AddressInput.jsx
+================================================================================
+// src/components/market/AddressInput.jsx - Google Places Integration
+import { useState, useEffect, useRef } from 'react'
+import { MapPin, Search, CheckCircle } from 'lucide-react'
+
+export default function AddressInput({ 
+  address, 
+  suburb, 
+  state, 
+  postcode, 
+  latitude, 
+  longitude,
+  onAddressChange 
+}) {
+  const [inputValue, setInputValue] = useState(address || '')
+  const [suggestions, setSuggestions] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [isManualEntry, setIsManualEntry] = useState(false)
+  const [addressComponents, setAddressComponents] = useState({
+    address: address || '',
+    suburb: suburb || '',
+    state: state || 'SA',
+    postcode: postcode || '',
+    latitude: latitude || null,
+    longitude: longitude || null
+  })
+
+  const inputRef = useRef(null)
+  const autocompleteService = useRef(null)
+  const placesService = useRef(null)
+
+  useEffect(() => {
+    // Initialize Google Places API
+    if (window.google && window.google.maps) {
+      autocompleteService.current = new window.google.maps.places.AutocompleteService()
+      placesService.current = new window.google.maps.places.PlacesService(
+        document.createElement('div')
+      )
+    }
+  }, [])
+
+  useEffect(() => {
+    // Load Google Maps API if not already loaded
+    if (!window.google) {
+      const script = document.createElement('script')
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&libraries=places`
+      script.async = true
+      script.defer = true
+      script.onload = () => {
+        autocompleteService.current = new window.google.maps.places.AutocompleteService()
+        placesService.current = new window.google.maps.places.PlacesService(
+          document.createElement('div')
+        )
+      }
+      document.head.appendChild(script)
+    }
+  }, [])
+
+  const searchPlaces = async (query) => {
+    if (!autocompleteService.current || query.length < 3) {
+      setSuggestions([])
+      return
+    }
+
+    setLoading(true)
+    
+    const request = {
+      input: query,
+      componentRestrictions: { country: 'AU' },
+      types: ['address', 'establishment'],
+      fields: ['place_id', 'formatted_address', 'geometry', 'address_components']
+    }
+
+    autocompleteService.current.getPlacePredictions(request, (predictions, status) => {
+      setLoading(false)
+      if (status === window.google.maps.places.PlacesServiceStatus.OK && predictions) {
+        setSuggestions(predictions.slice(0, 5))
+      } else {
+        setSuggestions([])
+      }
+    })
+  }
+
+  const selectPlace = (placeId) => {
+    if (!placesService.current) return
+
+    const request = {
+      placeId: placeId,
+      fields: ['formatted_address', 'geometry', 'address_components']
+    }
+
+    placesService.current.getDetails(request, (place, status) => {
+      if (status === window.google.maps.places.PlacesServiceStatus.OK && place) {
+        parseGooglePlace(place)
+        setSuggestions([])
+      }
+    })
+  }
+
+  const parseGooglePlace = (place) => {
+    const components = place.address_components
+    let parsedAddress = {
+      address: '',
+      suburb: '',
+      state: 'SA',
+      postcode: '',
+      latitude: place.geometry?.location?.lat() || null,
+      longitude: place.geometry?.location?.lng() || null
+    }
+
+    // Extract street number and route for address
+    const streetNumber = components.find(c => c.types.includes('street_number'))?.long_name || ''
+    const route = components.find(c => c.types.includes('route'))?.long_name || ''
+    parsedAddress.address = `${streetNumber} ${route}`.trim()
+
+    // Extract suburb
+    const locality = components.find(c => 
+      c.types.includes('locality') || 
+      c.types.includes('sublocality') ||
+      c.types.includes('administrative_area_level_2')
+    )
+    parsedAddress.suburb = locality?.long_name || ''
+
+    // Extract state
+    const stateComponent = components.find(c => c.types.includes('administrative_area_level_1'))
+    if (stateComponent) {
+      const stateName = stateComponent.short_name
+      const stateMap = {
+        'NSW': 'NSW', 'VIC': 'VIC', 'QLD': 'QLD', 'SA': 'SA',
+        'WA': 'WA', 'TAS': 'TAS', 'NT': 'NT', 'ACT': 'ACT'
+      }
+      parsedAddress.state = stateMap[stateName] || 'SA'
+    }
+
+    // Extract postcode
+    const postcodeComponent = components.find(c => c.types.includes('postal_code'))
+    parsedAddress.postcode = postcodeComponent?.long_name || ''
+
+    setAddressComponents(parsedAddress)
+    setInputValue(place.formatted_address)
+    onAddressChange(parsedAddress)
+  }
+
+  const handleInputChange = (e) => {
+    const value = e.target.value
+    setInputValue(value)
+    
+    if (!isManualEntry) {
+      searchPlaces(value)
+    }
+  }
+
+  const handleManualEntry = () => {
+    setIsManualEntry(true)
+    setSuggestions([])
+    setInputValue('')
+  }
+
+  const handleManualChange = (field, value) => {
+    const updated = { ...addressComponents, [field]: value }
+    setAddressComponents(updated)
+    onAddressChange(updated)
+  }
+
+  const validateAustralianPostcode = (postcode) => {
+    return /^[0-9]{4}$/.test(postcode)
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <label className="block text-sm font-medium text-gray-700">
+          Market Address *
+        </label>
+        <button
+          type="button"
+          onClick={handleManualEntry}
+          className="text-sm text-primary-600 hover:text-primary-500"
+        >
+          Enter manually
+        </button>
+      </div>
+
+      {!isManualEntry ? (
+        /* Google Places Autocomplete */
+        <div className="relative">
+          <div className="relative">
+            <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            <input
+              ref={inputRef}
+              type="text"
+              value={inputValue}
+              onChange={handleInputChange}
+              placeholder="Start typing the market address..."
+              className="input-field pl-10 pr-10"
+              autoComplete="off"
+            />
+            {loading && (
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-600"></div>
+              </div>
+            )}
+          </div>
+
+          {/* Suggestions Dropdown */}
+          {suggestions.length > 0 && (
+            <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg">
+              {suggestions.map((suggestion) => (
+                <button
+                  key={suggestion.place_id}
+                  type="button"
+                  onClick={() => selectPlace(suggestion.place_id)}
+                  className="w-full px-4 py-3 text-left hover:bg-gray-50 border-b border-gray-100 last:border-b-0 first:rounded-t-lg last:rounded-b-lg"
+                >
+                  <div className="flex items-start">
+                    <MapPin className="h-4 w-4 text-gray-400 mt-1 mr-3 flex-shrink-0" />
+                    <div>
+                      <div className="font-medium text-gray-900 text-sm">
+                        {suggestion.structured_formatting?.main_text}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {suggestion.structured_formatting?.secondary_text}
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Address Confirmation */}
+          {addressComponents.address && !loading && (
+            <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+              <div className="flex items-start">
+                <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 mr-2 flex-shrink-0" />
+                <div className="text-sm">
+                  <div className="font-medium text-green-800">Address confirmed:</div>
+                  <div className="text-green-700">
+                    {addressComponents.address}<br />
+                    {addressComponents.suburb}, {addressComponents.state} {addressComponents.postcode}
+                  </div>
+                  {addressComponents.latitude && (
+                    <div className="text-xs text-green-600 mt-1">
+                      Coordinates: {addressComponents.latitude.toFixed(6)}, {addressComponents.longitude.toFixed(6)}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      ) : (
+        /* Manual Entry Form */
+        <div className="space-y-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
+          <div className="flex items-center justify-between">
+            <h4 className="font-medium text-gray-900">Manual Address Entry</h4>
+            <button
+              type="button"
+              onClick={() => setIsManualEntry(false)}
+              className="text-sm text-primary-600 hover:text-primary-500"
+            >
+              Use address lookup
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Street Address *
+              </label>
+              <input
+                type="text"
+                value={addressComponents.address}
+                onChange={(e) => handleManualChange('address', e.target.value)}
+                placeholder="123 Market Street"
+                className="input-field"
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Suburb *
+                </label>
+                <input
+                  type="text"
+                  value={addressComponents.suburb}
+                  onChange={(e) => handleManualChange('suburb', e.target.value)}
+                  placeholder="Adelaide"
+                  className="input-field"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  State *
+                </label>
+                <select
+                  value={addressComponents.state}
+                  onChange={(e) => handleManualChange('state', e.target.value)}
+                  className="input-field"
+                  required
+                >
+                  <option value="SA">South Australia</option>
+                  <option value="VIC">Victoria</option>
+                  <option value="NSW">New South Wales</option>
+                  <option value="QLD">Queensland</option>
+                  <option value="WA">Western Australia</option>
+                  <option value="TAS">Tasmania</option>
+                  <option value="NT">Northern Territory</option>
+                  <option value="ACT">ACT</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="w-32">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Postcode *
+              </label>
+              <input
+                type="text"
+                value={addressComponents.postcode}
+                onChange={(e) => handleManualChange('postcode', e.target.value)}
+                placeholder="5000"
+                pattern="[0-9]{4}"
+                maxLength="4"
+                className={`input-field ${
+                  addressComponents.postcode && !validateAustralianPostcode(addressComponents.postcode)
+                    ? 'border-red-300'
+                    : ''
+                }`}
+                required
+              />
+              {addressComponents.postcode && !validateAustralianPostcode(addressComponents.postcode) && (
+                <p className="mt-1 text-sm text-red-600">Please enter a valid 4-digit Australian postcode</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+📄 src/components/market/AmenitySelector.jsx
+================================================================================
+// src/components/market/AmenitySelector.jsx
+import { useState, useEffect } from 'react'
+import { Check, Plus, X } from 'lucide-react'
+
+export default function AmenitySelector({ 
+  selectedAmenities = [], 
+  onChange 
+}) {
+  const [amenityTypes, setAmenityTypes] = useState({})
+  const [loading, setLoading] = useState(true)
+  const [localSelected, setLocalSelected] = useState(selectedAmenities)
+
+  useEffect(() => {
+    fetchAmenityTypes()
+  }, [])
+
+  useEffect(() => {
+    setLocalSelected(selectedAmenities)
+  }, [selectedAmenities])
+
+  const fetchAmenityTypes = async () => {
+    try {
+      setLoading(true)
+      // Import marketService here to avoid circular imports
+      const marketService = (await import('../../services/marketService.js')).default
+      const types = await marketService.getAmenityTypes()
+      setAmenityTypes(types)
+    } catch (error) {
+      console.error('Error fetching amenity types:', error)
+      // Use fallback data if API fails
+      setAmenityTypes({
+        facility: [
+          { id: 'toilets', name: 'Toilets', category: 'facility' },
+          { id: 'parking', name: 'Parking', category: 'facility' },
+          { id: 'atm', name: 'ATM', category: 'facility' },
+          { id: 'food_court', name: 'Food Court', category: 'facility' },
+          { id: 'seating', name: 'Seating', category: 'facility' },
+          { id: 'shelter', name: 'Shelter/Cover', category: 'facility' }
+        ],
+        service: [
+          { id: 'entertainment', name: 'Entertainment', category: 'service' },
+          { id: 'security', name: 'Security', category: 'service' },
+          { id: 'storage', name: 'Storage', category: 'service' },
+          { id: 'loading_dock', name: 'Loading Dock', category: 'service' }
+        ],
+        accessibility: [
+          { id: 'wheelchair_access', name: 'Wheelchair Access', category: 'accessibility' },
+          { id: 'accessible_toilets', name: 'Accessible Toilets', category: 'accessibility' },
+          { id: 'accessible_parking', name: 'Accessible Parking', category: 'accessibility' }
+        ]
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleAmenityToggle = (amenityType) => {
+    const isSelected = localSelected.some(a => a.amenity_type === amenityType.id)
+    
+    let updated
+    if (isSelected) {
+      // Remove amenity
+      updated = localSelected.filter(a => a.amenity_type !== amenityType.id)
+    } else {
+      // Add amenity
+      updated = [...localSelected, {
+        amenity_type: amenityType.id,
+        name: amenityType.name,
+        category: amenityType.category,
+        notes: ''
+      }]
+    }
+
+    setLocalSelected(updated)
+    onChange(updated)
+  }
+
+  const handleNotesChange = (amenityTypeId, notes) => {
+    const updated = localSelected.map(amenity => 
+      amenity.amenity_type === amenityTypeId 
+        ? { ...amenity, notes }
+        : amenity
+    )
+    setLocalSelected(updated)
+    onChange(updated)
+  }
+
+  const categoryLabels = {
+    facility: 'Facilities',
+    service: 'Services', 
+    accessibility: 'Accessibility'
+  }
+
+  const categoryIcons = {
+    facility: '🏢',
+    service: '🛠️',
+    accessibility: '♿'
+  }
+
+  if (loading) {
+    return (
+      <div className="space-y-4">
+        <label className="block text-sm font-medium text-gray-700">
+          Amenities & Facilities
+        </label>
+        <div className="animate-pulse">
+          <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="h-8 bg-gray-200 rounded"></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Amenities & Facilities
+        </label>
+        <p className="text-sm text-gray-500 mb-4">
+          Select the amenities and facilities available at your market
+        </p>
+      </div>
+
+      {Object.entries(amenityTypes).map(([category, amenities]) => (
+        <div key={category} className="space-y-3">
+          <h3 className="text-lg font-medium text-gray-900 flex items-center">
+            <span className="mr-2">{categoryIcons[category]}</span>
+            {categoryLabels[category]}
+          </h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {amenities.map((amenity) => {
+              const isSelected = localSelected.some(a => a.amenity_type === amenity.id)
+              
+              return (
+                <div key={amenity.id} className="space-y-2">
+                  <button
+                    type="button"
+                    onClick={() => handleAmenityToggle(amenity)}
+                    className={`w-full p-3 border-2 rounded-lg text-left transition-colors ${
+                      isSelected
+                        ? 'border-primary-500 bg-primary-50 text-primary-700'
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium">{amenity.name}</span>
+                      {isSelected && (
+                        <Check className="h-4 w-4 text-primary-600" />
+                      )}
+                    </div>
+                  </button>
+
+                  {isSelected && (
+                    <div className="ml-2">
+                      <input
+                        type="text"
+                        placeholder="Optional notes..."
+                        value={localSelected.find(a => a.amenity_type === amenity.id)?.notes || ''}
+                        onChange={(e) => handleNotesChange(amenity.id, e.target.value)}
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500"
+                      />
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      ))}
+
+      {localSelected.length > 0 && (
+        <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+          <h4 className="font-medium text-green-800 mb-2">
+            Selected Amenities ({localSelected.length})
+          </h4>
+          <div className="space-y-1">
+            {localSelected.map((amenity) => (
+              <div key={amenity.amenity_type} className="flex items-center justify-between text-sm text-green-700">
+                <span>{amenity.name}</span>
+                <button
+                  type="button"
+                  onClick={() => handleAmenityToggle({ id: amenity.amenity_type })}
+                  className="text-green-600 hover:text-green-800"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+📄 src/components/market/FeeBuilder.jsx
+================================================================================
+// src/components/market/FeeBuilder.jsx
+import { useState, useEffect } from 'react'
+import { Plus, X, DollarSign } from 'lucide-react'
+
+export default function FeeBuilder({ 
+  fees = [], 
+  onChange 
+}) {
+  const [localFees, setLocalFees] = useState(fees)
+
+  useEffect(() => {
+    setLocalFees(fees)
+  }, [fees])
+
+  const feeTypes = [
+    { value: 'stall_fee', label: 'Stall Fee', description: 'Regular stall rental fee' },
+    { value: 'application_fee', label: 'Application Fee', description: 'One-time application processing fee' },
+    { value: 'bond', label: 'Security Bond', description: 'Refundable security deposit' },
+    { value: 'power_fee', label: 'Power Fee', description: 'Electricity usage fee' },
+    { value: 'parking_fee', label: 'Parking Fee', description: 'Reserved parking space fee' },
+    { value: 'storage_fee', label: 'Storage Fee', description: 'Storage space rental' },
+    { value: 'insurance_fee', label: 'Insurance Fee', description: 'Insurance coverage fee' },
+    { value: 'other', label: 'Other Fee', description: 'Custom fee type' }
+  ]
+
+  const frequencies = [
+    { value: 'per_day', label: 'Per Day' },
+    { value: 'per_week', label: 'Per Week' },
+    { value: 'per_month', label: 'Per Month' },
+    { value: 'per_event', label: 'Per Event' },
+    { value: 'one_time', label: 'One Time' },
+    { value: 'annual', label: 'Annual' }
+  ]
+
+  const addFee = () => {
+    const newFee = {
+      id: Date.now(), // Temporary ID for local state
+      fee_type: 'stall_fee',
+      amount: '',
+      frequency: 'per_day',
+      description: '',
+      required: true
+    }
+
+    const updated = [...localFees, newFee]
+    setLocalFees(updated)
+    onChange(updated)
+  }
+
+  const removeFee = (index) => {
+    const updated = localFees.filter((_, i) => i !== index)
+    setLocalFees(updated)
+    onChange(updated)
+  }
+
+  const updateFee = (index, field, value) => {
+    const updated = localFees.map((fee, i) => 
+      i === index ? { ...fee, [field]: value } : fee
+    )
+    setLocalFees(updated)
+    onChange(updated)
+  }
+
+  const formatCurrency = (amount) => {
+    if (!amount) return '$0.00'
+    return `$${parseFloat(amount).toFixed(2)}`
+  }
+
+  const calculateTotal = () => {
+    return localFees
+      .filter(fee => fee.frequency === 'per_day' || fee.frequency === 'per_week')
+      .reduce((total, fee) => total + (parseFloat(fee.amount) || 0), 0)
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Market Fees & Pricing
+          </label>
+          <p className="text-sm text-gray-500 mt-1">
+            Define the fees stallholders will pay to participate in your market.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={addFee}
+          className="flex items-center px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          Add Fee
+        </button>
+      </div>
+
+      {localFees.length === 0 ? (
+        <div className="text-center py-8 bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg">
+          <DollarSign className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 mb-2">No Fees Defined</h3>
+          <p className="text-gray-500 mb-4">Add fees to let stallholders know your pricing structure.</p>
+          <button
+            type="button"
+            onClick={addFee}
+            className="btn-primary"
+          >
+            Add Your First Fee
+          </button>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {localFees.map((fee, index) => (
+            <div key={fee.id || index} className="border border-gray-200 rounded-lg p-6 bg-gray-50">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-medium text-gray-900">
+                  Fee {index + 1}
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => removeFee(index)}
+                  className="text-red-500 hover:text-red-700"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {/* Fee Type */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Fee Type
+                  </label>
+                  <select
+                    value={fee.fee_type}
+                    onChange={(e) => updateFee(index, 'fee_type', e.target.value)}
+                    className="input-field"
+                  >
+                    {feeTypes.map((type) => (
+                      <option key={type.value} value={type.value}>
+                        {type.label}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {feeTypes.find(t => t.value === fee.fee_type)?.description}
+                  </p>
+                </div>
+
+                {/* Amount */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Amount
+                  </label>
+                  <div className="relative">
+                    <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={fee.amount}
+                      onChange={(e) => updateFee(index, 'amount', e.target.value)}
+                      className="input-field pl-10"
+                      placeholder="0.00"
+                    />
+                  </div>
+                </div>
+
+                {/* Frequency */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Frequency
+                  </label>
+                  <select
+                    value={fee.frequency}
+                    onChange={(e) => updateFee(index, 'frequency', e.target.value)}
+                    className="input-field"
+                  >
+                    {frequencies.map((freq) => (
+                      <option key={freq.value} value={freq.value}>
+                        {freq.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Custom Description (for 'other' fee type) */}
+                {fee.fee_type === 'other' && (
+                  <div className="lg:col-span-3">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Custom Fee Description
+                    </label>
+                    <input
+                      type="text"
+                      value={fee.description}
+                      onChange={(e) => updateFee(index, 'description', e.target.value)}
+                      className="input-field"
+                      placeholder="Describe this custom fee..."
+                    />
+                  </div>
+                )}
+
+                {/* Required/Optional */}
+                <div className="lg:col-span-3">
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={fee.required}
+                      onChange={(e) => updateFee(index, 'required', e.target.checked)}
+                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                    />
+                    <span className="ml-2 text-sm text-gray-700">
+                      This fee is required for all stallholders
+                    </span>
+                  </label>
+                </div>
+              </div>
+
+              {/* Fee Preview */}
+              {fee.amount && (
+                <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded">
+                  <div className="flex items-center text-blue-800">
+                    <DollarSign className="h-4 w-4 mr-2" />
+                    <div className="text-sm">
+                      <strong>Preview:</strong> {formatCurrency(fee.amount)} {fee.frequency.replace('_', ' ')}
+                      {!fee.required && <span className="text-blue-600 ml-2">(Optional)</span>}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+
+          {/* Fee Summary */}
+          {localFees.length > 0 && (
+            <div className="bg-white border border-gray-200 rounded-lg p-6">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Fee Summary</h3>
+              
+              <div className="space-y-2">
+                {localFees.map((fee, index) => (
+                  <div key={fee.id || index} className="flex justify-between items-center text-sm">
+                    <span className="text-gray-600">
+                      {feeTypes.find(t => t.value === fee.fee_type)?.label}
+                      {fee.fee_type === 'other' && fee.description && ` (${fee.description})`}
+                    </span>
+                    <span className="font-medium">
+                      {formatCurrency(fee.amount)} {fee.frequency.replace('_', ' ')}
+                      {!fee.required && <span className="text-gray-500 ml-1">(opt)</span>}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {calculateTotal() > 0 && (
+                <div className="mt-4 pt-4 border-t border-gray-200">
+                  <div className="flex justify-between items-center font-medium">
+                    <span>Regular Fees Total (per day/week):</span>
+                    <span className="text-lg text-primary-600">
+                      {formatCurrency(calculateTotal())}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+📄 src/components/market/FlexibleFrequencySelector.jsx
+================================================================================
+// src/components/market/FlexibleFrequencySelector.jsx
+import { useState, useEffect } from 'react'
+import { Calendar, Plus, X, Clock, Repeat } from 'lucide-react'
+
+export default function FlexibleFrequencySelector({ 
+  frequencyType, 
+  frequencyValue, 
+  frequencyDetails, 
+  onChange 
+}) {
+  const [localType, setLocalType] = useState(frequencyType || 'regular')
+  const [localValue, setLocalValue] = useState(frequencyValue || '')
+  const [localDetails, setLocalDetails] = useState(frequencyDetails || {})
+
+  useEffect(() => {
+    onChange({
+      frequencyType: localType,
+      frequencyValue: localValue,
+      frequencyDetails: localDetails
+    })
+  }, [localType, localValue, localDetails, onChange])
+
+  const handleTypeChange = (type) => {
+    setLocalType(type)
+    setLocalValue('')
+    setLocalDetails({})
+  }
+
+  const regularOptions = [
+    { value: 'daily', label: 'Daily', description: 'Every day' },
+    { value: 'weekly', label: 'Weekly', description: 'Every week' },
+    { value: 'fortnightly', label: 'Fortnightly', description: 'Every 2 weeks' },
+    { value: 'monthly', label: 'Monthly', description: 'Every month' }
+  ]
+
+  const weekDays = [
+    { value: 0, short: 'Sun', full: 'Sunday' },
+    { value: 1, short: 'Mon', full: 'Monday' },
+    { value: 2, short: 'Tue', full: 'Tuesday' },
+    { value: 3, short: 'Wed', full: 'Wednesday' },
+    { value: 4, short: 'Thu', full: 'Thursday' },
+    { value: 5, short: 'Fri', full: 'Friday' },
+    { value: 6, short: 'Sat', full: 'Saturday' }
+  ]
+
+  const weekNumbers = [
+    { value: 1, label: '1st' },
+    { value: 2, label: '2nd' },
+    { value: 3, label: '3rd' },
+    { value: 4, label: '4th' },
+    { value: -1, label: 'Last' }
+  ]
+
+  const handleMonthlyPatternChange = (weekNumber, dayOfWeek) => {
+    setLocalDetails({
+      weekNumber,
+      dayOfWeek,
+      description: `${weekNumbers.find(w => w.value === weekNumber)?.label} ${weekDays.find(d => d.value === dayOfWeek)?.full}`
+    })
+    setLocalValue(`${weekNumbers.find(w => w.value === weekNumber)?.label} ${weekDays.find(d => d.value === dayOfWeek)?.full}`)
+  }
+
+  const handleWeeklyPatternChange = (selectedDays) => {
+    const dayNames = selectedDays.map(day => weekDays.find(d => d.value === day)?.short).join(', ')
+    setLocalDetails({ selectedDays, dayNames })
+    setLocalValue(`Weekly: ${dayNames}`)
+  }
+
+  const addCustomDate = () => {
+    const newDate = prompt('Enter date (YYYY-MM-DD):')
+    if (newDate && /^\d{4}-\d{2}-\d{2}$/.test(newDate)) {
+      const currentDates = localDetails.customDates || []
+      setLocalDetails({
+        ...localDetails,
+        customDates: [...currentDates, newDate].sort()
+      })
+      setLocalValue(`${currentDates.length + 1} custom dates`)
+    }
+  }
+
+  const removeCustomDate = (dateToRemove) => {
+    const updatedDates = (localDetails.customDates || []).filter(date => date !== dateToRemove)
+    setLocalDetails({
+      ...localDetails,
+      customDates: updatedDates
+    })
+    setLocalValue(`${updatedDates.length} custom dates`)
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Type Selection */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-3">
+          How often does your market run?
+        </label>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+          <button
+            type="button"
+            onClick={() => handleTypeChange('regular')}
+            className={`p-4 border-2 rounded-lg text-left transition-colors ${
+              localType === 'regular'
+                ? 'border-primary-500 bg-primary-50 text-primary-700'
+                : 'border-gray-200 hover:border-gray-300'
+            }`}
+          >
+            <div className="flex items-center">
+              <Repeat className="h-5 w-5 mr-3" />
+              <div>
+                <div className="font-medium">Regular</div>
+                <div className="text-sm text-gray-500">Daily, weekly, etc.</div>
+              </div>
+            </div>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => handleTypeChange('weekly_pattern')}
+            className={`p-4 border-2 rounded-lg text-left transition-colors ${
+              localType === 'weekly_pattern'
+                ? 'border-primary-500 bg-primary-50 text-primary-700'
+                : 'border-gray-200 hover:border-gray-300'
+            }`}
+          >
+            <div className="flex items-center">
+              <Calendar className="h-5 w-5 mr-3" />
+              <div>
+                <div className="font-medium">Weekly Pattern</div>
+                <div className="text-sm text-gray-500">Specific days each week</div>
+              </div>
+            </div>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => handleTypeChange('monthly_pattern')}
+            className={`p-4 border-2 rounded-lg text-left transition-colors ${
+              localType === 'monthly_pattern'
+                ? 'border-primary-500 bg-primary-50 text-primary-700'
+                : 'border-gray-200 hover:border-gray-300'
+            }`}
+          >
+            <div className="flex items-center">
+              <Calendar className="h-5 w-5 mr-3" />
+              <div>
+                <div className="font-medium">Monthly Pattern</div>
+                <div className="text-sm text-gray-500">3rd Wednesday, etc.</div>
+              </div>
+            </div>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => handleTypeChange('custom_dates')}
+            className={`p-4 border-2 rounded-lg text-left transition-colors ${
+              localType === 'custom_dates'
+                ? 'border-primary-500 bg-primary-50 text-primary-700'
+                : 'border-gray-200 hover:border-gray-300'
+            }`}
+          >
+            <div className="flex items-center">
+              <Clock className="h-5 w-5 mr-3" />
+              <div>
+                <div className="font-medium">Custom Dates</div>
+                <div className="text-sm text-gray-500">Specific dates only</div>
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      {/* Regular Pattern */}
+      {localType === 'regular' && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-3">
+            Select frequency
+          </label>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {regularOptions.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => setLocalValue(option.value)}
+                className={`p-3 border-2 rounded-lg text-center transition-colors ${
+                  localValue === option.value
+                    ? 'border-primary-500 bg-primary-50 text-primary-700'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <div className="font-medium">{option.label}</div>
+                <div className="text-xs text-gray-500">{option.description}</div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Weekly Pattern */}
+      {localType === 'weekly_pattern' && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-3">
+            Select which days of the week
+          </label>
+          <div className="grid grid-cols-7 gap-2">
+            {weekDays.map((day) => {
+              const selectedDays = localDetails.selectedDays || []
+              const isSelected = selectedDays.includes(day.value)
+              
+              return (
+                <button
+                  key={day.value}
+                  type="button"
+                  onClick={() => {
+                    const newSelected = isSelected 
+                      ? selectedDays.filter(d => d !== day.value)
+                      : [...selectedDays, day.value].sort()
+                    handleWeeklyPatternChange(newSelected)
+                  }}
+                  className={`p-3 border-2 rounded-lg text-center transition-colors ${
+                    isSelected
+                      ? 'border-primary-500 bg-primary-50 text-primary-700'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <div className="font-medium text-sm">{day.short}</div>
+                </button>
+              )
+            })}
+          </div>
+          {localDetails.selectedDays?.length > 0 && (
+            <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded text-sm text-green-700">
+              Market runs: {localDetails.dayNames}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Monthly Pattern */}
+      {localType === 'monthly_pattern' && (
+        <div className="space-y-4">
+          <label className="block text-sm font-medium text-gray-700">
+            Select which week and day of the month
+          </label>
+          
+          <div>
+            <div className="text-sm text-gray-600 mb-2">Week of the month:</div>
+            <div className="grid grid-cols-5 gap-2">
+              {weekNumbers.map((week) => (
+                <button
+                  key={week.value}
+                  type="button"
+                  onClick={() => handleMonthlyPatternChange(week.value, localDetails.dayOfWeek || 0)}
+                  className={`p-2 border-2 rounded-lg text-center transition-colors ${
+                    localDetails.weekNumber === week.value
+                      ? 'border-primary-500 bg-primary-50 text-primary-700'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <div className="font-medium text-sm">{week.label}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <div className="text-sm text-gray-600 mb-2">Day of the week:</div>
+            <div className="grid grid-cols-7 gap-2">
+              {weekDays.map((day) => (
+                <button
+                  key={day.value}
+                  type="button"
+                  onClick={() => handleMonthlyPatternChange(localDetails.weekNumber || 1, day.value)}
+                  className={`p-2 border-2 rounded-lg text-center transition-colors ${
+                    localDetails.dayOfWeek === day.value
+                      ? 'border-primary-500 bg-primary-50 text-primary-700'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <div className="font-medium text-sm">{day.short}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {localDetails.description && (
+            <div className="p-2 bg-green-50 border border-green-200 rounded text-sm text-green-700">
+              Market runs: {localDetails.description} of each month
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Custom Dates */}
+      {localType === 'custom_dates' && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <label className="block text-sm font-medium text-gray-700">
+              Custom market dates
+            </label>
+            <button
+              type="button"
+              onClick={addCustomDate}
+              className="flex items-center px-3 py-1 text-sm bg-primary-600 text-white rounded hover:bg-primary-700"
+            >
+              <Plus className="h-4 w-4 mr-1" />
+              Add Date
+            </button>
+          </div>
+
+          {localDetails.customDates?.length > 0 ? (
+            <div className="space-y-2">
+              {localDetails.customDates.map((date, index) => (
+                <div key={index} className="flex items-center justify-between p-2 border border-gray-200 rounded">
+                  <span className="text-sm">{new Date(date).toLocaleDateString()}</span>
+                  <button
+                    type="button"
+                    onClick={() => removeCustomDate(date)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="p-4 bg-gray-50 border border-gray-200 rounded text-center text-gray-500">
+              No custom dates added yet. Click "Add Date" to specify when your market runs.
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Current Selection Summary */}
+      {localValue && (
+        <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="flex items-center text-blue-800">
+            <Calendar className="h-5 w-5 mr-2" />
+            <div>
+              <div className="font-medium">Market Schedule:</div>
+              <div className="text-sm">{localValue}</div>
+              {localType === 'custom_dates' && localDetails.customDates?.length > 0 && (
+                <div className="text-xs mt-1">
+                  Next date: {new Date(Math.min(...localDetails.customDates.map(d => new Date(d)))).toLocaleDateString()}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+📄 src/components/market/RequirementsBuilder.jsx
+================================================================================
+// src/components/market/RequirementsBuilder.jsx
+import { useState, useEffect } from 'react'
+import { Plus, X, Shield, Building, Users, Package, Truck, Award, FileText } from 'lucide-react'
+import marketService from '../../services/marketService'
+
+export default function RequirementsBuilder({ 
+  requirements = [], 
+  onChange 
+}) {
+  const [availableTypes, setAvailableTypes] = useState({ types: [], grouped: {} })
+  const [loading, setLoading] = useState(true)
+  const [localRequirements, setLocalRequirements] = useState(requirements)
+  const [showAddModal, setShowAddModal] = useState(false)
+
+  useEffect(() => {
+    fetchRequirementTypes()
+  }, [])
+
+  useEffect(() => {
+    setLocalRequirements(requirements)
+  }, [requirements])
+
+  const fetchRequirementTypes = async () => {
+    try {
+      setLoading(true)
+      const result = await marketService.getRequirementTypes()
+      setAvailableTypes(result)
+      console.log('Requirement types loaded:', result)
+    } catch (error) {
+      console.error('Error fetching requirement types:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const addRequirement = (typeId) => {
+    const type = availableTypes.types.find(t => t.id === typeId)
+    if (!type) return
+
+    const newReq = {
+      id: Date.now(),
+      requirement_type: typeId,
+      type_info: type,
+      is_required: true,
+      requirement_value: getDefaultValue(type.value_type, type.value_options),
+      custom_notes: '',
+      priority: 'required'
+    }
+
+    const updated = [...localRequirements, newReq]
+    setLocalRequirements(updated)
+    onChange(updated)
+    setShowAddModal(false)
+  }
+
+  const updateRequirement = (index, field, value) => {
+    const updated = localRequirements.map((req, i) => 
+      i === index ? { ...req, [field]: value } : req
+    )
+    setLocalRequirements(updated)
+    onChange(updated)
+  }
+
+  const removeRequirement = (index) => {
+    const updated = localRequirements.filter((_, i) => i !== index)
+    setLocalRequirements(updated)
+    onChange(updated)
+  }
+
+  const getDefaultValue = (valueType, options = {}) => {
+    switch (valueType) {
+      case 'boolean': 
+        return { required: true }
+      case 'amount': 
+        return { 
+          minimum_amount: options.suggested_amounts?.[1] || options.min_amount || 5000000,
+          currency: options.currency || 'AUD'
+        }
+      case 'text': 
+        return { value: '' }
+      case 'select': 
+        return { selected: options.options?.[0]?.value || '' }
+      case 'number':
+        return { value: options.default_value || options.min_value || 0 }
+      case 'date':
+        return { required_by: null }
+      default: 
+        return {}
+    }
+  }
+
+  const getCategoryIcon = (category) => {
+    switch (category) {
+      case 'legal': return Shield
+      case 'business': return Building
+      case 'membership': return Users
+      case 'product': return Package
+      case 'logistics': return Truck
+      case 'experience': return Award
+      case 'certification': return FileText
+      default: return Shield
+    }
+  }
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-AU', {
+      style: 'currency',
+      currency: 'AUD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(amount)
+  }
+
+  const renderValueInput = (requirement, index) => {
+    const type = requirement.type_info
+    const value = requirement.requirement_value || {}
+
+    switch (type.value_type) {
+      case 'amount':
+        return (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Minimum Amount Required
+            </label>
+            <div className="space-y-2">
+              {type.value_options?.suggested_amounts && (
+                <div className="grid grid-cols-2 gap-2">
+                  {type.value_options.suggested_amounts.map((amount) => (
+                    <button
+                      key={amount}
+                      type="button"
+                      onClick={() => updateRequirement(index, 'requirement_value', {
+                        ...value,
+                        minimum_amount: amount
+                      })}
+                      className={`p-2 text-sm border rounded transition-colors ${
+                        value.minimum_amount === amount
+                          ? 'border-primary-500 bg-primary-50 text-primary-700'
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                    >
+                      {formatCurrency(amount)}
+                    </button>
+                  ))}
+                </div>
+              )}
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                <input
+                  type="number"
+                  value={value.minimum_amount || ''}
+                  onChange={(e) => updateRequirement(index, 'requirement_value', {
+                    ...value,
+                    minimum_amount: parseInt(e.target.value) || 0
+                  })}
+                  className="input-field pl-8"
+                  placeholder="5000000"
+                />
+              </div>
+            </div>
+          </div>
+        )
+
+      case 'select':
+        return (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Required Option
+            </label>
+            <select
+              value={value.selected || ''}
+              onChange={(e) => updateRequirement(index, 'requirement_value', {
+                ...value,
+                selected: e.target.value
+              })}
+              className="input-field"
+            >
+              <option value="">Select option</option>
+              {type.value_options?.options?.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        )
+
+      case 'number':
+        return (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              {type.value_options?.unit ? `Value (${type.value_options.unit})` : 'Value'}
+            </label>
+            <input
+              type="number"
+              value={value.value || ''}
+              onChange={(e) => updateRequirement(index, 'requirement_value', {
+                ...value,
+                value: parseInt(e.target.value) || 0
+              })}
+              className="input-field"
+              min={type.value_options?.min_value}
+              max={type.value_options?.max_value}
+              placeholder={type.value_options?.default_value?.toString() || '0'}
+            />
+          </div>
+        )
+
+      case 'text':
+        return (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Requirement Details
+            </label>
+            <input
+              type="text"
+              value={value.value || ''}
+              onChange={(e) => updateRequirement(index, 'requirement_value', {
+                ...value,
+                value: e.target.value
+              })}
+              className="input-field"
+              placeholder="Enter requirement details..."
+            />
+          </div>
+        )
+
+      case 'boolean':
+      default:
+        return (
+          <div className="flex items-center">
+            <span className="text-sm text-gray-600">
+              This requirement is either met or not met by stallholders.
+            </span>
+          </div>
+        )
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="space-y-4">
+        <div className="animate-pulse">
+          <div className="h-6 bg-gray-200 rounded w-1/3 mb-4"></div>
+          <div className="space-y-3">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="h-20 bg-gray-200 rounded"></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-lg font-medium text-gray-900">Stallholder Requirements</h3>
+          <p className="text-sm text-gray-500 mt-1">
+            Define what stallholders need to qualify for your market. These requirements help ensure quality and compliance.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setShowAddModal(true)}
+          className="flex items-center px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          Add Requirement
+        </button>
+      </div>
+
+      {/* Current Requirements */}
+      {localRequirements.length > 0 ? (
+        <div className="space-y-4">
+          {localRequirements.map((requirement, index) => {
+            const Icon = getCategoryIcon(requirement.type_info?.category)
+            
+            return (
+              <div key={requirement.id || index} className="border border-gray-200 rounded-lg p-6 bg-gray-50">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-start">
+                    <Icon className="h-5 w-5 text-gray-400 mr-3 mt-0.5" />
+                    <div>
+                      <h4 className="font-medium text-gray-900">
+                        {requirement.type_info?.name || 'Unknown Requirement'}
+                      </h4>
+                      <p className="text-sm text-gray-500 mt-1">
+                        {requirement.type_info?.description}
+                      </p>
+                      {requirement.type_info?.help_text && (
+                        <p className="text-xs text-blue-600 mt-1">
+                          💡 {requirement.type_info.help_text}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => removeRequirement(index)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Priority Level */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Priority Level
+                    </label>
+                    <select
+                      value={requirement.priority || 'required'}
+                      onChange={(e) => {
+                        const priority = e.target.value
+                        updateRequirement(index, 'priority', priority)
+                        updateRequirement(index, 'is_required', priority === 'required')
+                      }}
+                      className="input-field"
+                    >
+                      <option value="required">Required - Must have</option>
+                      <option value="preferred">Preferred - Bonus points</option>
+                      <option value="optional">Optional - Nice to have</option>
+                    </select>
+                  </div>
+
+                  {/* Value Input */}
+                  <div className="md:col-span-2">
+                    {renderValueInput(requirement, index)}
+                  </div>
+
+                  {/* Custom Notes */}
+                  <div className="md:col-span-3">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Additional Notes (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      value={requirement.custom_notes || ''}
+                      onChange={(e) => updateRequirement(index, 'custom_notes', e.target.value)}
+                      className="input-field"
+                      placeholder="Any additional context or special conditions..."
+                    />
+                  </div>
+                </div>
+
+                {/* Requirement Preview */}
+                <div className="mt-4 p-3 bg-white border border-gray-200 rounded text-sm">
+                  <span className="font-medium text-gray-900">Preview: </span>
+                  <span className={`${
+                    requirement.priority === 'required' ? 'text-red-600' :
+                    requirement.priority === 'preferred' ? 'text-yellow-600' : 'text-gray-600'
+                  }`}>
+                    {requirement.priority === 'required' ? '🔴 Required' :
+                     requirement.priority === 'preferred' ? '🟡 Preferred' : '🟢 Optional'}
+                  </span>
+                  <span className="text-gray-700"> - {requirement.type_info?.name}</span>
+                  {requirement.custom_notes && (
+                    <span className="text-gray-600"> ({requirement.custom_notes})</span>
+                  )}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      ) : (
+        <div className="text-center py-8 bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg">
+          <Shield className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 mb-2">No Requirements Yet</h3>
+          <p className="text-gray-500 mb-4">
+            Add requirements to help stallholders understand what they need to participate in your market.
+          </p>
+          <button
+            type="button"
+            onClick={() => setShowAddModal(true)}
+            className="btn-primary"
+          >
+            Add Your First Requirement
+          </button>
+        </div>
+      )}
+
+      {/* Add Requirement Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-4xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-lg font-medium text-gray-900">Add New Requirement</h3>
+              <button
+                onClick={() => setShowAddModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
+            <div className="space-y-6">
+              {Object.entries(availableTypes.grouped).map(([category, types]) => (
+                <div key={category}>
+                  <h4 className="text-md font-medium text-gray-900 mb-3 capitalize flex items-center">
+                    {React.createElement(getCategoryIcon(category), { className: "h-4 w-4 mr-2" })}
+                    {category} Requirements
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {types.map((type) => {
+                      const Icon = getCategoryIcon(category)
+                      const isAdded = localRequirements.some(req => req.requirement_type === type.id)
+                      
+                      return (
+                        <button
+                          key={type.id}
+                          type="button"
+                          onClick={() => addRequirement(type.id)}
+                          disabled={isAdded}
+                          className={`p-4 text-left border rounded-lg transition-colors ${
+                            isAdded 
+                              ? 'border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed'
+                              : 'border-gray-200 hover:border-primary-300 hover:bg-primary-50'
+                          }`}
+                        >
+                          <div className="flex items-start">
+                            <Icon className="h-5 w-5 mr-3 mt-0.5 flex-shrink-0" />
+                            <div className="flex-1">
+                              <div className="font-medium text-sm">{type.name}</div>
+                              <div className="text-xs text-gray-500 mt-1">{type.description}</div>
+                              {type.help_text && (
+                                <div className="text-xs text-blue-600 mt-1">💡 {type.help_text}</div>
+                              )}
+                              {isAdded && (
+                                <div className="text-xs text-green-600 mt-1">✓ Already added</div>
+                              )}
+                            </div>
+                          </div>
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-6 flex justify-end">
+              <button
+                onClick={() => setShowAddModal(false)}
+                className="btn-secondary"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Requirements Summary */}
+      {localRequirements.length > 0 && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <h4 className="font-medium text-blue-900 mb-2">Requirements Summary</h4>
+          <div className="grid grid-cols-3 gap-4 text-sm text-blue-800">
+            <div>
+              <span className="font-medium">Required:</span> {localRequirements.filter(r => r.priority === 'required').length}
+            </div>
+            <div>
+              <span className="font-medium">Preferred:</span> {localRequirements.filter(r => r.priority === 'preferred').length}
+            </div>
+            <div>
+              <span className="font-medium">Optional:</span> {localRequirements.filter(r => r.priority === 'optional').length}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+📄 src/components/market/ScheduleBuilder.jsx
+================================================================================
+// src/components/market/ScheduleBuilder.jsx
+import { useState, useEffect } from 'react'
+import { Plus, X, Calendar, Clock } from 'lucide-react'
+
+export default function ScheduleBuilder({ 
+  schedules = [], 
+  onChange 
+}) {
+  const [localSchedules, setLocalSchedules] = useState(schedules)
+
+  useEffect(() => {
+    setLocalSchedules(schedules)
+  }, [schedules])
+
+  const scheduleTypes = [
+    { value: 'regular', label: 'Regular Schedule', description: 'Repeating weekly/monthly pattern' },
+    { value: 'weekly_pattern', label: 'Weekly Pattern', description: 'Specific days each week' },
+    { value: 'monthly_pattern', label: 'Monthly Pattern', description: 'Specific week/day each month' },
+    { value: 'custom_dates', label: 'Custom Dates', description: 'Specific dates only' },
+    { value: 'seasonal', label: 'Seasonal', description: 'Seasonal operating period' }
+  ]
+
+  const addSchedule = () => {
+    const newSchedule = {
+      id: Date.now(), // Temporary ID for local state
+      schedule_type: 'regular',
+      start_time: '08:00',
+      end_time: '14:00',
+      start_date: null,
+      end_date: null,
+      pattern_data: {},
+      notes: ''
+    }
+
+    const updated = [...localSchedules, newSchedule]
+    setLocalSchedules(updated)
+    onChange(updated)
+  }
+
+  const removeSchedule = (index) => {
+    const updated = localSchedules.filter((_, i) => i !== index)
+    setLocalSchedules(updated)
+    onChange(updated)
+  }
+
+  const updateSchedule = (index, field, value) => {
+    const updated = localSchedules.map((schedule, i) => 
+      i === index ? { ...schedule, [field]: value } : schedule
+    )
+    setLocalSchedules(updated)
+    onChange(updated)
+  }
+
+  const formatTime = (time) => {
+    if (!time) return ''
+    const [hours, minutes] = time.split(':')
+    const hour = parseInt(hours)
+    const ampm = hour >= 12 ? 'PM' : 'AM'
+    const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour
+    return `${displayHour}:${minutes} ${ampm}`
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Market Schedule
+          </label>
+          <p className="text-sm text-gray-500 mt-1">
+            Define when your market operates. You can add multiple schedule patterns.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={addSchedule}
+          className="flex items-center px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          Add Schedule
+        </button>
+      </div>
+
+      {localSchedules.length === 0 ? (
+        <div className="text-center py-8 bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg">
+          <Calendar className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 mb-2">No Schedule Defined</h3>
+          <p className="text-gray-500 mb-4">Add a schedule to let stallholders know when your market operates.</p>
+          <button
+            type="button"
+            onClick={addSchedule}
+            className="btn-primary"
+          >
+            Add Your First Schedule
+          </button>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {localSchedules.map((schedule, index) => (
+            <div key={schedule.id || index} className="border border-gray-200 rounded-lg p-6 bg-gray-50">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-medium text-gray-900">
+                  Schedule {index + 1}
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => removeSchedule(index)}
+                  className="text-red-500 hover:text-red-700"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Schedule Type */}
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Schedule Type
+                  </label>
+                  <select
+                    value={schedule.schedule_type}
+                    onChange={(e) => updateSchedule(index, 'schedule_type', e.target.value)}
+                    className="input-field"
+                  >
+                    {scheduleTypes.map((type) => (
+                      <option key={type.value} value={type.value}>
+                        {type.label} - {type.description}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Operating Hours */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Start Time
+                  </label>
+                  <div className="relative">
+                    <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                    <input
+                      type="time"
+                      value={schedule.start_time}
+                      onChange={(e) => updateSchedule(index, 'start_time', e.target.value)}
+                      className="input-field pl-10"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    End Time
+                  </label>
+                  <div className="relative">
+                    <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                    <input
+                      type="time"
+                      value={schedule.end_time}
+                      onChange={(e) => updateSchedule(index, 'end_time', e.target.value)}
+                      className="input-field pl-10"
+                    />
+                  </div>
+                </div>
+
+                {/* Date Range (for seasonal or custom dates) */}
+                {(schedule.schedule_type === 'seasonal' || schedule.schedule_type === 'custom_dates') && (
+                  <>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Start Date
+                      </label>
+                      <input
+                        type="date"
+                        value={schedule.start_date || ''}
+                        onChange={(e) => updateSchedule(index, 'start_date', e.target.value)}
+                        className="input-field"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        End Date
+                      </label>
+                      <input
+                        type="date"
+                        value={schedule.end_date || ''}
+                        onChange={(e) => updateSchedule(index, 'end_date', e.target.value)}
+                        className="input-field"
+                      />
+                    </div>
+                  </>
+                )}
+
+                {/* Pattern Configuration */}
+                {schedule.schedule_type === 'regular' && (
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Frequency
+                    </label>
+                    <select
+                      value={schedule.pattern_data?.frequency || 'weekly'}
+                      onChange={(e) => updateSchedule(index, 'pattern_data', { 
+                        ...schedule.pattern_data, 
+                        frequency: e.target.value 
+                      })}
+                      className="input-field"
+                    >
+                      <option value="daily">Daily</option>
+                      <option value="weekly">Weekly</option>
+                      <option value="fortnightly">Fortnightly</option>
+                      <option value="monthly">Monthly</option>
+                    </select>
+                  </div>
+                )}
+
+                {schedule.schedule_type === 'weekly_pattern' && (
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Operating Days
+                    </label>
+                    <div className="grid grid-cols-7 gap-2">
+                      {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, dayIndex) => {
+                        const selectedDays = schedule.pattern_data?.selected_days || []
+                        const isSelected = selectedDays.includes(dayIndex)
+                        
+                        return (
+                          <button
+                            key={day}
+                            type="button"
+                            onClick={() => {
+                              const newSelectedDays = isSelected
+                                ? selectedDays.filter(d => d !== dayIndex)
+                                : [...selectedDays, dayIndex].sort()
+                              
+                              updateSchedule(index, 'pattern_data', {
+                                ...schedule.pattern_data,
+                                selected_days: newSelectedDays
+                              })
+                            }}
+                            className={`p-2 text-sm border-2 rounded ${
+                              isSelected
+                                ? 'border-primary-500 bg-primary-50 text-primary-700'
+                                : 'border-gray-200 hover:border-gray-300'
+                            }`}
+                          >
+                            {day}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Notes */}
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Notes (Optional)
+                  </label>
+                  <textarea
+                    value={schedule.notes}
+                    onChange={(e) => updateSchedule(index, 'notes', e.target.value)}
+                    rows={2}
+                    className="input-field"
+                    placeholder="Additional schedule details, exceptions, etc."
+                  />
+                </div>
+              </div>
+
+              {/* Schedule Preview */}
+              {schedule.start_time && schedule.end_time && (
+                <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded">
+                  <div className="flex items-center text-blue-800">
+                    <Calendar className="h-4 w-4 mr-2" />
+                    <div className="text-sm">
+                      <strong>Preview:</strong> {formatTime(schedule.start_time)} - {formatTime(schedule.end_time)}
+                      {schedule.schedule_type === 'weekly_pattern' && schedule.pattern_data?.selected_days?.length > 0 && (
+                        <span className="ml-2">
+                          ({schedule.pattern_data.selected_days.map(d => ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d]).join(', ')})
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+📄 src/components/market/TimeInput.jsx
+================================================================================
+// src/components/market/TimeInput.jsx
+import { useState } from 'react'
+import { Clock } from 'lucide-react'
+
+export default function TimeInput({ 
+  startTime, 
+  endTime, 
+  onStartTimeChange, 
+  onEndTimeChange,
+  error 
+}) {
+  const [timeError, setTimeError] = useState('')
+
+  const validateTimes = (start, end) => {
+    if (!start || !end) return ''
+    
+    const startMinutes = timeToMinutes(start)
+    const endMinutes = timeToMinutes(end)
+    
+    if (startMinutes >= endMinutes) {
+      return 'End time must be after start time'
+    }
+    
+    const duration = endMinutes - startMinutes
+    if (duration < 60) { // Less than 1 hour
+      return 'Market should run for at least 1 hour'
+    }
+    
+    if (duration > 720) { // More than 12 hours
+      return 'Market duration seems unusually long'
+    }
+    
+    return ''
+  }
+
+  const timeToMinutes = (time) => {
+    const [hours, minutes] = time.split(':').map(Number)
+    return hours * 60 + minutes
+  }
+
+  const formatDuration = (start, end) => {
+    if (!start || !end) return ''
+    
+    const startMinutes = timeToMinutes(start)
+    const endMinutes = timeToMinutes(end)
+    const duration = endMinutes - startMinutes
+    
+    const hours = Math.floor(duration / 60)
+    const mins = duration % 60
+    
+    return `${hours}h ${mins > 0 ? `${mins}m` : ''}`
+  }
+
+  const handleStartChange = (value) => {
+    onStartTimeChange(value)
+    const error = validateTimes(value, endTime)
+    setTimeError(error)
+  }
+
+  const handleEndChange = (value) => {
+    onEndTimeChange(value)
+    const error = validateTimes(startTime, value)
+    setTimeError(error)
+  }
+
+  const quickTimeOptions = [
+    { label: 'Early Morning', start: '06:00', end: '10:00' },
+    { label: 'Morning Market', start: '08:00', end: '12:00' },
+    { label: 'Weekend Market', start: '08:00', end: '14:00' },
+    { label: 'Afternoon Market', start: '14:00', end: '18:00' },
+    { label: 'Evening Market', start: '16:00', end: '20:00' }
+  ]
+
+  const setQuickTime = (start, end) => {
+    handleStartChange(start)
+    handleEndChange(end)
+  }
+
+  return (
+    <div className="space-y-4">
+      <label className="block text-sm font-medium text-gray-700">
+        Operating Hours *
+      </label>
+
+      {/* Quick Time Presets */}
+      <div>
+        <div className="text-sm text-gray-600 mb-2">Quick presets:</div>
+        <div className="flex flex-wrap gap-2">
+          {quickTimeOptions.map((option) => (
+            <button
+              key={option.label}
+              type="button"
+              onClick={() => setQuickTime(option.start, option.end)}
+              className="px-3 py-1 text-xs border border-gray-300 rounded-full hover:bg-gray-50 transition-colors"
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Time Inputs */}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            Start Time
+          </label>
+          <div className="relative">
+            <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <input
+              type="time"
+              value={startTime}
+              onChange={(e) => handleStartChange(e.target.value)}
+              className={`input-field pl-10 ${timeError ? 'border-red-300' : ''}`}
+              required
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            End Time
+          </label>
+          <div className="relative">
+            <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <input
+              type="time"
+              value={endTime}
+              onChange={(e) => handleEndChange(e.target.value)}
+              className={`input-field pl-10 ${timeError ? 'border-red-300' : ''}`}
+              required
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Duration Display */}
+      {startTime && endTime && !timeError && (
+        <div className="p-2 bg-green-50 border border-green-200 rounded text-sm text-green-700">
+          Duration: {formatDuration(startTime, endTime)}
+        </div>
+      )}
+
+      {/* Error Display */}
+      {(timeError || error) && (
+        <div className="text-sm text-red-600">
+          {timeError || error}
+        </div>
+      )}
+    </div>
+  )
+}
+
+📄 src/index.css
+================================================================================
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+  }
+  
+  .btn-secondary {
+    @apply bg-secondary-500 hover:bg-secondary-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+  }
+  
+  .card {
+    @apply bg-white rounded-lg shadow-md border border-gray-200 p-6;
+  }
+  
+  .input-field {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent;
+  }
+}
+
+
+📄 src/pages/CreateMarket.jsx
+================================================================================
+// src/pages/CreateMarket.jsx - Complete with Requirements System
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Save, ArrowLeft, MapPin, Clock, Calendar, DollarSign, Shield, Settings } from 'lucide-react'
+import { useAuth } from '../contexts/AuthContext'
+import marketService from '../services/marketService'
+import AddressInput from '../components/market/AddressInput'
+import AmenitySelector from '../components/market/AmenitySelector'
+import ScheduleBuilder from '../components/market/ScheduleBuilder'
+import FeeBuilder from '../components/market/FeeBuilder'
+import RequirementsBuilder from '../components/market/RequirementsBuilder'
+
+export default function CreateMarket() {
+  const [loading, setLoading] = useState(false)
+  const [categories, setCategories] = useState([])
+  const [error, setError] = useState(null)
+  const [currentStep, setCurrentStep] = useState(1)
+
+  // Main market data
+  const [formData, setFormData] = useState({
+    name: '',
+    category: '',
+    description: '',
+    address: '',
+    suburb: '',
+    state: 'SA',
+    postcode: '',
+    latitude: null,
+    longitude: null,
+    contact_email: '',
+    contact_phone: '',
+    website: '',
+    venue_type: '',
+    max_stalls: null,
+    waiting_list_enabled: false
+  })
+
+  // Normalized data
+  const [requirements, setRequirements] = useState([])
+  const [selectedAmenities, setSelectedAmenities] = useState([])
+  const [schedules, setSchedules] = useState([])
+  const [fees, setFees] = useState([])
+
+  const { user } = useAuth()
+  const navigate = useNavigate()
+
+  const steps = [
+    { id: 1, name: 'Basic Info', icon: MapPin },
+    { id: 2, name: 'Requirements', icon: Shield },
+    { id: 3, name: 'Schedule', icon: Calendar },
+    { id: 4, name: 'Details', icon: Settings }
+  ]
+
+  // Redirect if not organizer
+  useEffect(() => {
+    if (user && user.role !== 'organizer') {
+      navigate('/dashboard')
+    }
+  }, [user, navigate])
+
+  useEffect(() => {
+    fetchCategories()
+  }, [])
+
+  const fetchCategories = async () => {
+    try {
+      const categoriesData = await marketService.getCategories()
+      setCategories(categoriesData)
+    } catch (error) {
+      console.error('Error fetching categories:', error)
+    }
+  }
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }))
+  }
+
+  const handleAddressChange = (addressData) => {
+    setFormData(prev => ({
+      ...prev,
+      address: addressData.address,
+      suburb: addressData.suburb,
+      state: addressData.state,
+      postcode: addressData.postcode,
+      latitude: addressData.latitude,
+      longitude: addressData.longitude
+    }))
+  }
+
+  const createSlug = (name) => {
+    return name
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .trim()
+  }
+
+  const validateStep = (step) => {
+    const errors = []
+
+    switch (step) {
+      case 1: // Basic Info
+        if (!formData.name.trim()) errors.push('Market name is required')
+        if (!formData.category) errors.push('Market category is required')
+        if (!formData.address.trim()) errors.push('Address is required')
+        if (!formData.suburb.trim()) errors.push('Suburb is required')
+        if (!formData.postcode.trim()) errors.push('Postcode is required')
+        if (!formData.contact_email.trim()) errors.push('Contact email is required')
+        break
+      
+      case 2: // Requirements - no validation needed, optional
+        break
+      
+      case 3: // Schedule
+        if (schedules.length === 0) {
+          errors.push('At least one schedule is required')
+        }
+        schedules.forEach((schedule, index) => {
+          if (!schedule.start_time) errors.push(`Schedule ${index + 1}: Start time is required`)
+          if (!schedule.end_time) errors.push(`Schedule ${index + 1}: End time is required`)
+          if (schedule.start_time >= schedule.end_time) {
+            errors.push(`Schedule ${index + 1}: End time must be after start time`)
+          }
+        })
+        break
+      
+      case 4: // Details - validate fees
+        fees.forEach((fee, index) => {
+          if (!fee.amount || parseFloat(fee.amount) < 0) {
+            errors.push(`Fee ${index + 1}: Valid amount is required`)
+          }
+          if (!fee.fee_name) {
+            errors.push(`Fee ${index + 1}: Fee name is required`)
+          }
+        })
+        break
+    }
+
+    return errors
+  }
+
+  const nextStep = () => {
+    const errors = validateStep(currentStep)
+    if (errors.length > 0) {
+      setError(errors.join(', '))
+      return
+    }
+    
+    setError(null)
+    if (currentStep < steps.length) {
+      setCurrentStep(currentStep + 1)
+    }
+  }
+
+  const prevStep = () => {
+    setError(null)
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1)
+    }
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    setError(null)
+
+    // Validate all steps
+    for (let step = 1; step <= steps.length; step++) {
+      const stepErrors = validateStep(step)
+      if (stepErrors.length > 0) {
+        setError(`Step ${step}: ${stepErrors.join(', ')}`)
+        setCurrentStep(step)
+        setLoading(false)
+        return
+      }
+    }
+
+    try {
+      // Prepare market data
+      const marketData = {
+        name: formData.name,
+        slug: createSlug(formData.name),
+        category: formData.category,
+        organizer: user.id,
+        description: formData.description || '',
+        address: formData.address,
+        suburb: formData.suburb,
+        state: formData.state,
+        postcode: formData.postcode,
+        latitude: formData.latitude,
+        longitude: formData.longitude,
+        venue_type: formData.venue_type || null,
+        contact_email: formData.contact_email,
+        contact_phone: formData.contact_phone || '',
+        website: formData.website || '',
+        max_stalls: formData.max_stalls ? parseInt(formData.max_stalls) : null,
+        waiting_list_enabled: formData.waiting_list_enabled,
+        active: true
+      }
+
+      console.log('=== CREATING COMPREHENSIVE MARKET ===')
+      console.log('Market Data:', marketData)
+      console.log('Requirements:', requirements)
+      console.log('Amenities:', selectedAmenities)
+      console.log('Schedules:', schedules)
+      console.log('Fees:', fees)
+
+      const result = await marketService.createMarketWithDetails(
+        marketData,
+        requirements,
+        selectedAmenities,
+        schedules,
+        fees
+      )
+
+      console.log('Market created successfully:', result)
+
+      // Show success message with summary
+      const summary = {
+        market: result.market.name,
+        requirements: result.requirements?.length || 0,
+        amenities: result.amenities?.length || 0,
+        schedules: result.schedules?.length || 0,
+        fees: result.fees?.length || 0
+      }
+
+      console.log('Creation summary:', summary)
+
+      navigate(`/markets/${result.market.slug}`)
+    } catch (err) {
+      console.error('=== ERROR CREATING MARKET ===')
+      console.error('Error:', err)
+      
+      if (err.response?.data) {
+        console.error('Detailed errors:', err.response.data)
+        Object.entries(err.response.data).forEach(([field, error]) => {
+          console.error(`❌ Field "${field}" error:`, error)
+        })
+      }
+
+      setError(err.message || 'Failed to create market')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (user && user.role !== 'organizer') {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Access Restricted</h2>
+          <p className="text-gray-600">Only market organizers can create markets.</p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="mb-8">
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="flex items-center text-primary-600 hover:text-primary-500 mb-4"
+          >
+            <ArrowLeft className="h-5 w-5 mr-2" />
+            Back to Dashboard
+          </button>
+          <h1 className="text-3xl font-bold text-gray-900">Create New Market</h1>
+          <p className="text-gray-600 mt-2">
+            Set up your market listing to attract stallholders and customers
+          </p>
+        </div>
+
+        {/* Step Indicator */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between">
+            {steps.map((step, index) => {
+              const Icon = step.icon
+              const isActive = currentStep === step.id
+              const isCompleted = currentStep > step.id
+              
+              return (
+                <div key={step.id} className="flex items-center">
+                  <div className={`flex items-center justify-center w-10 h-10 rounded-full ${
+                    isCompleted 
+                      ? 'bg-primary-600 text-white'
+                      : isActive 
+                        ? 'bg-primary-100 text-primary-600 border-2 border-primary-600'
+                        : 'bg-gray-200 text-gray-400'
+                  }`}>
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <div className="ml-3">
+                    <div className={`text-sm font-medium ${
+                      isActive ? 'text-primary-600' : isCompleted ? 'text-gray-900' : 'text-gray-400'
+                    }`}>
+                      {step.name}
+                    </div>
+                  </div>
+                  {index < steps.length - 1 && (
+                    <div className={`w-12 h-0.5 mx-4 ${
+                      isCompleted ? 'bg-primary-600' : 'bg-gray-200'
+                    }`} />
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+              {error}
+            </div>
+          )}
+
+          {/* Step 1: Basic Information */}
+          {currentStep === 1 && (
+            <div className="space-y-6">
+              <div className="bg-white rounded-lg shadow p-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                  <MapPin className="h-5 w-5 mr-2 text-primary-600" />
+                  Basic Information
+                </h2>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Market Name *
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      required
+                      className="input-field"
+                      value={formData.name}
+                      onChange={handleChange}
+                      placeholder="e.g. Adelaide Central Market"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Category *
+                    </label>
+                    <select
+                      name="category"
+                      required
+                      className="input-field"
+                      value={formData.category}
+                      onChange={handleChange}
+                    >
+                      <option value="">Select a category</option>
+                      {categories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Venue Type
+                    </label>
+                    <select
+                      name="venue_type"
+                      className="input-field"
+                      value={formData.venue_type}
+                      onChange={handleChange}
+                    >
+                      <option value="">Select venue type</option>
+                      <option value="outdoor">Outdoor</option>
+                      <option value="indoor">Indoor</option>
+                      <option value="covered">Covered</option>
+                      <option value="mixed">Mixed</option>
+                    </select>
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Description
+                    </label>
+                    <textarea
+                      name="description"
+                      rows={4}
+                      className="input-field"
+                      value={formData.description}
+                      onChange={handleChange}
+                      placeholder="Describe your market, its atmosphere, and what makes it special..."
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow p-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                  Location Details
+                </h2>
+                
+                <AddressInput
+                  address={formData.address}
+                  suburb={formData.suburb}
+                  state={formData.state}
+                  postcode={formData.postcode}
+                  latitude={formData.latitude}
+                  longitude={formData.longitude}
+                  onAddressChange={handleAddressChange}
+                />
+              </div>
+
+              <div className="bg-white rounded-lg shadow p-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                  Contact Information
+                </h2>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Contact Email *
+                    </label>
+                    <input
+                      type="email"
+                      name="contact_email"
+                      required
+                      className="input-field"
+                      value={formData.contact_email}
+                      onChange={handleChange}
+                      placeholder="info@yourmarket.com"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Contact Phone
+                    </label>
+                    <input
+                      type="tel"
+                      name="contact_phone"
+                      className="input-field"
+                      value={formData.contact_phone}
+                      onChange={handleChange}
+                      placeholder="08 1234 5678"
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Website
+                    </label>
+                    <input
+                      type="url"
+                      name="website"
+                      className="input-field"
+                      value={formData.website}
+                      onChange={handleChange}
+                      placeholder="https://yourmarket.com"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Maximum Stalls
+                    </label>
+                    <input
+                      type="number"
+                      name="max_stalls"
+                      min="1"
+                      className="input-field"
+                      value={formData.max_stalls || ''}
+                      onChange={handleChange}
+                      placeholder="e.g. 50"
+                    />
+                  </div>
+
+                  <div className="flex items-center">
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="waiting_list_enabled"
+                        checked={formData.waiting_list_enabled}
+                        onChange={handleChange}
+                        className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                      />
+                      <span className="ml-2 text-sm text-gray-700">
+                        Enable waiting list when full
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Step 2: Requirements */}
+          {currentStep === 2 && (
+            <div className="bg-white rounded-lg shadow p-6">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                <Shield className="h-5 w-5 mr-2 text-primary-600" />
+                Stallholder Requirements
+              </h2>
+              
+              <RequirementsBuilder
+                requirements={requirements}
+                onChange={setRequirements}
+              />
+            </div>
+          )}
+
+          {/* Step 3: Schedule */}
+          {currentStep === 3 && (
+            <div className="bg-white rounded-lg shadow p-6">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                <Calendar className="h-5 w-5 mr-2 text-primary-600" />
+                Market Schedule
+              </h2>
+              
+              <ScheduleBuilder
+                schedules={schedules}
+                onChange={setSchedules}
+              />
+            </div>
+          )}
+
+          {/* Step 4: Details (Amenities & Fees) */}
+          {currentStep === 4 && (
+            <div className="space-y-6">
+              <div className="bg-white rounded-lg shadow p-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                  Facilities & Amenities
+                </h2>
+                
+                <AmenitySelector
+                  selectedAmenities={selectedAmenities}
+                  onChange={setSelectedAmenities}
+                />
+              </div>
+
+              <div className="bg-white rounded-lg shadow p-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                  <DollarSign className="h-5 w-5 mr-2 text-primary-600" />
+                  Pricing & Fees
+                </h2>
+                
+                <FeeBuilder
+                  fees={fees}
+                  onChange={setFees}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Navigation Buttons */}
+          <div className="flex justify-between">
+            <button
+              type="button"
+              onClick={prevStep}
+              className={`btn-secondary ${currentStep === 1 ? 'invisible' : ''}`}
+              disabled={loading}
+            >
+              Previous
+            </button>
+
+            <div className="flex space-x-4">
+              <button
+                type="button"
+                onClick={() => navigate('/dashboard')}
+                className="btn-secondary"
+                disabled={loading}
+              >
+                Cancel
+              </button>
+
+              {currentStep < steps.length ? (
+                <button
+                  type="button"
+                  onClick={nextStep}
+                  className="btn-primary"
+                  disabled={loading}
+                >
+                  Next
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  className="btn-primary flex items-center"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Creating Market...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-4 w-4 mr-2" />
+                      Create Market
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+📄 src/pages/Dashboard.jsx
+================================================================================
+// src/pages/Dashboard.jsx - Fixed Role Detection
+import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import { User, MapPin, ShoppingBag, BarChart3, Plus, Calendar, Users } from 'lucide-react'
+import { useAuth } from '../contexts/AuthContext'
+
+export default function Dashboard() {
+  const { user, loading } = useAuth()
+
+  // Debug: Let's see what user object looks like
+  useEffect(() => {
+    console.log('Dashboard - Current user:', user)
+    console.log('Dashboard - User role:', user?.role)
+  }, [user])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600">Please log in to access your dashboard.</p>
+          <Link to="/login" className="btn-primary mt-4">
+            Log In
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
+  const renderRoleSpecificContent = () => {
+    console.log('Rendering content for role:', user.role) // Debug log
+    
+    switch (user.role) {
+      case 'stallholder':
+        return <StallholderDashboard user={user} />
+      case 'organizer':
+        return <OrganizerDashboard user={user} />
+      case 'customer':
+      default:
+        return <CustomerDashboard user={user} />
+    }
+  }
+
+  const getRoleDisplayName = (role) => {
+    switch(role) {
+      case 'stallholder': return 'Stallholder'
+      case 'organizer': return 'Market Organizer'
+      case 'customer': return 'Customer'
+      default: return 'User'
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Welcome back, {user.name}!
+          </h1>
+          <div className="flex items-center space-x-4">
+            <p className="text-gray-600">
+              {user.role === 'stallholder' && 'Manage your stallholder profile and applications'}
+              {user.role === 'organizer' && 'Manage your markets and stallholder applications'}
+              {(user.role === 'customer' || !user.role) && 'Discover and save your favorite markets'}
+            </p>
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
+              {getRoleDisplayName(user.role)}
+            </span>
+          </div>
+        </div>
+
+        {/* Debug Info (remove this after testing) */}
+        <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <h3 className="text-sm font-medium text-blue-800 mb-2">Debug Info:</h3>
+          <p className="text-xs text-blue-600">User ID: {user.id}</p>
+          <p className="text-xs text-blue-600">User Role: {user.role || 'undefined'}</p>
+          <p className="text-xs text-blue-600">User Email: {user.email}</p>
+        </div>
+
+        {renderRoleSpecificContent()}
+      </div>
+    </div>
+  )
+}
+
+// Customer Dashboard Component
+const CustomerDashboard = ({ user }) => {
+  return (
+    <div>
+      <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+        <p className="text-green-800 font-medium">✅ Customer Dashboard Loaded</p>
+      </div>
+
+      {/* Quick Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="card">
+          <div className="flex items-center">
+            <div className="bg-primary-100 rounded-lg p-3">
+              <MapPin className="h-6 w-6 text-primary-600" />
+            </div>
+            <div className="ml-4">
+              <p className="text-2xl font-bold text-gray-900">12</p>
+              <p className="text-gray-600">Favorite Markets</p>
+            </div>
+          </div>
+        </div>
+        <div className="card">
+          <div className="flex items-center">
+            <div className="bg-secondary-100 rounded-lg p-3">
+              <Calendar className="h-6 w-6 text-secondary-600" />
+            </div>
+            <div className="ml-4">
+              <p className="text-2xl font-bold text-gray-900">3</p>
+              <p className="text-gray-600">This Weekend</p>
+            </div>
+          </div>
+        </div>
+        <div className="card">
+          <div className="flex items-center">
+            <div className="bg-green-100 rounded-lg p-3">
+              <User className="h-6 w-6 text-green-600" />
+            </div>
+            <div className="ml-4">
+              <p className="text-2xl font-bold text-gray-900">Free</p>
+              <p className="text-gray-600">Current Plan</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="bg-white rounded-lg shadow p-6">
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Link to="/markets" className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+            <MapPin className="h-8 w-8 text-primary-600 mr-4" />
+            <div>
+              <h3 className="font-medium text-gray-900">Browse Markets</h3>
+              <p className="text-sm text-gray-600">Find new markets in your area</p>
+            </div>
+          </Link>
+          <Link to="/register?role=stallholder" className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+            <ShoppingBag className="h-8 w-8 text-secondary-600 mr-4" />
+            <div>
+              <h3 className="font-medium text-gray-900">Become a Stallholder</h3>
+              <p className="text-sm text-gray-600">Start selling at local markets</p>
+            </div>
+          </Link>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Stallholder Dashboard Component
+const StallholderDashboard = ({ user }) => {
+  return (
+    <div>
+      <div className="mb-4 p-4 bg-purple-50 border border-purple-200 rounded-lg">
+        <p className="text-purple-800 font-medium">✅ Stallholder Dashboard Loaded</p>
+      </div>
+
+      {/* Quick Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="card">
+          <div className="flex items-center">
+            <div className="bg-primary-100 rounded-lg p-3">
+              <ShoppingBag className="h-6 w-6 text-primary-600" />
+            </div>
+            <div className="ml-4">
+              <p className="text-2xl font-bold text-gray-900">5</p>
+              <p className="text-gray-600">Active Applications</p>
+            </div>
+          </div>
+        </div>
+        <div className="card">
+          <div className="flex items-center">
+            <div className="bg-green-100 rounded-lg p-3">
+              <BarChart3 className="h-6 w-6 text-green-600" />
+            </div>
+            <div className="ml-4">
+              <p className="text-2xl font-bold text-gray-900">3</p>
+              <p className="text-gray-600">Approved</p>
+            </div>
+          </div>
+        </div>
+        <div className="card">
+          <div className="flex items-center">
+            <div className="bg-yellow-100 rounded-lg p-3">
+              <Calendar className="h-6 w-6 text-yellow-600" />
+            </div>
+            <div className="ml-4">
+              <p className="text-2xl font-bold text-gray-900">2</p>
+              <p className="text-gray-600">This Weekend</p>
+            </div>
+          </div>
+        </div>
+        <div className="card">
+          <div className="flex items-center">
+            <div className="bg-purple-100 rounded-lg p-3">
+              <User className="h-6 w-6 text-purple-600" />
+            </div>
+            <div className="ml-4">
+              <p className="text-2xl font-bold text-gray-900">4.8</p>
+              <p className="text-gray-600">Rating</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="bg-white rounded-lg shadow p-6">
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Link to="/profile" className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+            <User className="h-8 w-8 text-primary-600 mr-4" />
+            <div>
+              <h3 className="font-medium text-gray-900">Update Profile</h3>
+              <p className="text-sm text-gray-600">Edit your business details</p>
+            </div>
+          </Link>
+          <Link to="/markets" className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+            <MapPin className="h-8 w-8 text-secondary-600 mr-4" />
+            <div>
+              <h3 className="font-medium text-gray-900">Find Markets</h3>
+              <p className="text-sm text-gray-600">Discover new opportunities</p>
+            </div>
+          </Link>
+          <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+            <Plus className="h-8 w-8 text-green-600 mr-4" />
+            <div>
+              <h3 className="font-medium text-gray-900">Apply to Market</h3>
+              <p className="text-sm text-gray-600">Submit new application</p>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Organizer Dashboard Component
+const OrganizerDashboard = ({ user }) => {
+  return (
+    <div>
+      <div className="mb-4 p-4 bg-orange-50 border border-orange-200 rounded-lg">
+        <p className="text-orange-800 font-medium">✅ Organizer Dashboard Loaded</p>
+      </div>
+
+      {/* Quick Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="card">
+          <div className="flex items-center">
+            <div className="bg-primary-100 rounded-lg p-3">
+              <MapPin className="h-6 w-6 text-primary-600" />
+            </div>
+            <div className="ml-4">
+              <p className="text-2xl font-bold text-gray-900">3</p>
+              <p className="text-gray-600">Active Markets</p>
+            </div>
+          </div>
+        </div>
+        <div className="card">
+          <div className="flex items-center">
+            <div className="bg-secondary-100 rounded-lg p-3">
+              <Users className="h-6 w-6 text-secondary-600" />
+            </div>
+            <div className="ml-4">
+              <p className="text-2xl font-bold text-gray-900">47</p>
+              <p className="text-gray-600">Total Stallholders</p>
+            </div>
+          </div>
+        </div>
+        <div className="card">
+          <div className="flex items-center">
+            <div className="bg-yellow-100 rounded-lg p-3">
+              <ShoppingBag className="h-6 w-6 text-yellow-600" />
+            </div>
+            <div className="ml-4">
+              <p className="text-2xl font-bold text-gray-900">12</p>
+              <p className="text-gray-600">Pending Applications</p>
+            </div>
+          </div>
+        </div>
+        <div className="card">
+          <div className="flex items-center">
+            <div className="bg-green-100 rounded-lg p-3">
+              <BarChart3 className="h-6 w-6 text-green-600" />
+            </div>
+            <div className="ml-4">
+              <p className="text-2xl font-bold text-gray-900">$2,450</p>
+              <p className="text-gray-600">Monthly Revenue</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="bg-white rounded-lg shadow p-6">
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Link to="/markets/create" className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+            <Plus className="h-8 w-8 text-primary-600 mr-4" />
+            <div>
+              <h3 className="font-medium text-gray-900">Create Market</h3>
+              <p className="text-sm text-gray-600">Add a new market listing</p>
+            </div>
+          </Link>
+          <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+            <Users className="h-8 w-8 text-secondary-600 mr-4" />
+            <div>
+              <h3 className="font-medium text-gray-900">Manage Applications</h3>
+              <p className="text-sm text-gray-600">Review stallholder requests</p>
+            </div>
+          </button>
+          <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+            <BarChart3 className="h-8 w-8 text-green-600 mr-4" />
+            <div>
+              <h3 className="font-medium text-gray-900">View Analytics</h3>
+              <p className="text-sm text-gray-600">Market performance data</p>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+📄 src/pages/DatabaseTest.jsx
+================================================================================
+// PocketBase Verification Component
+// Add this to src/pages/DatabaseTest.jsx for internal verification
+
+import { useState, useEffect } from 'react'
+import pb from '../lib/pocketbase'
+import { CheckCircle, XCircle, AlertCircle, RefreshCw } from 'lucide-react'
+
+export default function DatabaseTest() {
+  const [status, setStatus] = useState({
+    loading: true,
+    pocketbaseOnline: false,
+    collections: {},
+    dataCounts: {},
+    errors: []
+  })
+
+  const checkDatabase = async () => {
+    setStatus(prev => ({ ...prev, loading: true, errors: [] }))
+    
+    try {
+      const collections = ['users', 'markets', 'market_categories', 'stallholders', 'applications', 'reviews']
+      const collectionStatus = {}
+      const dataStatus = {}
+      const errors = []
+
+      // Check PocketBase health
+      const healthCheck = await fetch(`${pb.baseUrl}/api/health`)
+      const pocketbaseOnline = healthCheck.ok
+
+      // Check each collection
+      for (const collection of collections) {
+        try {
+          const result = await pb.collection(collection).getList(1, 1)
+          collectionStatus[collection] = true
+          dataStatus[collection] = result.totalItems
+        } catch (error) {
+          collectionStatus[collection] = false
+          dataStatus[collection] = 0
+          errors.push(`${collection}: ${error.message}`)
+        }
+      }
+
+      // Test market query specifically
+      try {
+        const markets = await pb.collection('markets').getList(1, 3, {
+          expand: 'category'
+        })
+        console.log('Sample markets found:', markets.items)
+      } catch (error) {
+        errors.push(`Market query failed: ${error.message}`)
+      }
+
+      setStatus({
+        loading: false,
+        pocketbaseOnline,
+        collections: collectionStatus,
+        dataCounts: dataStatus,
+        errors
+      })
+
+    } catch (error) {
+      setStatus(prev => ({
+        ...prev,
+        loading: false,
+        pocketbaseOnline: false,
+        errors: [`General error: ${error.message}`]
+      }))
+    }
+  }
+
+  useEffect(() => {
+    checkDatabase()
+  }, [])
+
+  const StatusIcon = ({ status }) => {
+    if (status === true) return <CheckCircle className="h-5 w-5 text-green-500" />
+    if (status === false) return <XCircle className="h-5 w-5 text-red-500" />
+    return <AlertCircle className="h-5 w-5 text-yellow-500" />
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">Database Verification</h1>
+          <p className="text-gray-600">
+            Checking PocketBase collections and data integrity
+          </p>
+          <button 
+            onClick={checkDatabase}
+            className="mt-4 btn-primary inline-flex items-center"
+            disabled={status.loading}
+          >
+            <RefreshCw className={`h-4 w-4 mr-2 ${status.loading ? 'animate-spin' : ''}`} />
+            Refresh Check
+          </button>
+        </div>
+
+        {/* PocketBase Status */}
+        <div className="bg-white rounded-lg shadow p-6 mb-6">
+          <h2 className="text-xl font-semibold mb-4">PocketBase Status</h2>
+          <div className="flex items-center">
+            <StatusIcon status={status.pocketbaseOnline} />
+            <span className="ml-2">
+              {status.pocketbaseOnline ? 'Online and responding' : 'Offline or not responding'}
+            </span>
+          </div>
+          <p className="text-sm text-gray-500 mt-2">URL: {pb.baseUrl}</p>
+        </div>
+
+        {/* Collections Status */}
+        <div className="bg-white rounded-lg shadow p-6 mb-6">
+          <h2 className="text-xl font-semibold mb-4">Collections Status</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {Object.entries(status.collections).map(([collection, exists]) => (
+              <div key={collection} className="flex items-center justify-between p-3 border rounded">
+                <div className="flex items-center">
+                  <StatusIcon status={exists} />
+                  <span className="ml-2 font-medium">{collection}</span>
+                </div>
+                <span className="text-sm text-gray-500">
+                  {status.dataCounts[collection]} records
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Data Summary */}
+        <div className="bg-white rounded-lg shadow p-6 mb-6">
+          <h2 className="text-xl font-semibold mb-4">Data Summary</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="text-center p-4 bg-blue-50 rounded">
+              <div className="text-2xl font-bold text-blue-600">
+                {status.dataCounts.markets || 0}
+              </div>
+              <div className="text-sm text-blue-800">Markets</div>
+            </div>
+            <div className="text-center p-4 bg-green-50 rounded">
+              <div className="text-2xl font-bold text-green-600">
+                {status.dataCounts.stallholders || 0}
+              </div>
+              <div className="text-sm text-green-800">Stallholders</div>
+            </div>
+            <div className="text-center p-4 bg-purple-50 rounded">
+              <div className="text-2xl font-bold text-purple-600">
+                {status.dataCounts.applications || 0}
+              </div>
+              <div className="text-sm text-purple-800">Applications</div>
+            </div>
+            <div className="text-center p-4 bg-yellow-50 rounded">
+              <div className="text-2xl font-bold text-yellow-600">
+                {status.dataCounts.users || 0}
+              </div>
+              <div className="text-sm text-yellow-800">Users</div>
+            </div>
+            <div className="text-center p-4 bg-red-50 rounded">
+              <div className="text-2xl font-bold text-red-600">
+                {status.dataCounts.reviews || 0}
+              </div>
+              <div className="text-sm text-red-800">Reviews</div>
+            </div>
+            <div className="text-center p-4 bg-indigo-50 rounded">
+              <div className="text-2xl font-bold text-indigo-600">
+                {status.dataCounts.market_categories || 0}
+              </div>
+              <div className="text-sm text-indigo-800">Categories</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Errors */}
+        {status.errors.length > 0 && (
+          <div className="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 className="text-xl font-semibold mb-4 text-red-600">Issues Detected</h2>
+            <div className="space-y-2">
+              {status.errors.map((error, index) => (
+                <div key={index} className="flex items-start">
+                  <XCircle className="h-5 w-5 text-red-500 mt-0.5 mr-2 flex-shrink-0" />
+                  <span className="text-sm text-red-700">{error}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Quick Actions */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <button 
+              onClick={() => window.open(`${pb.baseUrl}/_/`, '_blank')}
+              className="btn-secondary"
+            >
+              Open PocketBase Admin
+            </button>
+            <button 
+              onClick={() => window.location.href = '/markets'}
+              className="btn-primary"
+            >
+              Test Market Listing
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Add this route to your App.jsx for testing:
+// <Route path="/database-test" element={<DatabaseTest />} />
+
+📄 src/pages/Home.jsx
+================================================================================
+import { Link } from 'react-router-dom'
+import { Search, MapPin, Users, ShoppingBag, ArrowRight } from 'lucide-react'
+
+export default function Home() {
+  return (
+    <div>
+      {/* Hero Section */}
+      <section className="bg-gradient-to-br from-primary-600 to-primary-800 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+              Discover Local Markets
+              <span className="block text-secondary-400">Across South Australia</span>
+            </h1>
+            <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto text-primary-100">
+              Connect with vibrant local markets, fresh produce, unique crafts, and community experiences right in your neighborhood.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/markets" className="btn-secondary text-lg px-8 py-3">
+                <Search className="h-5 w-5 mr-2" />
+                Browse Markets
+              </Link>
+              <Link to="/register" className="bg-white text-primary-600 hover:bg-gray-100 font-medium py-3 px-8 rounded-lg transition-colors text-lg">
+                Join as Stallholder
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Why Choose SA Markets?
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              We're building stronger communities by connecting local markets, stallholders, and customers across South Australia.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="bg-primary-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <MapPin className="h-8 w-8 text-primary-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Find Markets Nearby</h3>
+              <p className="text-gray-600">
+                Discover farmers markets, craft fairs, and community markets in your local area with our interactive map and search tools.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-secondary-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <Users className="h-8 w-8 text-secondary-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Connect Communities</h3>
+              <p className="text-gray-600">
+                Join a vibrant network of local producers, artisans, and market-goers who share a passion for community and quality.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <ShoppingBag className="h-8 w-8 text-green-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Support Local Business</h3>
+              <p className="text-gray-600">
+                Shop directly from local farmers, makers, and small businesses while supporting your community's economic growth.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            Ready to explore local markets?
+          </h2>
+          <p className="text-xl text-gray-600 mb-8">
+            Join thousands of South Australians discovering amazing local products and experiences.
+          </p>
+          <Link to="/markets" className="btn-primary text-lg px-8 py-3 inline-flex items-center">
+            Start Exploring
+            <ArrowRight className="h-5 w-5 ml-2" />
+          </Link>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+
+📄 src/pages/Login.jsx
+================================================================================
+import { useState } from 'react'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { Eye, EyeOff, Loader2 } from 'lucide-react'
+import { useAuth } from '../contexts/AuthContext'
+
+export default function Login() {
+  const [showPassword, setShowPassword] = useState(false)
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  })
+  
+  const { login, loading, error } = useAuth()
+  const navigate = useNavigate()
+  const location = useLocation()
+  
+  const from = location.state?.from?.pathname || '/dashboard'
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    try {
+      await login(formData.email, formData.password)
+      navigate(from, { replace: true })
+    } catch (err) {
+      // Error is handled by AuthContext
+      console.error('Login failed:', err)
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        <div>
+          <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
+            Welcome back
+          </h2>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            Sign in to your account
+          </p>
+        </div>
+        
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+              {typeof error === 'object' ? error.general || 'Login failed' : error}
+            </div>
+          )}
+          
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                Email address
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                className="input-field mt-1"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                disabled={loading}
+              />
+              {error?.email && (
+                <p className="mt-1 text-sm text-red-600">{error.email}</p>
+              )}
+            </div>
+            
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                Password
+              </label>
+              <div className="mt-1 relative">
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  className="input-field pr-10"
+                  placeholder="Enter your password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({...formData, password: e.target.value})}
+                  disabled={loading}
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  onClick={() => setShowPassword(!showPassword)}
+                  disabled={loading}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5 text-gray-400" />
+                  ) : (
+                    <Eye className="h-5 w-5 text-gray-400" />
+                  )}
+                </button>
+              </div>
+              {error?.password && (
+                <p className="mt-1 text-sm text-red-600">{error.password}</p>
+              )}
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <input
+                id="remember-me"
+                name="remember-me"
+                type="checkbox"
+                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+              />
+              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                Remember me
+              </label>
+            </div>
+
+            <div className="text-sm">
+              <Link to="/forgot-password" className="text-primary-600 hover:text-primary-500">
+                Forgot your password?
+              </Link>
+            </div>
+          </div>
+
+          <div>
+            <button 
+              type="submit" 
+              className="btn-primary w-full flex items-center justify-center"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Signing in...
+                </>
+              ) : (
+                'Sign in'
+              )}
+            </button>
+          </div>
+
+          <div className="text-center">
+            <span className="text-sm text-gray-600">
+              Don't have an account?{' '}
+              <Link to="/register" className="text-primary-600 hover:text-primary-500 font-medium">
+                Sign up here
+              </Link>
+            </span>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+📄 src/pages/MarketDetail.jsx
+================================================================================
+import { useState, useEffect } from 'react'
+import { useParams, Link } from 'react-router-dom'
+import { MapPin, Clock, Calendar, ArrowLeft } from 'lucide-react'
+import marketService from '../services/marketService'
+
+export default function MarketDetail() {
+  const { slug } = useParams()
+  const [market, setMarket] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    fetchMarket()
+  }, [slug])
+
+  const fetchMarket = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+      const marketData = await marketService.getMarket(slug)
+      setMarket(marketData)
+    } catch (error) {
+      console.error('Error fetching market:', error)
+      setError('Market not found or failed to load.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading market details...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error || !market) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center py-12">
+            <p className="text-red-600 mb-4">{error}</p>
+            <Link to="/markets" className="btn-primary">
+              Back to Markets
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <Link to="/markets" className="inline-flex items-center text-primary-600 hover:text-primary-500 mb-6">
+          <ArrowLeft className="h-5 w-5 mr-2" />
+          Back to Markets
+        </Link>
+
+        <div className="bg-white rounded-lg shadow p-8 mb-8">
+          {market.expand?.category && (
+            <div className="mb-4">
+              <span 
+                className="inline-block text-white text-sm px-3 py-1 rounded-full"
+                style={{ backgroundColor: market.expand.category.color || '#6b7280' }}
+              >
+                {market.expand.category.name}
+              </span>
+            </div>
+          )}
+
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">{market.name}</h1>
+          
+          <div className="flex items-center text-gray-600 mb-6">
+            <MapPin className="h-5 w-5 mr-2" />
+            <span>{market.address || `${market.suburb}, ${market.state}`}</span>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {market.frequency && (
+              <div className="flex items-center">
+                <Calendar className="h-5 w-5 text-primary-600 mr-3" />
+                <div>
+                  <p className="font-medium text-gray-900">Schedule</p>
+                  <p className="text-gray-600">{market.frequency}</p>
+                </div>
+              </div>
+            )}
+
+            {market.operating_hours && (
+              <div className="flex items-center">
+                <Clock className="h-5 w-5 text-primary-600 mr-3" />
+                <div>
+                  <p className="font-medium text-gray-900">Hours</p>
+                  <p className="text-gray-600">{market.operating_hours}</p>
+                </div>
+              </div>
+            )}
+
+            {market.website && (
+              <div className="flex items-center">
+                <div>
+                  <p className="font-medium text-gray-900">Website</p>
+                  <a 
+                    href={market.website} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-primary-600 hover:underline"
+                  >
+                    Visit Site
+                  </a>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {market.description && (
+          <div className="bg-white rounded-lg shadow p-8 mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">About This Market</h2>
+            <div className="text-gray-600 leading-relaxed">
+              {market.description}
+            </div>
+          </div>
+        )}
+
+        <div className="bg-white rounded-lg shadow p-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Interested in Selling Here?</h2>
+          <p className="text-gray-600 mb-6">
+            Connect with the market organizers to learn about stallholder opportunities, 
+            application requirements, and available spaces.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Link to="/register" className="btn-primary">
+              Apply as Stallholder
+            </Link>
+            <button className="btn-secondary">
+              Contact Organizer
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+📄 src/pages/MarketList.jsx
+================================================================================
+import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import { Search, Filter, MapPin, Clock, Calendar } from 'lucide-react'
+import marketService from '../services/marketService'
+
+export default function MarketList() {
+  const [markets, setMarkets] = useState([])
+  const [categories, setCategories] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [filters, setFilters] = useState({
+    search: '',
+    category: '',
+    state: 'SA'
+  })
+
+  useEffect(() => {
+    fetchData()
+  }, [filters])
+
+  const fetchData = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+
+      // Fetch categories
+      const categoriesData = await marketService.getCategories()
+      setCategories(categoriesData)
+
+      // Fetch markets with filters
+      const marketsData = await marketService.getMarkets({
+        search: filters.search,
+        category: filters.category,
+        state: filters.state,
+        perPage: 50
+      })
+      
+      setMarkets(marketsData.items || [])
+    } catch (error) {
+      console.error('Error fetching data:', error)
+      setError('Failed to load markets. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleSearchChange = (e) => {
+    setFilters({ ...filters, search: e.target.value })
+  }
+
+  const handleCategoryChange = (categoryId) => {
+    setFilters({ ...filters, category: categoryId })
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading markets...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center py-12">
+            <p className="text-red-600">{error}</p>
+            <button 
+              onClick={fetchData}
+              className="btn-primary mt-4"
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">Browse Markets</h1>
+          <p className="text-gray-600">
+            Discover {markets.length} local markets across South Australia
+          </p>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+            <div className="md:col-span-6">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                <input
+                  type="text"
+                  placeholder="Search markets by name or location..."
+                  className="input-field pl-10"
+                  value={filters.search}
+                  onChange={handleSearchChange}
+                />
+              </div>
+            </div>
+
+            <div className="md:col-span-4">
+              <select
+                className="input-field"
+                value={filters.category}
+                onChange={(e) => handleCategoryChange(e.target.value)}
+              >
+                <option value="">All Categories</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="md:col-span-2">
+              <select
+                className="input-field"
+                value={filters.state}
+                onChange={(e) => setFilters({ ...filters, state: e.target.value })}
+              >
+                <option value="SA">South Australia</option>
+                <option value="VIC">Victoria</option>
+                <option value="NSW">New South Wales</option>
+                <option value="QLD">Queensland</option>
+                <option value="WA">Western Australia</option>
+                <option value="TAS">Tasmania</option>
+                <option value="NT">Northern Territory</option>
+                <option value="ACT">ACT</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {markets.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-gray-600">No markets found matching your criteria.</p>
+            <button 
+              onClick={() => setFilters({ search: '', category: '', state: 'SA' })}
+              className="btn-secondary mt-4"
+            >
+              Clear Filters
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {markets.map((market) => (
+              <div key={market.id} className="card hover:shadow-lg transition-shadow">
+                {market.expand?.category && (
+                  <div className="mb-4">
+                    <span 
+                      className="inline-block text-white text-xs px-2 py-1 rounded-full"
+                      style={{ backgroundColor: market.expand.category.color || '#6b7280' }}
+                    >
+                      {market.expand.category.name}
+                    </span>
+                  </div>
+                )}
+
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">{market.name}</h3>
+                
+                <div className="flex items-center text-gray-600 mb-2">
+                  <MapPin className="h-4 w-4 mr-1" />
+                  <span>{market.suburb}, {market.state}</span>
+                </div>
+
+                {market.frequency && (
+                  <div className="flex items-center text-gray-600 mb-2">
+                    <Calendar className="h-4 w-4 mr-1" />
+                    <span>{market.frequency}</span>
+                  </div>
+                )}
+
+                {market.operating_hours && (
+                  <div className="flex items-center text-gray-600 mb-4">
+                    <Clock className="h-4 w-4 mr-1" />
+                    <span>{market.operating_hours}</span>
+                  </div>
+                )}
+
+                {market.description && (
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                    {market.description.substring(0, 100)}...
+                  </p>
+                )}
+
+                <div className="flex gap-2">
+                  <Link 
+                    to={`/markets/${market.slug}`}
+                    className="btn-primary flex-1 text-center"
+                  >
+                    View Details
+                  </Link>
+                  {market.website && (
+                    <button className="btn-secondary px-3 py-2" title="Visit Website">
+                      🌐
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+📄 src/pages/Register.jsx
+================================================================================
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { Eye, EyeOff, Loader2 } from 'lucide-react'
+import { useAuth } from '../contexts/AuthContext'
+
+export default function Register() {
+  const [showPassword, setShowPassword] = useState(false)
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    role: 'customer'
+  })
+  
+  const { register, loading, error } = useAuth()
+  const navigate = useNavigate()
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    try {
+      await register(formData)
+      navigate('/dashboard')
+    } catch (err) {
+      // Error is handled by AuthContext
+      console.error('Registration failed:', err)
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        <div>
+          <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
+            Join SA Markets
+          </h2>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            Create your account to get started
+          </p>
+        </div>
+        
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+              {typeof error === 'object' ? error.general || 'Registration failed' : error}
+            </div>
+          )}
+          
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                Full Name
+              </label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                required
+                className="input-field mt-1"
+                placeholder="Enter your full name"
+                value={formData.name}
+                onChange={(e) => setFormData({...formData, name: e.target.value})}
+                disabled={loading}
+              />
+              {error?.name && (
+                <p className="mt-1 text-sm text-red-600">{error.name}</p>
+              )}
+            </div>
+            
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                Email address
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                className="input-field mt-1"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                disabled={loading}
+              />
+              {error?.email && (
+                <p className="mt-1 text-sm text-red-600">{error.email}</p>
+              )}
+            </div>
+            
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                Password
+              </label>
+              <div className="mt-1 relative">
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  className="input-field pr-10"
+                  placeholder="Create a password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({...formData, password: e.target.value})}
+                  disabled={loading}
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  onClick={() => setShowPassword(!showPassword)}
+                  disabled={loading}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5 text-gray-400" />
+                  ) : (
+                    <Eye className="h-5 w-5 text-gray-400" />
+                  )}
+                </button>
+              </div>
+              {error?.password && (
+                <p className="mt-1 text-sm text-red-600">{error.password}</p>
+              )}
+            </div>
+            
+            <div>
+              <label htmlFor="role" className="block text-sm font-medium text-gray-700">
+                I am a...
+              </label>
+              <select
+                id="role"
+                name="role"
+                className="input-field mt-1"
+                value={formData.role}
+                onChange={(e) => setFormData({...formData, role: e.target.value})}
+                disabled={loading}
+              >
+                <option value="customer">Market Customer</option>
+                <option value="stallholder">Stallholder/Vendor</option>
+                <option value="organizer">Market Organizer</option>
+              </select>
+              {error?.role && (
+                <p className="mt-1 text-sm text-red-600">{error.role}</p>
+              )}
+            </div>
+          </div>
+
+          <div>
+            <button 
+              type="submit" 
+              className="btn-primary w-full flex items-center justify-center"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Creating account...
+                </>
+              ) : (
+                'Create Account'
+              )}
+            </button>
+          </div>
+
+          <div className="text-center">
+            <span className="text-sm text-gray-600">
+              Already have an account?{' '}
+              <Link to="/login" className="text-primary-600 hover:text-primary-500 font-medium">
+                Sign in here
+              </Link>
+            </span>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+📄 tailwind.config.js
+================================================================================
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          50: '#f0f9ff',
+          100: '#e0f2fe',
+          200: '#bae6fd',
+          300: '#7dd3fc',
+          400: '#38bdf8',
+          500: '#0ea5e9',
+          600: '#0284c7',
+          700: '#0369a1',
+          800: '#075985',
+          900: '#0c4a6e',
+        },
+        secondary: {
+          50: '#fefce8',
+          100: '#fef9c3',
+          200: '#fef08a',
+          300: '#fde047',
+          400: '#facc15',
+          500: '#eab308',
+          600: '#ca8a04',
+          700: '#a16207',
+          800: '#854d0e',
+          900: '#713f12',
+        }
+      },
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+      },
+    },
+  },
+  plugins: [],
+}
+
+
+📊 EXPORT SUMMARY
+========================================
+Mode: ui (pattern-based)
+Files included: 23
+Total size: 163K
+Generated: Wed Jun  4 08:18:53 UTC 2025
+Auto-discovers new files in target directories

@@ -1,0 +1,145 @@
+🔍 Testing PocketBase connection...
+✅ PocketBase is running
+🚀 Applying schema changes to database...
+
+🔐 Admin authentication required
+🔍 Checking for stored credentials...
+🔑 Using stored credentials...
+🔐 Credentials saved securely
+🔐 Credentials saved securely
+✅ Authentication successful with stored credentials
+ℹ️  Stored credentials expire in 7 days
+✅ Loaded schema v2.0.0
+📋 Collections defined: 10
+📋 Collections:
+  - users (auth) - 4 fields
+  - market_categories (base) - 5 fields
+  - amenity_types (base) - 5 fields
+  - markets (base) - 27 fields
+  - market_amenities (base) - 4 fields
+  - market_schedules (base) - 8 fields
+  - market_fees (base) - 10 fields
+  - stallholders (base) - 14 fields
+  - applications (base) - 10 fields
+  - reviews (base) - 8 fields
+
+📊 SCHEMA COMPARISON RESULTS
+=====================================
+
+🆕 Collections to CREATE (3):
+  📁 market_amenities (base) - 4 fields
+  📁 market_schedules (base) - 8 fields
+  📁 market_fees (base) - 10 fields
+
+🔄 Collections to UPDATE (7):
+  📁 users:
+    ➕ Add field: phone (text)
+    ➕ Add field: verified (bool)
+    ➕ Add field: subscription_tier (select)
+    ➖ Remove field: name (text)
+    ➖ Remove field: avatar (file)
+    🔧 Modify field: role
+  📁 market_categories:
+    🔧 Modify field: name
+    🔧 Modify field: description
+    🔧 Modify field: color
+    🔧 Modify field: icon
+    🔧 Modify field: sort_order
+    🔐 Modify rule: listRule
+    🔐 Modify rule: viewRule
+  📁 amenity_types:
+    🔧 Modify field: name
+    🔧 Modify field: description
+    🔧 Modify field: icon
+    🔧 Modify field: category
+    🔧 Modify field: active
+    🔐 Modify rule: listRule
+    🔐 Modify rule: viewRule
+  📁 markets:
+    ➕ Add field: category (relation)
+    ➕ Add field: organizer (relation)
+    ➕ Add field: postcode (text)
+    ➕ Add field: latitude (number)
+    ➕ Add field: longitude (number)
+    ➕ Add field: venue_type (select)
+    ➕ Add field: contact_phone (text)
+    ➕ Add field: social_media (json)
+    ➕ Add field: max_stalls (number)
+    ➕ Add field: insurance_minimum (number)
+    ➕ Add field: abn_required (bool)
+    ➕ Add field: waiting_list_enabled (bool)
+    ➕ Add field: featured_image (file)
+    ➕ Add field: gallery_images (file)
+    ➕ Add field: view_count (number)
+    ➕ Add field: favorite_count (number)
+    ➕ Add field: average_rating (number)
+    ➕ Add field: total_reviews (number)
+    ➖ Remove field: frequency (text)
+    ➖ Remove field: operating_hours (text)
+    🔧 Modify field: name
+    🔧 Modify field: slug
+    🔧 Modify field: description
+    🔧 Modify field: address
+    🔧 Modify field: suburb
+    🔧 Modify field: state
+    🔧 Modify field: contact_email
+    🔧 Modify field: website
+    🔧 Modify field: active
+    🔐 Modify rule: createRule
+    🔐 Modify rule: updateRule
+    🔐 Modify rule: deleteRule
+  📁 stallholders:
+    ➕ Add field: user (relation)
+    ➕ Add field: business_description (text)
+    ➕ Add field: abn (text)
+    ➕ Add field: contact_phone (text)
+    ➕ Add field: social_media (json)
+    ➕ Add field: power_required (bool)
+    ➕ Add field: space_requirements (text)
+    ➕ Add field: rating (number)
+    ➕ Add field: reviews_count (number)
+    ➕ Add field: verified (bool)
+    ➕ Add field: subscription_tier (select)
+    ➖ Remove field: description (editor)
+    ➖ Remove field: active (bool)
+    🔧 Modify field: business_name
+    🔧 Modify field: product_categories
+    🔧 Modify field: website
+    🔐 Modify rule: listRule
+    🔐 Modify rule: viewRule
+    🔐 Modify rule: createRule
+    🔐 Modify rule: updateRule
+    🔐 Modify rule: deleteRule
+  📁 applications:
+    ➕ Add field: stallholder (relation)
+    ➕ Add field: market (relation)
+    ➕ Add field: application_date (date)
+    ➕ Add field: message (text)
+    ➕ Add field: payment_status (select)
+    ➕ Add field: payment_amount (number)
+    ➕ Add field: stall_assignment (text)
+    ➖ Remove field: stallholder_notes (text)
+    🔧 Modify field: status
+    🔧 Modify field: requested_dates
+    🔧 Modify field: organizer_notes
+    🔐 Modify rule: listRule
+    🔐 Modify rule: viewRule
+    🔐 Modify rule: createRule
+    🔐 Modify rule: updateRule
+    🔐 Modify rule: deleteRule
+  📁 reviews:
+    ➕ Add field: title (text)
+    ➕ Add field: helpful_votes (number)
+    ➖ Remove field: active (bool)
+    🔧 Modify field: reviewer
+    🔧 Modify field: target_type
+    🔧 Modify field: target_id
+    🔧 Modify field: rating
+    🔧 Modify field: comment
+    🔧 Modify field: verified_purchase
+
+=====================================
+💡 Run "node scripts/schema-manager.js apply" to apply these changes
+
+⚠️  WARNING: This will modify your database structure!
+Continue? (yes/no): 

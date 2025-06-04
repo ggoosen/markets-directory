@@ -1,0 +1,2000 @@
+SA MARKETS DIRECTORY - market MODE (Dynamic)
+Generated: Wed Jun  4 05:01:10 UTC 2025
+Pattern-based file selection - automatically includes new files
+================================================================================
+
+📄 src/components/market/AddressInput.jsx
+================================================================================
+// src/components/market/AddressInput.jsx - Google Places Integration
+import { useState, useEffect, useRef } from 'react'
+import { MapPin, Search, CheckCircle } from 'lucide-react'
+
+export default function AddressInput({ 
+  address, 
+  suburb, 
+  state, 
+  postcode, 
+  latitude, 
+  longitude,
+  onAddressChange 
+}) {
+  const [inputValue, setInputValue] = useState(address || '')
+  const [suggestions, setSuggestions] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [isManualEntry, setIsManualEntry] = useState(false)
+  const [addressComponents, setAddressComponents] = useState({
+    address: address || '',
+    suburb: suburb || '',
+    state: state || 'SA',
+    postcode: postcode || '',
+    latitude: latitude || null,
+    longitude: longitude || null
+  })
+
+  const inputRef = useRef(null)
+  const autocompleteService = useRef(null)
+  const placesService = useRef(null)
+
+  useEffect(() => {
+    // Initialize Google Places API
+    if (window.google && window.google.maps) {
+      autocompleteService.current = new window.google.maps.places.AutocompleteService()
+      placesService.current = new window.google.maps.places.PlacesService(
+        document.createElement('div')
+      )
+    }
+  }, [])
+
+  useEffect(() => {
+    // Load Google Maps API if not already loaded
+    if (!window.google) {
+      const script = document.createElement('script')
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&libraries=places`
+      script.async = true
+      script.defer = true
+      script.onload = () => {
+        autocompleteService.current = new window.google.maps.places.AutocompleteService()
+        placesService.current = new window.google.maps.places.PlacesService(
+          document.createElement('div')
+        )
+      }
+      document.head.appendChild(script)
+    }
+  }, [])
+
+  const searchPlaces = async (query) => {
+    if (!autocompleteService.current || query.length < 3) {
+      setSuggestions([])
+      return
+    }
+
+    setLoading(true)
+    
+    const request = {
+      input: query,
+      componentRestrictions: { country: 'AU' },
+      types: ['address', 'establishment'],
+      fields: ['place_id', 'formatted_address', 'geometry', 'address_components']
+    }
+
+    autocompleteService.current.getPlacePredictions(request, (predictions, status) => {
+      setLoading(false)
+      if (status === window.google.maps.places.PlacesServiceStatus.OK && predictions) {
+        setSuggestions(predictions.slice(0, 5))
+      } else {
+        setSuggestions([])
+      }
+    })
+  }
+
+  const selectPlace = (placeId) => {
+    if (!placesService.current) return
+
+    const request = {
+      placeId: placeId,
+      fields: ['formatted_address', 'geometry', 'address_components']
+    }
+
+    placesService.current.getDetails(request, (place, status) => {
+      if (status === window.google.maps.places.PlacesServiceStatus.OK && place) {
+        parseGooglePlace(place)
+        setSuggestions([])
+      }
+    })
+  }
+
+  const parseGooglePlace = (place) => {
+    const components = place.address_components
+    let parsedAddress = {
+      address: '',
+      suburb: '',
+      state: 'SA',
+      postcode: '',
+      latitude: place.geometry?.location?.lat() || null,
+      longitude: place.geometry?.location?.lng() || null
+    }
+
+    // Extract street number and route for address
+    const streetNumber = components.find(c => c.types.includes('street_number'))?.long_name || ''
+    const route = components.find(c => c.types.includes('route'))?.long_name || ''
+    parsedAddress.address = `${streetNumber} ${route}`.trim()
+
+    // Extract suburb
+    const locality = components.find(c => 
+      c.types.includes('locality') || 
+      c.types.includes('sublocality') ||
+      c.types.includes('administrative_area_level_2')
+    )
+    parsedAddress.suburb = locality?.long_name || ''
+
+    // Extract state
+    const stateComponent = components.find(c => c.types.includes('administrative_area_level_1'))
+    if (stateComponent) {
+      const stateName = stateComponent.short_name
+      const stateMap = {
+        'NSW': 'NSW', 'VIC': 'VIC', 'QLD': 'QLD', 'SA': 'SA',
+        'WA': 'WA', 'TAS': 'TAS', 'NT': 'NT', 'ACT': 'ACT'
+      }
+      parsedAddress.state = stateMap[stateName] || 'SA'
+    }
+
+    // Extract postcode
+    const postcodeComponent = components.find(c => c.types.includes('postal_code'))
+    parsedAddress.postcode = postcodeComponent?.long_name || ''
+
+    setAddressComponents(parsedAddress)
+    setInputValue(place.formatted_address)
+    onAddressChange(parsedAddress)
+  }
+
+  const handleInputChange = (e) => {
+    const value = e.target.value
+    setInputValue(value)
+    
+    if (!isManualEntry) {
+      searchPlaces(value)
+    }
+  }
+
+  const handleManualEntry = () => {
+    setIsManualEntry(true)
+    setSuggestions([])
+    setInputValue('')
+  }
+
+  const handleManualChange = (field, value) => {
+    const updated = { ...addressComponents, [field]: value }
+    setAddressComponents(updated)
+    onAddressChange(updated)
+  }
+
+  const validateAustralianPostcode = (postcode) => {
+    return /^[0-9]{4}$/.test(postcode)
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <label className="block text-sm font-medium text-gray-700">
+          Market Address *
+        </label>
+        <button
+          type="button"
+          onClick={handleManualEntry}
+          className="text-sm text-primary-600 hover:text-primary-500"
+        >
+          Enter manually
+        </button>
+      </div>
+
+      {!isManualEntry ? (
+        /* Google Places Autocomplete */
+        <div className="relative">
+          <div className="relative">
+            <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            <input
+              ref={inputRef}
+              type="text"
+              value={inputValue}
+              onChange={handleInputChange}
+              placeholder="Start typing the market address..."
+              className="input-field pl-10 pr-10"
+              autoComplete="off"
+            />
+            {loading && (
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-600"></div>
+              </div>
+            )}
+          </div>
+
+          {/* Suggestions Dropdown */}
+          {suggestions.length > 0 && (
+            <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg">
+              {suggestions.map((suggestion) => (
+                <button
+                  key={suggestion.place_id}
+                  type="button"
+                  onClick={() => selectPlace(suggestion.place_id)}
+                  className="w-full px-4 py-3 text-left hover:bg-gray-50 border-b border-gray-100 last:border-b-0 first:rounded-t-lg last:rounded-b-lg"
+                >
+                  <div className="flex items-start">
+                    <MapPin className="h-4 w-4 text-gray-400 mt-1 mr-3 flex-shrink-0" />
+                    <div>
+                      <div className="font-medium text-gray-900 text-sm">
+                        {suggestion.structured_formatting?.main_text}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {suggestion.structured_formatting?.secondary_text}
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Address Confirmation */}
+          {addressComponents.address && !loading && (
+            <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+              <div className="flex items-start">
+                <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 mr-2 flex-shrink-0" />
+                <div className="text-sm">
+                  <div className="font-medium text-green-800">Address confirmed:</div>
+                  <div className="text-green-700">
+                    {addressComponents.address}<br />
+                    {addressComponents.suburb}, {addressComponents.state} {addressComponents.postcode}
+                  </div>
+                  {addressComponents.latitude && (
+                    <div className="text-xs text-green-600 mt-1">
+                      Coordinates: {addressComponents.latitude.toFixed(6)}, {addressComponents.longitude.toFixed(6)}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      ) : (
+        /* Manual Entry Form */
+        <div className="space-y-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
+          <div className="flex items-center justify-between">
+            <h4 className="font-medium text-gray-900">Manual Address Entry</h4>
+            <button
+              type="button"
+              onClick={() => setIsManualEntry(false)}
+              className="text-sm text-primary-600 hover:text-primary-500"
+            >
+              Use address lookup
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Street Address *
+              </label>
+              <input
+                type="text"
+                value={addressComponents.address}
+                onChange={(e) => handleManualChange('address', e.target.value)}
+                placeholder="123 Market Street"
+                className="input-field"
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Suburb *
+                </label>
+                <input
+                  type="text"
+                  value={addressComponents.suburb}
+                  onChange={(e) => handleManualChange('suburb', e.target.value)}
+                  placeholder="Adelaide"
+                  className="input-field"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  State *
+                </label>
+                <select
+                  value={addressComponents.state}
+                  onChange={(e) => handleManualChange('state', e.target.value)}
+                  className="input-field"
+                  required
+                >
+                  <option value="SA">South Australia</option>
+                  <option value="VIC">Victoria</option>
+                  <option value="NSW">New South Wales</option>
+                  <option value="QLD">Queensland</option>
+                  <option value="WA">Western Australia</option>
+                  <option value="TAS">Tasmania</option>
+                  <option value="NT">Northern Territory</option>
+                  <option value="ACT">ACT</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="w-32">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Postcode *
+              </label>
+              <input
+                type="text"
+                value={addressComponents.postcode}
+                onChange={(e) => handleManualChange('postcode', e.target.value)}
+                placeholder="5000"
+                pattern="[0-9]{4}"
+                maxLength="4"
+                className={`input-field ${
+                  addressComponents.postcode && !validateAustralianPostcode(addressComponents.postcode)
+                    ? 'border-red-300'
+                    : ''
+                }`}
+                required
+              />
+              {addressComponents.postcode && !validateAustralianPostcode(addressComponents.postcode) && (
+                <p className="mt-1 text-sm text-red-600">Please enter a valid 4-digit Australian postcode</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+📄 src/components/market/FlexibleFrequencySelector.jsx
+================================================================================
+// src/components/market/FlexibleFrequencySelector.jsx
+import { useState, useEffect } from 'react'
+import { Calendar, Plus, X, Clock, Repeat } from 'lucide-react'
+
+export default function FlexibleFrequencySelector({ 
+  frequencyType, 
+  frequencyValue, 
+  frequencyDetails, 
+  onChange 
+}) {
+  const [localType, setLocalType] = useState(frequencyType || 'regular')
+  const [localValue, setLocalValue] = useState(frequencyValue || '')
+  const [localDetails, setLocalDetails] = useState(frequencyDetails || {})
+
+  useEffect(() => {
+    onChange({
+      frequencyType: localType,
+      frequencyValue: localValue,
+      frequencyDetails: localDetails
+    })
+  }, [localType, localValue, localDetails, onChange])
+
+  const handleTypeChange = (type) => {
+    setLocalType(type)
+    setLocalValue('')
+    setLocalDetails({})
+  }
+
+  const regularOptions = [
+    { value: 'daily', label: 'Daily', description: 'Every day' },
+    { value: 'weekly', label: 'Weekly', description: 'Every week' },
+    { value: 'fortnightly', label: 'Fortnightly', description: 'Every 2 weeks' },
+    { value: 'monthly', label: 'Monthly', description: 'Every month' }
+  ]
+
+  const weekDays = [
+    { value: 0, short: 'Sun', full: 'Sunday' },
+    { value: 1, short: 'Mon', full: 'Monday' },
+    { value: 2, short: 'Tue', full: 'Tuesday' },
+    { value: 3, short: 'Wed', full: 'Wednesday' },
+    { value: 4, short: 'Thu', full: 'Thursday' },
+    { value: 5, short: 'Fri', full: 'Friday' },
+    { value: 6, short: 'Sat', full: 'Saturday' }
+  ]
+
+  const weekNumbers = [
+    { value: 1, label: '1st' },
+    { value: 2, label: '2nd' },
+    { value: 3, label: '3rd' },
+    { value: 4, label: '4th' },
+    { value: -1, label: 'Last' }
+  ]
+
+  const handleMonthlyPatternChange = (weekNumber, dayOfWeek) => {
+    setLocalDetails({
+      weekNumber,
+      dayOfWeek,
+      description: `${weekNumbers.find(w => w.value === weekNumber)?.label} ${weekDays.find(d => d.value === dayOfWeek)?.full}`
+    })
+    setLocalValue(`${weekNumbers.find(w => w.value === weekNumber)?.label} ${weekDays.find(d => d.value === dayOfWeek)?.full}`)
+  }
+
+  const handleWeeklyPatternChange = (selectedDays) => {
+    const dayNames = selectedDays.map(day => weekDays.find(d => d.value === day)?.short).join(', ')
+    setLocalDetails({ selectedDays, dayNames })
+    setLocalValue(`Weekly: ${dayNames}`)
+  }
+
+  const addCustomDate = () => {
+    const newDate = prompt('Enter date (YYYY-MM-DD):')
+    if (newDate && /^\d{4}-\d{2}-\d{2}$/.test(newDate)) {
+      const currentDates = localDetails.customDates || []
+      setLocalDetails({
+        ...localDetails,
+        customDates: [...currentDates, newDate].sort()
+      })
+      setLocalValue(`${currentDates.length + 1} custom dates`)
+    }
+  }
+
+  const removeCustomDate = (dateToRemove) => {
+    const updatedDates = (localDetails.customDates || []).filter(date => date !== dateToRemove)
+    setLocalDetails({
+      ...localDetails,
+      customDates: updatedDates
+    })
+    setLocalValue(`${updatedDates.length} custom dates`)
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Type Selection */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-3">
+          How often does your market run?
+        </label>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+          <button
+            type="button"
+            onClick={() => handleTypeChange('regular')}
+            className={`p-4 border-2 rounded-lg text-left transition-colors ${
+              localType === 'regular'
+                ? 'border-primary-500 bg-primary-50 text-primary-700'
+                : 'border-gray-200 hover:border-gray-300'
+            }`}
+          >
+            <div className="flex items-center">
+              <Repeat className="h-5 w-5 mr-3" />
+              <div>
+                <div className="font-medium">Regular</div>
+                <div className="text-sm text-gray-500">Daily, weekly, etc.</div>
+              </div>
+            </div>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => handleTypeChange('weekly_pattern')}
+            className={`p-4 border-2 rounded-lg text-left transition-colors ${
+              localType === 'weekly_pattern'
+                ? 'border-primary-500 bg-primary-50 text-primary-700'
+                : 'border-gray-200 hover:border-gray-300'
+            }`}
+          >
+            <div className="flex items-center">
+              <Calendar className="h-5 w-5 mr-3" />
+              <div>
+                <div className="font-medium">Weekly Pattern</div>
+                <div className="text-sm text-gray-500">Specific days each week</div>
+              </div>
+            </div>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => handleTypeChange('monthly_pattern')}
+            className={`p-4 border-2 rounded-lg text-left transition-colors ${
+              localType === 'monthly_pattern'
+                ? 'border-primary-500 bg-primary-50 text-primary-700'
+                : 'border-gray-200 hover:border-gray-300'
+            }`}
+          >
+            <div className="flex items-center">
+              <Calendar className="h-5 w-5 mr-3" />
+              <div>
+                <div className="font-medium">Monthly Pattern</div>
+                <div className="text-sm text-gray-500">3rd Wednesday, etc.</div>
+              </div>
+            </div>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => handleTypeChange('custom_dates')}
+            className={`p-4 border-2 rounded-lg text-left transition-colors ${
+              localType === 'custom_dates'
+                ? 'border-primary-500 bg-primary-50 text-primary-700'
+                : 'border-gray-200 hover:border-gray-300'
+            }`}
+          >
+            <div className="flex items-center">
+              <Clock className="h-5 w-5 mr-3" />
+              <div>
+                <div className="font-medium">Custom Dates</div>
+                <div className="text-sm text-gray-500">Specific dates only</div>
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      {/* Regular Pattern */}
+      {localType === 'regular' && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-3">
+            Select frequency
+          </label>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {regularOptions.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => setLocalValue(option.value)}
+                className={`p-3 border-2 rounded-lg text-center transition-colors ${
+                  localValue === option.value
+                    ? 'border-primary-500 bg-primary-50 text-primary-700'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <div className="font-medium">{option.label}</div>
+                <div className="text-xs text-gray-500">{option.description}</div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Weekly Pattern */}
+      {localType === 'weekly_pattern' && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-3">
+            Select which days of the week
+          </label>
+          <div className="grid grid-cols-7 gap-2">
+            {weekDays.map((day) => {
+              const selectedDays = localDetails.selectedDays || []
+              const isSelected = selectedDays.includes(day.value)
+              
+              return (
+                <button
+                  key={day.value}
+                  type="button"
+                  onClick={() => {
+                    const newSelected = isSelected 
+                      ? selectedDays.filter(d => d !== day.value)
+                      : [...selectedDays, day.value].sort()
+                    handleWeeklyPatternChange(newSelected)
+                  }}
+                  className={`p-3 border-2 rounded-lg text-center transition-colors ${
+                    isSelected
+                      ? 'border-primary-500 bg-primary-50 text-primary-700'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <div className="font-medium text-sm">{day.short}</div>
+                </button>
+              )
+            })}
+          </div>
+          {localDetails.selectedDays?.length > 0 && (
+            <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded text-sm text-green-700">
+              Market runs: {localDetails.dayNames}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Monthly Pattern */}
+      {localType === 'monthly_pattern' && (
+        <div className="space-y-4">
+          <label className="block text-sm font-medium text-gray-700">
+            Select which week and day of the month
+          </label>
+          
+          <div>
+            <div className="text-sm text-gray-600 mb-2">Week of the month:</div>
+            <div className="grid grid-cols-5 gap-2">
+              {weekNumbers.map((week) => (
+                <button
+                  key={week.value}
+                  type="button"
+                  onClick={() => handleMonthlyPatternChange(week.value, localDetails.dayOfWeek || 0)}
+                  className={`p-2 border-2 rounded-lg text-center transition-colors ${
+                    localDetails.weekNumber === week.value
+                      ? 'border-primary-500 bg-primary-50 text-primary-700'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <div className="font-medium text-sm">{week.label}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <div className="text-sm text-gray-600 mb-2">Day of the week:</div>
+            <div className="grid grid-cols-7 gap-2">
+              {weekDays.map((day) => (
+                <button
+                  key={day.value}
+                  type="button"
+                  onClick={() => handleMonthlyPatternChange(localDetails.weekNumber || 1, day.value)}
+                  className={`p-2 border-2 rounded-lg text-center transition-colors ${
+                    localDetails.dayOfWeek === day.value
+                      ? 'border-primary-500 bg-primary-50 text-primary-700'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <div className="font-medium text-sm">{day.short}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {localDetails.description && (
+            <div className="p-2 bg-green-50 border border-green-200 rounded text-sm text-green-700">
+              Market runs: {localDetails.description} of each month
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Custom Dates */}
+      {localType === 'custom_dates' && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <label className="block text-sm font-medium text-gray-700">
+              Custom market dates
+            </label>
+            <button
+              type="button"
+              onClick={addCustomDate}
+              className="flex items-center px-3 py-1 text-sm bg-primary-600 text-white rounded hover:bg-primary-700"
+            >
+              <Plus className="h-4 w-4 mr-1" />
+              Add Date
+            </button>
+          </div>
+
+          {localDetails.customDates?.length > 0 ? (
+            <div className="space-y-2">
+              {localDetails.customDates.map((date, index) => (
+                <div key={index} className="flex items-center justify-between p-2 border border-gray-200 rounded">
+                  <span className="text-sm">{new Date(date).toLocaleDateString()}</span>
+                  <button
+                    type="button"
+                    onClick={() => removeCustomDate(date)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="p-4 bg-gray-50 border border-gray-200 rounded text-center text-gray-500">
+              No custom dates added yet. Click "Add Date" to specify when your market runs.
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Current Selection Summary */}
+      {localValue && (
+        <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="flex items-center text-blue-800">
+            <Calendar className="h-5 w-5 mr-2" />
+            <div>
+              <div className="font-medium">Market Schedule:</div>
+              <div className="text-sm">{localValue}</div>
+              {localType === 'custom_dates' && localDetails.customDates?.length > 0 && (
+                <div className="text-xs mt-1">
+                  Next date: {new Date(Math.min(...localDetails.customDates.map(d => new Date(d)))).toLocaleDateString()}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+📄 src/components/market/TimeInput.jsx
+================================================================================
+// src/components/market/TimeInput.jsx
+import { useState } from 'react'
+import { Clock } from 'lucide-react'
+
+export default function TimeInput({ 
+  startTime, 
+  endTime, 
+  onStartTimeChange, 
+  onEndTimeChange,
+  error 
+}) {
+  const [timeError, setTimeError] = useState('')
+
+  const validateTimes = (start, end) => {
+    if (!start || !end) return ''
+    
+    const startMinutes = timeToMinutes(start)
+    const endMinutes = timeToMinutes(end)
+    
+    if (startMinutes >= endMinutes) {
+      return 'End time must be after start time'
+    }
+    
+    const duration = endMinutes - startMinutes
+    if (duration < 60) { // Less than 1 hour
+      return 'Market should run for at least 1 hour'
+    }
+    
+    if (duration > 720) { // More than 12 hours
+      return 'Market duration seems unusually long'
+    }
+    
+    return ''
+  }
+
+  const timeToMinutes = (time) => {
+    const [hours, minutes] = time.split(':').map(Number)
+    return hours * 60 + minutes
+  }
+
+  const formatDuration = (start, end) => {
+    if (!start || !end) return ''
+    
+    const startMinutes = timeToMinutes(start)
+    const endMinutes = timeToMinutes(end)
+    const duration = endMinutes - startMinutes
+    
+    const hours = Math.floor(duration / 60)
+    const mins = duration % 60
+    
+    return `${hours}h ${mins > 0 ? `${mins}m` : ''}`
+  }
+
+  const handleStartChange = (value) => {
+    onStartTimeChange(value)
+    const error = validateTimes(value, endTime)
+    setTimeError(error)
+  }
+
+  const handleEndChange = (value) => {
+    onEndTimeChange(value)
+    const error = validateTimes(startTime, value)
+    setTimeError(error)
+  }
+
+  const quickTimeOptions = [
+    { label: 'Early Morning', start: '06:00', end: '10:00' },
+    { label: 'Morning Market', start: '08:00', end: '12:00' },
+    { label: 'Weekend Market', start: '08:00', end: '14:00' },
+    { label: 'Afternoon Market', start: '14:00', end: '18:00' },
+    { label: 'Evening Market', start: '16:00', end: '20:00' }
+  ]
+
+  const setQuickTime = (start, end) => {
+    handleStartChange(start)
+    handleEndChange(end)
+  }
+
+  return (
+    <div className="space-y-4">
+      <label className="block text-sm font-medium text-gray-700">
+        Operating Hours *
+      </label>
+
+      {/* Quick Time Presets */}
+      <div>
+        <div className="text-sm text-gray-600 mb-2">Quick presets:</div>
+        <div className="flex flex-wrap gap-2">
+          {quickTimeOptions.map((option) => (
+            <button
+              key={option.label}
+              type="button"
+              onClick={() => setQuickTime(option.start, option.end)}
+              className="px-3 py-1 text-xs border border-gray-300 rounded-full hover:bg-gray-50 transition-colors"
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Time Inputs */}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            Start Time
+          </label>
+          <div className="relative">
+            <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <input
+              type="time"
+              value={startTime}
+              onChange={(e) => handleStartChange(e.target.value)}
+              className={`input-field pl-10 ${timeError ? 'border-red-300' : ''}`}
+              required
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            End Time
+          </label>
+          <div className="relative">
+            <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <input
+              type="time"
+              value={endTime}
+              onChange={(e) => handleEndChange(e.target.value)}
+              className={`input-field pl-10 ${timeError ? 'border-red-300' : ''}`}
+              required
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Duration Display */}
+      {startTime && endTime && !timeError && (
+        <div className="p-2 bg-green-50 border border-green-200 rounded text-sm text-green-700">
+          Duration: {formatDuration(startTime, endTime)}
+        </div>
+      )}
+
+      {/* Error Display */}
+      {(timeError || error) && (
+        <div className="text-sm text-red-600">
+          {timeError || error}
+        </div>
+      )}
+    </div>
+  )
+}
+
+📄 src/pages/CreateMarket.jsx
+================================================================================
+// src/pages/CreateMarket.jsx - Market Creation Form
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Save, ArrowLeft, MapPin, Clock, Calendar, DollarSign } from 'lucide-react'
+import { useAuth } from '../contexts/AuthContext'
+import marketService from '../services/marketService'
+
+export default function CreateMarket() {
+  const [loading, setLoading] = useState(false)
+  const [categories, setCategories] = useState([])
+  const [error, setError] = useState(null)
+  const [formData, setFormData] = useState({
+    name: '',
+    category: '',
+    description: '',
+    address: '',
+    suburb: '',
+    state: 'SA',
+    postcode: '',
+    frequency: '',
+    operating_hours: '',
+    contact_email: '',
+    contact_phone: '',
+    website: '',
+    facilities: [],
+    stall_fee: '',
+    application_fee: '',
+    bond_required: false,
+    bond_amount: '',
+    insurance_required: true,
+    power_available: false,
+    parking_available: true,
+    accessibility_notes: ''
+  })
+
+  const { user } = useAuth()
+  const navigate = useNavigate()
+
+  // Redirect if not organizer
+  useEffect(() => {
+    if (user && user.role !== 'organizer') {
+      navigate('/dashboard')
+    }
+  }, [user, navigate])
+
+  useEffect(() => {
+    fetchCategories()
+  }, [])
+
+  const fetchCategories = async () => {
+    try {
+      const categoriesData = await marketService.getCategories()
+      setCategories(categoriesData)
+    } catch (error) {
+      console.error('Error fetching categories:', error)
+    }
+  }
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }))
+  }
+
+  const handleFacilitiesChange = (facility) => {
+    setFormData(prev => ({
+      ...prev,
+      facilities: prev.facilities.includes(facility)
+        ? prev.facilities.filter(f => f !== facility)
+        : [...prev.facilities, facility]
+    }))
+  }
+
+  const createSlug = (name) => {
+    return name
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .trim()
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    setError(null)
+
+    try {
+      const marketData = {
+        ...formData,
+        slug: createSlug(formData.name),
+        organizer: user.id,
+        active: true,
+        stall_fee: formData.stall_fee ? parseFloat(formData.stall_fee) : null,
+        application_fee: formData.application_fee ? parseFloat(formData.application_fee) : null,
+        bond_amount: formData.bond_amount ? parseFloat(formData.bond_amount) : null
+      }
+
+      const newMarket = await marketService.createMarket(marketData)
+      navigate(`/markets/${newMarket.slug}`)
+    } catch (err) {
+      console.error('Error creating market:', err)
+      setError(err.message || 'Failed to create market')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const facilityOptions = [
+    'Toilets', 'Parking', 'Food Court', 'ATM', 'Wheelchair Access',
+    'Children\'s Area', 'Entertainment', 'Seating', 'Shelter/Cover',
+    'Storage', 'Loading Dock', 'Security'
+  ]
+
+  const frequencyOptions = [
+    'Daily', 'Weekly', 'Fortnightly', 'Monthly',
+    'First Saturday', 'First Sunday', 'Second Saturday', 'Second Sunday',
+    'Third Saturday', 'Third Sunday', 'Fourth Saturday', 'Fourth Sunday',
+    'Specific Dates', 'Seasonal'
+  ]
+
+  if (user && user.role !== 'organizer') {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Access Restricted</h2>
+          <p className="text-gray-600">Only market organizers can create markets.</p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="mb-8">
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="flex items-center text-primary-600 hover:text-primary-500 mb-4"
+          >
+            <ArrowLeft className="h-5 w-5 mr-2" />
+            Back to Dashboard
+          </button>
+          <h1 className="text-3xl font-bold text-gray-900">Create New Market</h1>
+          <p className="text-gray-600 mt-2">
+            Set up your market listing to attract stallholders and customers
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+              {error}
+            </div>
+          )}
+
+          {/* Basic Information */}
+          <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+              <MapPin className="h-5 w-5 mr-2 text-primary-600" />
+              Basic Information
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Market Name *
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  required
+                  className="input-field"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="e.g. Adelaide Central Market"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Category *
+                </label>
+                <select
+                  name="category"
+                  required
+                  className="input-field"
+                  value={formData.category}
+                  onChange={handleChange}
+                >
+                  <option value="">Select a category</option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  State
+                </label>
+                <select
+                  name="state"
+                  className="input-field"
+                  value={formData.state}
+                  onChange={handleChange}
+                >
+                  <option value="SA">South Australia</option>
+                  <option value="VIC">Victoria</option>
+                  <option value="NSW">New South Wales</option>
+                  <option value="QLD">Queensland</option>
+                  <option value="WA">Western Australia</option>
+                  <option value="TAS">Tasmania</option>
+                  <option value="NT">Northern Territory</option>
+                  <option value="ACT">ACT</option>
+                </select>
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Description
+                </label>
+                <textarea
+                  name="description"
+                  rows={4}
+                  className="input-field"
+                  value={formData.description}
+                  onChange={handleChange}
+                  placeholder="Describe your market, its atmosphere, and what makes it special..."
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Location Details */}
+          <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              Location Details
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Street Address *
+                </label>
+                <input
+                  type="text"
+                  name="address"
+                  required
+                  className="input-field"
+                  value={formData.address}
+                  onChange={handleChange}
+                  placeholder="123 Market Street"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Suburb *
+                </label>
+                <input
+                  type="text"
+                  name="suburb"
+                  required
+                  className="input-field"
+                  value={formData.suburb}
+                  onChange={handleChange}
+                  placeholder="Adelaide"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Postcode *
+                </label>
+                <input
+                  type="text"
+                  name="postcode"
+                  required
+                  pattern="[0-9]{4}"
+                  className="input-field"
+                  value={formData.postcode}
+                  onChange={handleChange}
+                  placeholder="5000"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Schedule & Operations */}
+          <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+              <Calendar className="h-5 w-5 mr-2 text-primary-600" />
+              Schedule & Operations
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Frequency *
+                </label>
+                <select
+                  name="frequency"
+                  required
+                  className="input-field"
+                  value={formData.frequency}
+                  onChange={handleChange}
+                >
+                  <option value="">Select frequency</option>
+                  {frequencyOptions.map((freq) => (
+                    <option key={freq} value={freq}>
+                      {freq}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Operating Hours
+                </label>
+                <input
+                  type="text"
+                  name="operating_hours"
+                  className="input-field"
+                  value={formData.operating_hours}
+                  onChange={handleChange}
+                  placeholder="8:00 AM - 2:00 PM"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Contact Information */}
+          <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              Contact Information
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Contact Email *
+                </label>
+                <input
+                  type="email"
+                  name="contact_email"
+                  required
+                  className="input-field"
+                  value={formData.contact_email}
+                  onChange={handleChange}
+                  placeholder="info@yourmarket.com"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Contact Phone
+                </label>
+                <input
+                  type="tel"
+                  name="contact_phone"
+                  className="input-field"
+                  value={formData.contact_phone}
+                  onChange={handleChange}
+                  placeholder="08 1234 5678"
+                />
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Website
+                </label>
+                <input
+                  type="url"
+                  name="website"
+                  className="input-field"
+                  value={formData.website}
+                  onChange={handleChange}
+                  placeholder="https://yourmarket.com"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Facilities */}
+          <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              Facilities & Amenities
+            </h2>
+            
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {facilityOptions.map((facility) => (
+                <label key={facility} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={formData.facilities.includes(facility)}
+                    onChange={() => handleFacilitiesChange(facility)}
+                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                  />
+                  <span className="ml-2 text-sm text-gray-700">{facility}</span>
+                </label>
+              ))}
+            </div>
+
+            <div className="mt-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Accessibility Notes
+              </label>
+              <textarea
+                name="accessibility_notes"
+                rows={3}
+                className="input-field"
+                value={formData.accessibility_notes}
+                onChange={handleChange}
+                placeholder="Describe accessibility features, parking, wheelchair access, etc."
+              />
+            </div>
+          </div>
+
+          {/* Pricing & Requirements */}
+          <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+              <DollarSign className="h-5 w-5 mr-2 text-primary-600" />
+              Pricing & Requirements
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Stall Fee (per market day)
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                  <input
+                    type="number"
+                    name="stall_fee"
+                    min="0"
+                    step="0.01"
+                    className="input-field pl-8"
+                    value={formData.stall_fee}
+                    onChange={handleChange}
+                    placeholder="50.00"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Application Fee
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                  <input
+                    type="number"
+                    name="application_fee"
+                    min="0"
+                    step="0.01"
+                    className="input-field pl-8"
+                    value={formData.application_fee}
+                    onChange={handleChange}
+                    placeholder="10.00"
+                  />
+                </div>
+              </div>
+
+              <div className="md:col-span-2">
+                <div className="space-y-4">
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="bond_required"
+                      checked={formData.bond_required}
+                      onChange={handleChange}
+                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                    />
+                    <span className="ml-2 text-sm text-gray-700">Bond Required</span>
+                  </label>
+
+                  {formData.bond_required && (
+                    <div className="ml-6">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Bond Amount
+                      </label>
+                      <div className="relative max-w-xs">
+                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                        <input
+                          type="number"
+                          name="bond_amount"
+                          min="0"
+                          step="0.01"
+                          className="input-field pl-8"
+                          value={formData.bond_amount}
+                          onChange={handleChange}
+                          placeholder="100.00"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="insurance_required"
+                      checked={formData.insurance_required}
+                      onChange={handleChange}
+                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                    />
+                    <span className="ml-2 text-sm text-gray-700">Public Liability Insurance Required</span>
+                  </label>
+
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="power_available"
+                      checked={formData.power_available}
+                      onChange={handleChange}
+                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                    />
+                    <span className="ml-2 text-sm text-gray-700">Power Available for Stalls</span>
+                  </label>
+
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="parking_available"
+                      checked={formData.parking_available}
+                      onChange={handleChange}
+                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                    />
+                    <span className="ml-2 text-sm text-gray-700">Parking Available</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Submit Button */}
+          <div className="flex justify-end space-x-4">
+            <button
+              type="button"
+              onClick={() => navigate('/dashboard')}
+              className="btn-secondary"
+              disabled={loading}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="btn-primary flex items-center"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Creating Market...
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4 mr-2" />
+                  Create Market
+                </>
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+📄 src/pages/MarketDetail.jsx
+================================================================================
+import { useState, useEffect } from 'react'
+import { useParams, Link } from 'react-router-dom'
+import { MapPin, Clock, Calendar, ArrowLeft } from 'lucide-react'
+import marketService from '../services/marketService'
+
+export default function MarketDetail() {
+  const { slug } = useParams()
+  const [market, setMarket] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    fetchMarket()
+  }, [slug])
+
+  const fetchMarket = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+      const marketData = await marketService.getMarket(slug)
+      setMarket(marketData)
+    } catch (error) {
+      console.error('Error fetching market:', error)
+      setError('Market not found or failed to load.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading market details...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error || !market) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center py-12">
+            <p className="text-red-600 mb-4">{error}</p>
+            <Link to="/markets" className="btn-primary">
+              Back to Markets
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <Link to="/markets" className="inline-flex items-center text-primary-600 hover:text-primary-500 mb-6">
+          <ArrowLeft className="h-5 w-5 mr-2" />
+          Back to Markets
+        </Link>
+
+        <div className="bg-white rounded-lg shadow p-8 mb-8">
+          {market.expand?.category && (
+            <div className="mb-4">
+              <span 
+                className="inline-block text-white text-sm px-3 py-1 rounded-full"
+                style={{ backgroundColor: market.expand.category.color || '#6b7280' }}
+              >
+                {market.expand.category.name}
+              </span>
+            </div>
+          )}
+
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">{market.name}</h1>
+          
+          <div className="flex items-center text-gray-600 mb-6">
+            <MapPin className="h-5 w-5 mr-2" />
+            <span>{market.address || `${market.suburb}, ${market.state}`}</span>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {market.frequency && (
+              <div className="flex items-center">
+                <Calendar className="h-5 w-5 text-primary-600 mr-3" />
+                <div>
+                  <p className="font-medium text-gray-900">Schedule</p>
+                  <p className="text-gray-600">{market.frequency}</p>
+                </div>
+              </div>
+            )}
+
+            {market.operating_hours && (
+              <div className="flex items-center">
+                <Clock className="h-5 w-5 text-primary-600 mr-3" />
+                <div>
+                  <p className="font-medium text-gray-900">Hours</p>
+                  <p className="text-gray-600">{market.operating_hours}</p>
+                </div>
+              </div>
+            )}
+
+            {market.website && (
+              <div className="flex items-center">
+                <div>
+                  <p className="font-medium text-gray-900">Website</p>
+                  <a 
+                    href={market.website} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-primary-600 hover:underline"
+                  >
+                    Visit Site
+                  </a>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {market.description && (
+          <div className="bg-white rounded-lg shadow p-8 mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">About This Market</h2>
+            <div className="text-gray-600 leading-relaxed">
+              {market.description}
+            </div>
+          </div>
+        )}
+
+        <div className="bg-white rounded-lg shadow p-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Interested in Selling Here?</h2>
+          <p className="text-gray-600 mb-6">
+            Connect with the market organizers to learn about stallholder opportunities, 
+            application requirements, and available spaces.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Link to="/register" className="btn-primary">
+              Apply as Stallholder
+            </Link>
+            <button className="btn-secondary">
+              Contact Organizer
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+📄 src/pages/MarketList.jsx
+================================================================================
+import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import { Search, Filter, MapPin, Clock, Calendar } from 'lucide-react'
+import marketService from '../services/marketService'
+
+export default function MarketList() {
+  const [markets, setMarkets] = useState([])
+  const [categories, setCategories] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [filters, setFilters] = useState({
+    search: '',
+    category: '',
+    state: 'SA'
+  })
+
+  useEffect(() => {
+    fetchData()
+  }, [filters])
+
+  const fetchData = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+
+      // Fetch categories
+      const categoriesData = await marketService.getCategories()
+      setCategories(categoriesData)
+
+      // Fetch markets with filters
+      const marketsData = await marketService.getMarkets({
+        search: filters.search,
+        category: filters.category,
+        state: filters.state,
+        perPage: 50
+      })
+      
+      setMarkets(marketsData.items || [])
+    } catch (error) {
+      console.error('Error fetching data:', error)
+      setError('Failed to load markets. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleSearchChange = (e) => {
+    setFilters({ ...filters, search: e.target.value })
+  }
+
+  const handleCategoryChange = (categoryId) => {
+    setFilters({ ...filters, category: categoryId })
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading markets...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center py-12">
+            <p className="text-red-600">{error}</p>
+            <button 
+              onClick={fetchData}
+              className="btn-primary mt-4"
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">Browse Markets</h1>
+          <p className="text-gray-600">
+            Discover {markets.length} local markets across South Australia
+          </p>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+            <div className="md:col-span-6">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                <input
+                  type="text"
+                  placeholder="Search markets by name or location..."
+                  className="input-field pl-10"
+                  value={filters.search}
+                  onChange={handleSearchChange}
+                />
+              </div>
+            </div>
+
+            <div className="md:col-span-4">
+              <select
+                className="input-field"
+                value={filters.category}
+                onChange={(e) => handleCategoryChange(e.target.value)}
+              >
+                <option value="">All Categories</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="md:col-span-2">
+              <select
+                className="input-field"
+                value={filters.state}
+                onChange={(e) => setFilters({ ...filters, state: e.target.value })}
+              >
+                <option value="SA">South Australia</option>
+                <option value="VIC">Victoria</option>
+                <option value="NSW">New South Wales</option>
+                <option value="QLD">Queensland</option>
+                <option value="WA">Western Australia</option>
+                <option value="TAS">Tasmania</option>
+                <option value="NT">Northern Territory</option>
+                <option value="ACT">ACT</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {markets.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-gray-600">No markets found matching your criteria.</p>
+            <button 
+              onClick={() => setFilters({ search: '', category: '', state: 'SA' })}
+              className="btn-secondary mt-4"
+            >
+              Clear Filters
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {markets.map((market) => (
+              <div key={market.id} className="card hover:shadow-lg transition-shadow">
+                {market.expand?.category && (
+                  <div className="mb-4">
+                    <span 
+                      className="inline-block text-white text-xs px-2 py-1 rounded-full"
+                      style={{ backgroundColor: market.expand.category.color || '#6b7280' }}
+                    >
+                      {market.expand.category.name}
+                    </span>
+                  </div>
+                )}
+
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">{market.name}</h3>
+                
+                <div className="flex items-center text-gray-600 mb-2">
+                  <MapPin className="h-4 w-4 mr-1" />
+                  <span>{market.suburb}, {market.state}</span>
+                </div>
+
+                {market.frequency && (
+                  <div className="flex items-center text-gray-600 mb-2">
+                    <Calendar className="h-4 w-4 mr-1" />
+                    <span>{market.frequency}</span>
+                  </div>
+                )}
+
+                {market.operating_hours && (
+                  <div className="flex items-center text-gray-600 mb-4">
+                    <Clock className="h-4 w-4 mr-1" />
+                    <span>{market.operating_hours}</span>
+                  </div>
+                )}
+
+                {market.description && (
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                    {market.description.substring(0, 100)}...
+                  </p>
+                )}
+
+                <div className="flex gap-2">
+                  <Link 
+                    to={`/markets/${market.slug}`}
+                    className="btn-primary flex-1 text-center"
+                  >
+                    View Details
+                  </Link>
+                  {market.website && (
+                    <button className="btn-secondary px-3 py-2" title="Visit Website">
+                      🌐
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+📄 src/services/marketService.js
+================================================================================
+// src/services/marketService.js - Updated with better error handling
+import pb from '../lib/pocketbase.js';
+import { auditLogger } from '../utils/security.js';
+
+class MarketService {
+  // Get all active markets
+  async getMarkets(filters = {}) {
+    try {
+      const filterConditions = []; // Removed 'active = true' since the field might not exist yet
+      
+      if (filters.state) {
+        filterConditions.push(`state = "${filters.state}"`);
+      }
+      
+      if (filters.category) {
+        filterConditions.push(`category = "${filters.category}"`);
+      }
+      
+      if (filters.search) {
+        filterConditions.push(`(name ~ "${filters.search}" || suburb ~ "${filters.search}" || description ~ "${filters.search}")`);
+      }
+
+      const filterString = filterConditions.length > 0 ? filterConditions.join(' && ') : '';
+
+      const result = await pb.collection('markets').getList(
+        filters.page || 1,
+        filters.perPage || 20,
+        {
+          filter: filterString,
+          sort: filters.sort || '-created',
+          expand: 'category,organizer'
+        }
+      );
+
+      return result;
+    } catch (error) {
+      console.error('Error fetching markets:', error);
+      throw error;
+    }
+  }
+
+  // Get single market by ID or slug
+  async getMarket(idOrSlug) {
+    try {
+      const market = await pb.collection('markets').getFirstListItem(
+        `id = "${idOrSlug}" || slug = "${idOrSlug}"`,
+        {
+          expand: 'category,organizer'
+        }
+      );
+
+      return market;
+    } catch (error) {
+      console.error('Error fetching market:', error);
+      throw error;
+    }
+  }
+
+  // Create new market
+  async createMarket(marketData) {
+    try {
+      const market = await pb.collection('markets').create(marketData);
+      
+      auditLogger.log('market_created', pb.authStore.model?.id, {
+        marketId: market.id,
+        marketName: market.name
+      });
+
+      return market;
+    } catch (error) {
+      console.error('Error creating market:', error);
+      throw error;
+    }
+  }
+
+  // Update market
+  async updateMarket(id, marketData) {
+    try {
+      const market = await pb.collection('markets').update(id, marketData);
+      
+      auditLogger.log('market_updated', pb.authStore.model?.id, {
+        marketId: id,
+        changes: Object.keys(marketData)
+      });
+
+      return market;
+    } catch (error) {
+      console.error('Error updating market:', error);
+      throw error;
+    }
+  }
+
+  // Delete market
+  async deleteMarket(id) {
+    try {
+      await pb.collection('markets').delete(id);
+      
+      auditLogger.log('market_deleted', pb.authStore.model?.id, {
+        marketId: id
+      });
+
+      return true;
+    } catch (error) {
+      console.error('Error deleting market:', error);
+      throw error;
+    }
+  }
+
+  // Search markets by location (geolocation)
+  async searchNearby(latitude, longitude, radiusKm = 25) {
+    try {
+      // This is a simplified version - in production you'd use proper geospatial queries
+      const markets = await pb.collection('markets').getList(1, 50, {
+        filter: 'latitude != null && longitude != null',
+        expand: 'category'
+      });
+
+      // Calculate distances client-side (in production, do this server-side)
+      const marketsWithDistance = markets.items.map(market => {
+        const distance = this.calculateDistance(
+          latitude, longitude,
+          market.latitude, market.longitude
+        );
+        return { ...market, distance };
+      });
+
+      // Filter by radius and sort by distance
+      return marketsWithDistance
+        .filter(market => market.distance <= radiusKm)
+        .sort((a, b) => a.distance - b.distance);
+    } catch (error) {
+      console.error('Error searching nearby markets:', error);
+      throw error;
+    }
+  }
+
+  // Calculate distance between two points (Haversine formula)
+  calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Earth's radius in kilometers
+    const dLat = this.deg2rad(lat2 - lat1);
+    const dLon = this.deg2rad(lon2 - lon1);
+    const a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) * 
+      Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+  }
+
+  deg2rad(deg) {
+    return deg * (Math.PI/180);
+  }
+
+  // Get market categories - handle case where collection might not exist yet
+  async getCategories() {
+    try {
+      const categories = await pb.collection('market_categories').getFullList({
+        sort: 'name'
+      });
+      return categories;
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      // Return default categories if collection doesn't exist yet
+      return [
+        { id: 'farmers', name: 'Farmers Market', color: '#22c55e' },
+        { id: 'craft', name: 'Craft & Artisan', color: '#8b5cf6' },
+        { id: 'community', name: 'Community Market', color: '#3b82f6' },
+        { id: 'specialty', name: 'Specialty Market', color: '#f59e0b' },
+        { id: 'food', name: 'Food Market', color: '#ef4444' },
+        { id: 'vintage', name: 'Vintage & Antiques', color: '#6b7280' }
+      ];
+    }
+  }
+}
+
+export default new MarketService();
+
+📊 EXPORT SUMMARY
+========================================
+Mode: market (pattern-based)
+Files included: 7
+Total size: 68K
+Generated: Wed Jun  4 05:01:10 UTC 2025
+Auto-discovers new files in target directories

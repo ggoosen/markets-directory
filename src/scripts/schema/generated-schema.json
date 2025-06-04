@@ -1,7 +1,7 @@
 {
-  "version": "2.0.0",
-  "description": "SA Markets Directory - Complete Schema with Flexible Requirements System",
-  "generated": "2025-06-04T08:00:00.000Z",
+  "version": "1.0.0",
+  "description": "Generated from current PocketBase database",
+  "generated": "2025-06-04T07:42:26.183Z",
   "collections": {
     "users": {
       "name": "users",
@@ -20,8 +20,7 @@
             "values": [
               "customer",
               "stallholder",
-              "organizer",
-              "admin"
+              "organizer"
             ]
           }
         },
@@ -151,163 +150,9 @@
       ],
       "listRule": "@request.auth.id != \"\"",
       "viewRule": "@request.auth.id != \"\"",
-      "createRule": "@request.auth.role = \"admin\"",
-      "updateRule": "@request.auth.role = \"admin\"",
-      "deleteRule": "@request.auth.role = \"admin\""
-    },
-    "requirement_types": {
-      "name": "requirement_types",
-      "type": "base",
-      "schema": [
-        {
-          "system": false,
-          "id": "req_name",
-          "name": "name",
-          "type": "text",
-          "required": true,
-          "presentable": true,
-          "unique": false,
-          "options": {
-            "min": 2,
-            "max": 100,
-            "pattern": ""
-          }
-        },
-        {
-          "system": false,
-          "id": "req_desc",
-          "name": "description",
-          "type": "text",
-          "required": false,
-          "presentable": false,
-          "unique": false,
-          "options": {
-            "min": null,
-            "max": 500,
-            "pattern": ""
-          }
-        },
-        {
-          "system": false,
-          "id": "req_cat",
-          "name": "category",
-          "type": "select",
-          "required": true,
-          "presentable": false,
-          "unique": false,
-          "options": {
-            "maxSelect": 1,
-            "values": [
-              "legal",
-              "business",
-              "membership",
-              "product",
-              "logistics",
-              "experience",
-              "certification"
-            ]
-          }
-        },
-        {
-          "system": false,
-          "id": "req_vtype",
-          "name": "value_type",
-          "type": "select",
-          "required": true,
-          "presentable": false,
-          "unique": false,
-          "options": {
-            "maxSelect": 1,
-            "values": [
-              "boolean",
-              "amount",
-              "text",
-              "select",
-              "date",
-              "number"
-            ]
-          }
-        },
-        {
-          "system": false,
-          "id": "req_opts",
-          "name": "value_options",
-          "type": "json",
-          "required": false,
-          "presentable": false,
-          "unique": false,
-          "options": {
-            "maxSize": 2000000
-          }
-        },
-        {
-          "system": false,
-          "id": "req_icon",
-          "name": "icon",
-          "type": "text",
-          "required": false,
-          "presentable": false,
-          "unique": false,
-          "options": {
-            "min": null,
-            "max": 50,
-            "pattern": ""
-          }
-        },
-        {
-          "system": false,
-          "id": "req_help",
-          "name": "help_text",
-          "type": "text",
-          "required": false,
-          "presentable": false,
-          "unique": false,
-          "options": {
-            "min": null,
-            "max": 300,
-            "pattern": ""
-          }
-        },
-        {
-          "system": false,
-          "id": "req_active",
-          "name": "active",
-          "type": "bool",
-          "required": false,
-          "presentable": false,
-          "unique": false,
-          "options": {}
-        },
-        {
-          "system": false,
-          "id": "req_sort",
-          "name": "sort_order",
-          "type": "number",
-          "required": false,
-          "presentable": false,
-          "unique": false,
-          "options": {
-            "min": 0,
-            "max": null,
-            "noDecimal": false
-          }
-        },
-        {
-          "system": false,
-          "id": "req_system",
-          "name": "system_managed",
-          "type": "bool",
-          "required": false,
-          "presentable": false,
-          "unique": false,
-          "options": {}
-        }
-      ],
-      "listRule": "@request.auth.id != \"\"",
-      "viewRule": "@request.auth.id != \"\"",
-      "createRule": "@request.auth.role = \"admin\" || @request.auth.role = \"organizer\"",
-      "updateRule": "@request.auth.role = \"admin\" || (@request.auth.role = \"organizer\" && system_managed = false)",
-      "deleteRule": "@request.auth.role = \"admin\" || (@request.auth.role = \"organizer\" && system_managed = false)"
+      "createRule": "@request.auth.role = \"organizer\"",
+      "updateRule": "@request.auth.role = \"organizer\"",
+      "deleteRule": "@request.auth.role = \"organizer\""
     },
     "markets": {
       "name": "markets",
@@ -334,7 +179,7 @@
           "type": "text",
           "required": true,
           "presentable": false,
-          "unique": true,
+          "unique": false,
           "options": {
             "min": 2,
             "max": 100,
@@ -364,7 +209,7 @@
           "presentable": false,
           "unique": false,
           "options": {
-            "collectionId": "market_categories",
+            "collectionId": "o8aksmzfhlw04g0",
             "cascadeDelete": false,
             "minSelect": null,
             "maxSelect": 1,
@@ -570,6 +415,30 @@
         },
         {
           "system": false,
+          "id": "yv9vmslc",
+          "name": "insurance_minimum",
+          "type": "number",
+          "required": false,
+          "presentable": false,
+          "unique": false,
+          "options": {
+            "min": 0,
+            "max": null,
+            "noDecimal": false
+          }
+        },
+        {
+          "system": false,
+          "id": "hheiwxoq",
+          "name": "abn_required",
+          "type": "bool",
+          "required": false,
+          "presentable": false,
+          "unique": false,
+          "options": {}
+        },
+        {
+          "system": false,
           "id": "19ehcqnm",
           "name": "waiting_list_enabled",
           "type": "bool",
@@ -690,273 +559,6 @@
       "createRule": "@request.auth.id != \"\" && @request.auth.role = \"organizer\"",
       "updateRule": "@request.auth.id = organizer.id",
       "deleteRule": "@request.auth.id = organizer.id"
-    },
-    "market_requirements": {
-      "name": "market_requirements",
-      "type": "base",
-      "schema": [
-        {
-          "system": false,
-          "id": "mreq_market",
-          "name": "market",
-          "type": "relation",
-          "required": true,
-          "presentable": false,
-          "unique": false,
-          "options": {
-            "collectionId": "markets",
-            "cascadeDelete": true,
-            "minSelect": null,
-            "maxSelect": 1,
-            "displayFields": [
-              "name"
-            ]
-          }
-        },
-        {
-          "system": false,
-          "id": "mreq_type",
-          "name": "requirement_type",
-          "type": "relation",
-          "required": true,
-          "presentable": false,
-          "unique": false,
-          "options": {
-            "collectionId": "requirement_types",
-            "cascadeDelete": false,
-            "minSelect": null,
-            "maxSelect": 1,
-            "displayFields": [
-              "name"
-            ]
-          }
-        },
-        {
-          "system": false,
-          "id": "mreq_required",
-          "name": "is_required",
-          "type": "bool",
-          "required": false,
-          "presentable": false,
-          "unique": false,
-          "options": {}
-        },
-        {
-          "system": false,
-          "id": "mreq_value",
-          "name": "requirement_value",
-          "type": "json",
-          "required": false,
-          "presentable": false,
-          "unique": false,
-          "options": {
-            "maxSize": 2000000
-          }
-        },
-        {
-          "system": false,
-          "id": "mreq_notes",
-          "name": "custom_notes",
-          "type": "text",
-          "required": false,
-          "presentable": false,
-          "unique": false,
-          "options": {
-            "min": null,
-            "max": 500,
-            "pattern": ""
-          }
-        },
-        {
-          "system": false,
-          "id": "mreq_priority",
-          "name": "priority",
-          "type": "select",
-          "required": false,
-          "presentable": false,
-          "unique": false,
-          "options": {
-            "maxSelect": 1,
-            "values": [
-              "required",
-              "preferred",
-              "optional"
-            ]
-          }
-        },
-        {
-          "system": false,
-          "id": "mreq_active",
-          "name": "active",
-          "type": "bool",
-          "required": false,
-          "presentable": false,
-          "unique": false,
-          "options": {}
-        }
-      ],
-      "listRule": "@request.auth.id != \"\"",
-      "viewRule": "@request.auth.id != \"\"",
-      "createRule": "@request.auth.id = market.organizer",
-      "updateRule": "@request.auth.id = market.organizer",
-      "deleteRule": "@request.auth.id = market.organizer"
-    },
-    "stallholder_qualifications": {
-      "name": "stallholder_qualifications",
-      "type": "base",
-      "schema": [
-        {
-          "system": false,
-          "id": "sq_stallholder",
-          "name": "stallholder",
-          "type": "relation",
-          "required": true,
-          "presentable": false,
-          "unique": false,
-          "options": {
-            "collectionId": "stallholders",
-            "cascadeDelete": true,
-            "minSelect": null,
-            "maxSelect": 1,
-            "displayFields": [
-              "business_name"
-            ]
-          }
-        },
-        {
-          "system": false,
-          "id": "sq_type",
-          "name": "requirement_type",
-          "type": "relation",
-          "required": true,
-          "presentable": false,
-          "unique": false,
-          "options": {
-            "collectionId": "requirement_types",
-            "cascadeDelete": false,
-            "minSelect": null,
-            "maxSelect": 1,
-            "displayFields": [
-              "name"
-            ]
-          }
-        },
-        {
-          "system": false,
-          "id": "sq_status",
-          "name": "status",
-          "type": "select",
-          "required": true,
-          "presentable": false,
-          "unique": false,
-          "options": {
-            "maxSelect": 1,
-            "values": [
-              "verified",
-              "pending",
-              "expired",
-              "not_applicable",
-              "rejected"
-            ]
-          }
-        },
-        {
-          "system": false,
-          "id": "sq_value",
-          "name": "qualification_value",
-          "type": "json",
-          "required": false,
-          "presentable": false,
-          "unique": false,
-          "options": {
-            "maxSize": 2000000
-          }
-        },
-        {
-          "system": false,
-          "id": "sq_expiry",
-          "name": "expiry_date",
-          "type": "date",
-          "required": false,
-          "presentable": false,
-          "unique": false,
-          "options": {
-            "min": "",
-            "max": ""
-          }
-        },
-        {
-          "system": false,
-          "id": "sq_docs",
-          "name": "supporting_documents",
-          "type": "file",
-          "required": false,
-          "presentable": false,
-          "unique": false,
-          "options": {
-            "mimeTypes": [
-              "application/pdf",
-              "image/jpeg",
-              "image/png",
-              "image/webp"
-            ],
-            "thumbs": null,
-            "maxSelect": 5,
-            "maxSize": 10485760,
-            "protected": true
-          }
-        },
-        {
-          "system": false,
-          "id": "sq_verified_by",
-          "name": "verified_by",
-          "type": "relation",
-          "required": false,
-          "presentable": false,
-          "unique": false,
-          "options": {
-            "collectionId": "_pb_users_auth_",
-            "cascadeDelete": false,
-            "minSelect": null,
-            "maxSelect": 1,
-            "displayFields": [
-              "name"
-            ]
-          }
-        },
-        {
-          "system": false,
-          "id": "sq_verified_date",
-          "name": "verified_date",
-          "type": "date",
-          "required": false,
-          "presentable": false,
-          "unique": false,
-          "options": {
-            "min": "",
-            "max": ""
-          }
-        },
-        {
-          "system": false,
-          "id": "sq_notes",
-          "name": "verification_notes",
-          "type": "text",
-          "required": false,
-          "presentable": false,
-          "unique": false,
-          "options": {
-            "min": null,
-            "max": 500,
-            "pattern": ""
-          }
-        }
-      ],
-      "listRule": "@request.auth.id = stallholder.user || @request.auth.role = \"admin\"",
-      "viewRule": "@request.auth.id = stallholder.user || @request.auth.role = \"admin\"",
-      "createRule": "@request.auth.id = stallholder.user",
-      "updateRule": "@request.auth.id = stallholder.user || @request.auth.role = \"admin\"",
-      "deleteRule": "@request.auth.id = stallholder.user || @request.auth.role = \"admin\""
     },
     "stallholders": {
       "name": "stallholders",
@@ -1173,7 +775,7 @@
           "presentable": false,
           "unique": false,
           "options": {
-            "collectionId": "stallholders",
+            "collectionId": "9isenkwpz24w58h",
             "cascadeDelete": true,
             "minSelect": null,
             "maxSelect": 1,
@@ -1191,7 +793,7 @@
           "presentable": false,
           "unique": false,
           "options": {
-            "collectionId": "markets",
+            "collectionId": "4f3nr3ssrl6oqc0",
             "cascadeDelete": true,
             "minSelect": null,
             "maxSelect": 1,
@@ -1543,7 +1145,7 @@
           "presentable": false,
           "unique": false,
           "options": {
-            "collectionId": "markets",
+            "collectionId": "4f3nr3ssrl6oqc0",
             "cascadeDelete": true,
             "minSelect": null,
             "maxSelect": 1,
@@ -1561,7 +1163,7 @@
           "presentable": false,
           "unique": false,
           "options": {
-            "collectionId": "amenity_types",
+            "collectionId": "8ise5fvjffnrk3n",
             "cascadeDelete": false,
             "minSelect": null,
             "maxSelect": 1,
@@ -1614,7 +1216,7 @@
           "presentable": false,
           "unique": false,
           "options": {
-            "collectionId": "markets",
+            "collectionId": "4f3nr3ssrl6oqc0",
             "cascadeDelete": true,
             "minSelect": null,
             "maxSelect": 1,
@@ -1644,7 +1246,7 @@
         {
           "system": false,
           "id": "v7ptlqbt",
-          "name": "pattern_data",
+          "name": "schedule_data",
           "type": "json",
           "required": false,
           "presentable": false,
@@ -1716,20 +1318,6 @@
           "presentable": false,
           "unique": false,
           "options": {}
-        },
-        {
-          "system": false,
-          "id": "sched_notes",
-          "name": "notes",
-          "type": "text",
-          "required": false,
-          "presentable": false,
-          "unique": false,
-          "options": {
-            "min": null,
-            "max": 300,
-            "pattern": ""
-          }
         }
       ],
       "listRule": null,
@@ -1751,7 +1339,7 @@
           "presentable": false,
           "unique": false,
           "options": {
-            "collectionId": "markets",
+            "collectionId": "4f3nr3ssrl6oqc0",
             "cascadeDelete": true,
             "minSelect": null,
             "maxSelect": 1,
@@ -1885,16 +1473,6 @@
           "presentable": false,
           "unique": false,
           "options": {}
-        },
-        {
-          "system": false,
-          "id": "fee_required",
-          "name": "required",
-          "type": "bool",
-          "required": false,
-          "presentable": false,
-          "unique": false,
-          "options": {}
         }
       ],
       "listRule": null,
@@ -1903,103 +1481,5 @@
       "updateRule": "@request.auth.id != \"\"",
       "deleteRule": "@request.auth.id != \"\""
     }
-  },
-  "seed_data": {
-    "requirement_types": [
-      {
-        "name": "Public Liability Insurance",
-        "description": "Minimum public liability insurance coverage required for stallholders",
-        "category": "legal",
-        "value_type": "amount",
-        "value_options": {
-          "currency": "AUD",
-          "min_amount": 1000000,
-          "suggested_amounts": [2000000, 5000000, 10000000, 20000000],
-          "amount_labels": {
-            "2000000": "$2 Million",
-            "5000000": "$5 Million", 
-            "10000000": "$10 Million",
-            "20000000": "$20 Million"
-          }
-        },
-        "icon": "shield",
-        "help_text": "Most markets require between $2M-$10M coverage. Check with your venue for specific requirements.",
-        "active": true,
-        "sort_order": 1,
-        "system_managed": true
-      },
-      {
-        "name": "Australian Business Number (ABN)",
-        "description": "Valid ABN registration required for all stallholders", 
-        "category": "business",
-        "value_type": "boolean",
-        "value_options": {},
-        "icon": "building",
-        "help_text": "Required for tax purposes and business legitimacy",
-        "active": true,
-        "sort_order": 2,
-        "system_managed": true
-      },
-      {
-        "name": "Food Safety Certificate",
-        "description": "Current food safety certification for food vendors",
-        "category": "certification",
-        "value_type": "boolean", 
-        "value_options": {},
-        "icon": "utensils",
-        "help_text": "Required for all food vendors. Certificate must be current and valid.",
-        "active": true,
-        "sort_order": 3,
-        "system_managed": true
-      },
-      {
-        "name": "Local Business Preference",
-        "description": "Preference for businesses based within specified radius",
-        "category": "membership",
-        "value_type": "number",
-        "value_options": {
-          "unit": "km", 
-          "min_value": 10,
-          "max_value": 200,
-          "default_value": 50
-        },
-        "icon": "map-pin",
-        "help_text": "Distance in kilometers from market location",
-        "active": true,
-        "sort_order": 4,
-        "system_managed": true
-      },
-      {
-        "name": "Handmade Products Only",
-        "description": "All products must be handmade by the stallholder",
-        "category": "product",
-        "value_type": "boolean",
-        "value_options": {},
-        "icon": "hammer",
-        "help_text": "Excludes resold or mass-produced items",
-        "active": true,
-        "sort_order": 5,
-        "system_managed": true
-      },
-      {
-        "name": "Minimum Experience Required",
-        "description": "Minimum number of markets or years of experience required",
-        "category": "experience", 
-        "value_type": "select",
-        "value_options": {
-          "options": [
-            {"value": "none", "label": "No experience required - first-time friendly"},
-            {"value": "beginner", "label": "Some market experience preferred"},
-            {"value": "intermediate", "label": "1+ years market experience"},
-            {"value": "advanced", "label": "3+ years established business"}
-          ]
-        },
-        "icon": "star",
-        "help_text": "Helps set expectations for stallholder experience level",
-        "active": true,
-        "sort_order": 6,
-        "system_managed": true
-      }
-    ]
   }
 }

@@ -1,0 +1,919 @@
+SA MARKETS DIRECTORY - services MODE (Dynamic)
+Generated: Wed Jun  4 05:00:45 UTC 2025
+Pattern-based file selection - automatically includes new files
+================================================================================
+
+📄 src/hooks/useApplications.js
+================================================================================
+// src/hooks/useApplications.js - Fixed import
+import { useState, useEffect } from 'react';
+import ApplicationService from '../services/ApplicationService.js';
+
+export const useApplications = (stallholderId, filters = {}) => {
+  const [applications, setApplications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [pagination, setPagination] = useState(null);
+
+  useEffect(() => {
+    if (stallholderId) {
+      fetchApplications();
+    }
+  }, [stallholderId, filters]);
+
+  const fetchApplications = async () => {
+    try {
+      setLoading(true);
+      const result = await ApplicationService.getStallholderApplications(stallholderId, filters);
+      setApplications(result.items);
+      setPagination({
+        page: result.page,
+        perPage: result.perPage,
+        totalItems: result.totalItems,
+        totalPages: result.totalPages
+      });
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const submitApplication = async (applicationData) => {
+    try {
+      const newApplication = await ApplicationService.submitApplication(applicationData);
+      setApplications(prev => [newApplication, ...prev]);
+      return newApplication;
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    }
+  };
+
+  const cancelApplication = async (applicationId) => {
+    try {
+      await ApplicationService.cancelApplication(applicationId);
+      setApplications(prev => 
+        prev.map(app => 
+          app.id === applicationId 
+            ? { ...app, status: 'cancelled' }
+            : app
+        )
+      );
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    }
+  };
+
+  return {
+    applications,
+    loading,
+    error,
+    pagination,
+    submitApplication,
+    cancelApplication,
+    refetch: fetchApplications
+  };
+};
+
+📄 src/hooks/useStallholder.js
+================================================================================
+// src/hooks/useStallholder.js - Complete Implementation
+import { useState, useEffect } from 'react';
+import StallholderService from '../services/StallholderService.js';
+import { useAuth } from '../contexts/AuthContext';
+
+export const useStallholder = () => {
+  const [stallholder, setStallholder] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (user && user.role === 'stallholder') {
+      fetchStallholder();
+    } else {
+      setLoading(false);
+    }
+  }, [user]);
+
+  const fetchStallholder = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      // Get stallholder profile for current user
+      const result = await StallholderService.getStallholders({
+        user: user.id
+      });
+      
+      if (result.items.length > 0) {
+        setStallholder(result.items[0]);
+      }
+    } catch (err) {
+      console.error('Error fetching stallholder:', err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateStallholder = async (data) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      if (!stallholder) {
+        throw new Error('No stallholder profile to update');
+      }
+      
+      const updated = await StallholderService.updateStallholder(stallholder.id, data);
+      setStallholder(updated);
+      return updated;
+    } catch (err) {
+      console.error('Error updating stallholder:', err);
+      setError(err.message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const createStallholder = async (data) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      if (!user) {
+        throw new Error('User must be logged in to create stallholder profile');
+      }
+      
+      const created = await StallholderService.createStallholder({
+        ...data,
+        user: user.id
+      });
+      
+      setStallholder(created);
+      return created;
+    } catch (err) {
+      console.error('Error creating stallholder:', err);
+      setError(err.message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return {
+    stallholder,
+    loading,
+    error,
+    updateStallholder,
+    createStallholder,
+    refetch: fetchStallholder,
+    hasProfile: !!stallholder
+  };
+};
+
+📄 src/lib/pocketbase.js
+================================================================================
+import PocketBase from 'pocketbase';
+
+const pb = new PocketBase(import.meta.env.VITE_POCKETBASE_URL || 'http://localhost:8090');
+
+// Configure authentication
+pb.autoCancellation(false);
+
+// Export the instance
+export default pb;
+
+// Helper functions for common operations
+export const auth = {
+  // Login user
+  async login(email, password) {
+    return await pb.collection('users').authWithPassword(email, password);
+  },
+
+  // Register user
+  async register(data) {
+    return await pb.collection('users').create(data);
+  },
+
+  // Logout
+  logout() {
+    pb.authStore.clear();
+  },
+
+  // Get current user
+  getCurrentUser() {
+    return pb.authStore.model;
+  },
+
+  // Check if user is authenticated
+  isAuthenticated() {
+    return pb.authStore.isValid;
+  },
+
+  // Subscribe to auth changes
+  onChange(callback) {
+    return pb.authStore.onChange(callback);
+  }
+};
+
+// Helper for handling API errors
+export const handlePocketBaseError = (error) => {
+  console.error('PocketBase Error:', error);
+  
+  if (error?.response?.data) {
+    // Extract field-specific errors
+    const fieldErrors = {};
+    Object.entries(error.response.data).forEach(([field, fieldError]) => {
+      fieldErrors[field] = fieldError.message || fieldError;
+    });
+    return fieldErrors;
+  }
+  
+  return { general: error.message || 'An unexpected error occurred' };
+};
+
+
+📄 src/services/ApplicationService.js
+================================================================================
+// src/services/ApplicationService.js - Fix the import and missing methods
+import pb from '../lib/pocketbase.js';
+import { auditLogger } from '../utils/security.js';
+
+class ApplicationService {
+  // Get applications for market organizer
+  async getMarketApplications(marketId, filters = {}) {
+    try {
+      const filterConditions = [`market = "${marketId}"`];
+      
+      if (filters.status) {
+        filterConditions.push(`status = "${filters.status}"`);
+      }
+
+      const result = await pb.collection('applications').getList(
+        filters.page || 1,
+        filters.perPage || 20,
+        {
+          filter: filterConditions.join(' && '),
+          sort: '-created',
+          expand: 'stallholder,stallholder.user,market'
+        }
+      );
+
+      return result;
+    } catch (error) {
+      console.error('Error fetching market applications:', error);
+      throw error;
+    }
+  }
+
+  // Get applications for stallholder (method that was missing)
+  async getStallholderApplications(stallholderId, filters = {}) {
+    try {
+      const filterConditions = [`stallholder = "${stallholderId}"`];
+      
+      if (filters.status) {
+        filterConditions.push(`status = "${filters.status}"`);
+      }
+
+      const result = await pb.collection('applications').getList(
+        filters.page || 1,
+        filters.perPage || 20,
+        {
+          filter: filterConditions.join(' && '),
+          sort: '-created',
+          expand: 'market,stallholder'
+        }
+      );
+
+      return result;
+    } catch (error) {
+      console.error('Error fetching stallholder applications:', error);
+      throw error;
+    }
+  }
+
+  // Submit application to market
+  async submitApplication(applicationData) {
+    try {
+      const application = await pb.collection('applications').create({
+        ...applicationData,
+        status: 'pending',
+        payment_status: 'unpaid'
+      });
+      
+      auditLogger.log('application_submitted', pb.authStore.model?.id, {
+        applicationId: application.id,
+        marketId: applicationData.market,
+        stallholderId: applicationData.stallholder
+      });
+
+      return application;
+    } catch (error) {
+      console.error('Error submitting application:', error);
+      throw error;
+    }
+  }
+
+  // Update application status
+  async updateApplicationStatus(applicationId, status, organizerNotes = '') {
+    try {
+      const application = await pb.collection('applications').update(applicationId, {
+        status,
+        organizer_notes: organizerNotes
+      });
+      
+      auditLogger.log('application_status_updated', pb.authStore.model?.id, {
+        applicationId,
+        newStatus: status
+      });
+
+      return application;
+    } catch (error) {
+      console.error('Error updating application status:', error);
+      throw error;
+    }
+  }
+
+  // Get application statistics for market
+  async getApplicationStats(marketId) {
+    try {
+      const applications = await pb.collection('applications').getFullList({
+        filter: `market = "${marketId}"`
+      });
+
+      const stats = {
+        total: applications.length,
+        pending: applications.filter(app => app.status === 'pending').length,
+        approved: applications.filter(app => app.status === 'approved').length,
+        rejected: applications.filter(app => app.status === 'rejected').length,
+        cancelled: applications.filter(app => app.status === 'cancelled').length
+      };
+
+      return stats;
+    } catch (error) {
+      console.error('Error fetching application stats:', error);
+      throw error;
+    }
+  }
+
+  // Check if stallholder has existing application for market
+  async checkExistingApplication(stallholderId, marketId) {
+    try {
+      const existing = await pb.collection('applications').getFirstListItem(
+        `stallholder = "${stallholderId}" && market = "${marketId}" && status != "cancelled" && status != "rejected"`
+      );
+      return existing;
+    } catch (error) {
+      if (error.status === 404) {
+        return null; // No existing application
+      }
+      throw error;
+    }
+  }
+
+  // Cancel application
+  async cancelApplication(applicationId) {
+    try {
+      const application = await pb.collection('applications').update(applicationId, {
+        status: 'cancelled'
+      });
+      
+      auditLogger.log('application_cancelled', pb.authStore.model?.id, {
+        applicationId
+      });
+
+      return application;
+    } catch (error) {
+      console.error('Error cancelling application:', error);
+      throw error;
+    }
+  }
+}
+
+export default new ApplicationService();
+
+📄 src/services/StallholderService.js
+================================================================================
+// src/services/StallholderService.js - Updated to fix import issues
+import pb from '../lib/pocketbase.js';
+import { auditLogger } from '../utils/security.js';
+import ApplicationService from './ApplicationService.js';
+
+class StallholderService {
+  // Get all stallholders with filtering
+  async getStallholders(filters = {}) {
+    try {
+      const filterConditions = ['user != ""']; // Changed from 'active = true' since we don't have that field
+      
+      if (filters.category) {
+        filterConditions.push(`product_categories ~ "${filters.category}"`);
+      }
+      
+      if (filters.state) {
+        filterConditions.push(`state = "${filters.state}"`);
+      }
+      
+      if (filters.search) {
+        filterConditions.push(`(business_name ~ "${filters.search}" || description ~ "${filters.search}")`);
+      }
+
+      if (filters.rating) {
+        filterConditions.push(`rating >= ${filters.rating}`);
+      }
+
+      if (filters.user) {
+        filterConditions.push(`user = "${filters.user}"`);
+      }
+
+      const result = await pb.collection('stallholders').getList(
+        filters.page || 1,
+        filters.perPage || 20,
+        {
+          filter: filterConditions.join(' && '),
+          sort: filters.sort || '-created',
+          expand: 'user'
+        }
+      );
+
+      return result;
+    } catch (error) {
+      console.error('Error fetching stallholders:', error);
+      throw error;
+    }
+  }
+
+  // Get single stallholder
+  async getStallholder(id) {
+    try {
+      const stallholder = await pb.collection('stallholders').getOne(id, {
+        expand: 'user'
+      });
+      return stallholder;
+    } catch (error) {
+      console.error('Error fetching stallholder:', error);
+      throw error;
+    }
+  }
+
+  // Create stallholder profile
+  async createStallholder(stallholderData) {
+    try {
+      const stallholder = await pb.collection('stallholders').create(stallholderData);
+      
+      auditLogger.log('stallholder_created', pb.authStore.model?.id, {
+        stallholderId: stallholder.id,
+        businessName: stallholder.business_name
+      });
+
+      return stallholder;
+    } catch (error) {
+      console.error('Error creating stallholder:', error);
+      throw error;
+    }
+  }
+
+  // Update stallholder profile
+  async updateStallholder(id, stallholderData) {
+    try {
+      const stallholder = await pb.collection('stallholders').update(id, stallholderData);
+      
+      auditLogger.log('stallholder_updated', pb.authStore.model?.id, {
+        stallholderId: id,
+        changes: Object.keys(stallholderData)
+      });
+
+      return stallholder;
+    } catch (error) {
+      console.error('Error updating stallholder:', error);
+      throw error;
+    }
+  }
+
+  // Get stallholder's applications - now properly delegated
+  async getApplications(stallholderId, filters = {}) {
+    return ApplicationService.getStallholderApplications(stallholderId, filters);
+  }
+
+  // Submit application to market - now properly delegated
+  async submitApplication(applicationData) {
+    return ApplicationService.submitApplication(applicationData);
+  }
+
+  // Get reviews for stallholder
+  async getReviews(stallholderId) {
+    try {
+      const reviews = await pb.collection('reviews').getList(1, 50, {
+        filter: `target_id = "${stallholderId}" && target_type = "stallholder"`,
+        sort: '-created',
+        expand: 'reviewer'
+      });
+      return reviews;
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+      throw error;
+    }
+  }
+
+  // Add review for stallholder
+  async addReview(reviewData) {
+    try {
+      const review = await pb.collection('reviews').create({
+        ...reviewData,
+        target_type: 'stallholder'
+      });
+
+      // Update stallholder rating
+      await this.updateStallholderRating(reviewData.target_id);
+      
+      auditLogger.log('review_added', pb.authStore.model?.id, {
+        reviewId: review.id,
+        targetId: reviewData.target_id,
+        rating: reviewData.rating
+      });
+
+      return review;
+    } catch (error) {
+      console.error('Error adding review:', error);
+      throw error;
+    }
+  }
+
+  // Update stallholder's average rating
+  async updateStallholderRating(stallholderId) {
+    try {
+      const reviews = await pb.collection('reviews').getFullList({
+        filter: `target_id = "${stallholderId}" && target_type = "stallholder"`
+      });
+
+      if (reviews.length === 0) return;
+
+      const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+      const averageRating = totalRating / reviews.length;
+
+      await pb.collection('stallholders').update(stallholderId, {
+        rating: Math.round(averageRating * 10) / 10, // Round to 1 decimal
+        reviews_count: reviews.length
+      });
+    } catch (error) {
+      console.error('Error updating stallholder rating:', error);
+    }
+  }
+
+  // Get product categories
+  async getProductCategories() {
+    return [
+      'Fresh Produce',
+      'Baked Goods',
+      'Arts & Crafts',
+      'Clothing & Accessories',
+      'Food & Beverages',
+      'Home & Garden',
+      'Beauty & Wellness',
+      'Books & Media',
+      'Vintage & Antiques',
+      'Handmade Jewelry',
+      'Plants & Flowers',
+      'Other'
+    ];
+  }
+}
+
+export default new StallholderService();
+
+📄 src/services/marketService.js
+================================================================================
+// src/services/marketService.js - Updated with better error handling
+import pb from '../lib/pocketbase.js';
+import { auditLogger } from '../utils/security.js';
+
+class MarketService {
+  // Get all active markets
+  async getMarkets(filters = {}) {
+    try {
+      const filterConditions = []; // Removed 'active = true' since the field might not exist yet
+      
+      if (filters.state) {
+        filterConditions.push(`state = "${filters.state}"`);
+      }
+      
+      if (filters.category) {
+        filterConditions.push(`category = "${filters.category}"`);
+      }
+      
+      if (filters.search) {
+        filterConditions.push(`(name ~ "${filters.search}" || suburb ~ "${filters.search}" || description ~ "${filters.search}")`);
+      }
+
+      const filterString = filterConditions.length > 0 ? filterConditions.join(' && ') : '';
+
+      const result = await pb.collection('markets').getList(
+        filters.page || 1,
+        filters.perPage || 20,
+        {
+          filter: filterString,
+          sort: filters.sort || '-created',
+          expand: 'category,organizer'
+        }
+      );
+
+      return result;
+    } catch (error) {
+      console.error('Error fetching markets:', error);
+      throw error;
+    }
+  }
+
+  // Get single market by ID or slug
+  async getMarket(idOrSlug) {
+    try {
+      const market = await pb.collection('markets').getFirstListItem(
+        `id = "${idOrSlug}" || slug = "${idOrSlug}"`,
+        {
+          expand: 'category,organizer'
+        }
+      );
+
+      return market;
+    } catch (error) {
+      console.error('Error fetching market:', error);
+      throw error;
+    }
+  }
+
+  // Create new market
+  async createMarket(marketData) {
+    try {
+      const market = await pb.collection('markets').create(marketData);
+      
+      auditLogger.log('market_created', pb.authStore.model?.id, {
+        marketId: market.id,
+        marketName: market.name
+      });
+
+      return market;
+    } catch (error) {
+      console.error('Error creating market:', error);
+      throw error;
+    }
+  }
+
+  // Update market
+  async updateMarket(id, marketData) {
+    try {
+      const market = await pb.collection('markets').update(id, marketData);
+      
+      auditLogger.log('market_updated', pb.authStore.model?.id, {
+        marketId: id,
+        changes: Object.keys(marketData)
+      });
+
+      return market;
+    } catch (error) {
+      console.error('Error updating market:', error);
+      throw error;
+    }
+  }
+
+  // Delete market
+  async deleteMarket(id) {
+    try {
+      await pb.collection('markets').delete(id);
+      
+      auditLogger.log('market_deleted', pb.authStore.model?.id, {
+        marketId: id
+      });
+
+      return true;
+    } catch (error) {
+      console.error('Error deleting market:', error);
+      throw error;
+    }
+  }
+
+  // Search markets by location (geolocation)
+  async searchNearby(latitude, longitude, radiusKm = 25) {
+    try {
+      // This is a simplified version - in production you'd use proper geospatial queries
+      const markets = await pb.collection('markets').getList(1, 50, {
+        filter: 'latitude != null && longitude != null',
+        expand: 'category'
+      });
+
+      // Calculate distances client-side (in production, do this server-side)
+      const marketsWithDistance = markets.items.map(market => {
+        const distance = this.calculateDistance(
+          latitude, longitude,
+          market.latitude, market.longitude
+        );
+        return { ...market, distance };
+      });
+
+      // Filter by radius and sort by distance
+      return marketsWithDistance
+        .filter(market => market.distance <= radiusKm)
+        .sort((a, b) => a.distance - b.distance);
+    } catch (error) {
+      console.error('Error searching nearby markets:', error);
+      throw error;
+    }
+  }
+
+  // Calculate distance between two points (Haversine formula)
+  calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Earth's radius in kilometers
+    const dLat = this.deg2rad(lat2 - lat1);
+    const dLon = this.deg2rad(lon2 - lon1);
+    const a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) * 
+      Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+  }
+
+  deg2rad(deg) {
+    return deg * (Math.PI/180);
+  }
+
+  // Get market categories - handle case where collection might not exist yet
+  async getCategories() {
+    try {
+      const categories = await pb.collection('market_categories').getFullList({
+        sort: 'name'
+      });
+      return categories;
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      // Return default categories if collection doesn't exist yet
+      return [
+        { id: 'farmers', name: 'Farmers Market', color: '#22c55e' },
+        { id: 'craft', name: 'Craft & Artisan', color: '#8b5cf6' },
+        { id: 'community', name: 'Community Market', color: '#3b82f6' },
+        { id: 'specialty', name: 'Specialty Market', color: '#f59e0b' },
+        { id: 'food', name: 'Food Market', color: '#ef4444' },
+        { id: 'vintage', name: 'Vintage & Antiques', color: '#6b7280' }
+      ];
+    }
+  }
+}
+
+export default new MarketService();
+
+📄 src/utils/security.js
+================================================================================
+// Input validation and sanitization
+export const validation = {
+  // Australian-specific validation
+  validateABN(abn) {
+    const cleanABN = abn.replace(/\s/g, '');
+    if (!/^\d{11}$/.test(cleanABN)) return false;
+    
+    // ABN checksum validation
+    const weights = [10, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19];
+    let sum = 0;
+    
+    for (let i = 0; i < 11; i++) {
+      sum += (parseInt(cleanABN[i]) - (i === 0 ? 1 : 0)) * weights[i];
+    }
+    
+    return sum % 89 === 0;
+  },
+
+  validateAustralianPhone(phone) {
+    const cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
+    const australianPhoneRegex = /^(\+61|0)[2-478](?:[0-9]){8}$/;
+    return australianPhoneRegex.test(cleanPhone);
+  },
+
+  validatePostcode(postcode) {
+    return /^\d{4}$/.test(postcode);
+  },
+
+  validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email) && email.length <= 254;
+  },
+
+  // Password strength validation
+  validatePassword(password) {
+    const minLength = 12;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    
+    return {
+      isValid: password.length >= minLength && hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChar,
+      length: password.length >= minLength,
+      uppercase: hasUpperCase,
+      lowercase: hasLowerCase,
+      numbers: hasNumbers,
+      special: hasSpecialChar,
+      score: [hasUpperCase, hasLowerCase, hasNumbers, hasSpecialChar, password.length >= minLength]
+        .filter(Boolean).length
+    };
+  }
+};
+
+// Data sanitization
+export const sanitizer = {
+  // Remove potentially dangerous characters
+  sanitizeInput(input) {
+    if (typeof input !== 'string') return input;
+    
+    return input
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') // Remove script tags
+      .replace(/javascript:/gi, '') // Remove javascript: URLs
+      .replace(/on\w+=/gi, '') // Remove event handlers
+      .replace(/[<>]/g, '') // Remove angle brackets
+      .trim();
+  },
+
+  // Sanitize HTML content (for descriptions, etc.)
+  sanitizeHTML(html) {
+    // In production, use a proper HTML sanitizer like DOMPurify
+    const allowedTags = ['p', 'br', 'strong', 'em', 'ul', 'ol', 'li', 'h1', 'h2', 'h3'];
+    // For now, just remove script tags and dangerous attributes
+    return html
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+      .replace(/on\w+="[^"]*"/gi, '')
+      .replace(/javascript:/gi, '');
+  },
+
+  // Sanitize file names
+  sanitizeFileName(fileName) {
+    return fileName
+      .replace(/[^a-zA-Z0-9.\-_]/g, '_')
+      .replace(/_{2,}/g, '_')
+      .substr(0, 255);
+  }
+};
+
+// Rate limiting helper
+export const rateLimiter = {
+  attempts: new Map(),
+
+  isAllowed(key, limit = 5, windowMs = 15 * 60 * 1000) { // 5 attempts per 15 minutes
+    const now = Date.now();
+    const userAttempts = this.attempts.get(key) || [];
+    
+    // Remove old attempts outside the window
+    const validAttempts = userAttempts.filter(time => now - time < windowMs);
+    
+    if (validAttempts.length >= limit) {
+      return false;
+    }
+    
+    // Add current attempt
+    validAttempts.push(now);
+    this.attempts.set(key, validAttempts);
+    
+    return true;
+  },
+
+  getRemainingAttempts(key, limit = 5, windowMs = 15 * 60 * 1000) {
+    const now = Date.now();
+    const userAttempts = this.attempts.get(key) || [];
+    const validAttempts = userAttempts.filter(time => now - time < windowMs);
+    
+    return Math.max(0, limit - validAttempts.length);
+  }
+};
+
+// Audit logging
+export const auditLogger = {
+  log(event, userId, details = {}) {
+    const auditEntry = {
+      event,
+      userId,
+      details,
+      timestamp: new Date().toISOString(),
+      userAgent: navigator.userAgent,
+      sessionId: sessionStorage.getItem('session_id') || 'no_session'
+    };
+
+    // In development, log to console
+    if (import.meta.env.VITE_ENVIRONMENT === 'development') {
+      console.log('AUDIT LOG:', auditEntry);
+    }
+
+    // Store in local storage for debugging (remove in production)
+    const logs = JSON.parse(localStorage.getItem('audit_logs') || '[]');
+    logs.push(auditEntry);
+    localStorage.setItem('audit_logs', JSON.stringify(logs.slice(-100))); // Keep last 100
+  }
+};
+
+
+📊 EXPORT SUMMARY
+========================================
+Mode: services (pattern-based)
+Files included: 7
+Total size: 26K
+Generated: Wed Jun  4 05:00:45 UTC 2025
+Auto-discovers new files in target directories

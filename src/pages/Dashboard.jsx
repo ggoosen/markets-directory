@@ -1,12 +1,25 @@
-// src/pages/Dashboard.jsx - Enhanced with role-based content
+// src/pages/Dashboard.jsx - Fixed Role Detection
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { User, MapPin, ShoppingBag, BarChart3, Plus, Calendar, Users } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 
 export default function Dashboard() {
-  const [activeTab, setActiveTab] = useState('overview')
-  const { user } = useAuth()
+  const { user, loading } = useAuth()
+
+  // Debug: Let's see what user object looks like
+  useEffect(() => {
+    console.log('Dashboard - Current user:', user)
+    console.log('Dashboard - User role:', user?.role)
+  }, [user])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+      </div>
+    )
+  }
 
   if (!user) {
     return (
@@ -22,13 +35,25 @@ export default function Dashboard() {
   }
 
   const renderRoleSpecificContent = () => {
+    console.log('Rendering content for role:', user.role) // Debug log
+    
     switch (user.role) {
       case 'stallholder':
-        return <StallholderDashboard />
+        return <StallholderDashboard user={user} />
       case 'organizer':
-        return <OrganizerDashboard />
+        return <OrganizerDashboard user={user} />
+      case 'customer':
       default:
-        return <CustomerDashboard />
+        return <CustomerDashboard user={user} />
+    }
+  }
+
+  const getRoleDisplayName = (role) => {
+    switch(role) {
+      case 'stallholder': return 'Stallholder'
+      case 'organizer': return 'Market Organizer'
+      case 'customer': return 'Customer'
+      default: return 'User'
     }
   }
 
@@ -40,11 +65,24 @@ export default function Dashboard() {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Welcome back, {user.name}!
           </h1>
-          <p className="text-gray-600">
-            {user.role === 'stallholder' && 'Manage your stallholder profile and applications'}
-            {user.role === 'organizer' && 'Manage your markets and stallholder applications'}
-            {user.role === 'customer' && 'Discover and save your favorite markets'}
-          </p>
+          <div className="flex items-center space-x-4">
+            <p className="text-gray-600">
+              {user.role === 'stallholder' && 'Manage your stallholder profile and applications'}
+              {user.role === 'organizer' && 'Manage your markets and stallholder applications'}
+              {(user.role === 'customer' || !user.role) && 'Discover and save your favorite markets'}
+            </p>
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
+              {getRoleDisplayName(user.role)}
+            </span>
+          </div>
+        </div>
+
+        {/* Debug Info (remove this after testing) */}
+        <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <h3 className="text-sm font-medium text-blue-800 mb-2">Debug Info:</h3>
+          <p className="text-xs text-blue-600">User ID: {user.id}</p>
+          <p className="text-xs text-blue-600">User Role: {user.role || 'undefined'}</p>
+          <p className="text-xs text-blue-600">User Email: {user.email}</p>
         </div>
 
         {renderRoleSpecificContent()}
@@ -54,9 +92,13 @@ export default function Dashboard() {
 }
 
 // Customer Dashboard Component
-const CustomerDashboard = () => {
+const CustomerDashboard = ({ user }) => {
   return (
     <div>
+      <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+        <p className="text-green-800 font-medium">✅ Customer Dashboard Loaded</p>
+      </div>
+
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="card">
@@ -94,31 +136,6 @@ const CustomerDashboard = () => {
         </div>
       </div>
 
-      {/* Recent Activity */}
-      <div className="bg-white rounded-lg shadow p-6 mb-8">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Upcoming Markets</h2>
-        <div className="space-y-4">
-          <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-            <div>
-              <h3 className="font-medium text-gray-900">Adelaide Central Market</h3>
-              <p className="text-sm text-gray-600">Saturday, June 7 • 7:00 AM - 2:00 PM</p>
-            </div>
-            <Link to="/markets/adelaide-central" className="btn-primary">
-              View Details
-            </Link>
-          </div>
-          <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-            <div>
-              <h3 className="font-medium text-gray-900">Barossa Farmers Market</h3>
-              <p className="text-sm text-gray-600">Saturday, June 7 • 7:30 AM - 11:30 AM</p>
-            </div>
-            <Link to="/markets/barossa-farmers" className="btn-primary">
-              View Details
-            </Link>
-          </div>
-        </div>
-      </div>
-
       {/* Quick Actions */}
       <div className="bg-white rounded-lg shadow p-6">
         <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
@@ -144,9 +161,13 @@ const CustomerDashboard = () => {
 }
 
 // Stallholder Dashboard Component
-const StallholderDashboard = () => {
+const StallholderDashboard = ({ user }) => {
   return (
     <div>
+      <div className="mb-4 p-4 bg-purple-50 border border-purple-200 rounded-lg">
+        <p className="text-purple-800 font-medium">✅ Stallholder Dashboard Loaded</p>
+      </div>
+
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <div className="card">
@@ -195,37 +216,6 @@ const StallholderDashboard = () => {
         </div>
       </div>
 
-      {/* Recent Applications */}
-      <div className="bg-white rounded-lg shadow p-6 mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-gray-900">Recent Applications</h2>
-          <Link to="/apply" className="btn-primary">
-            <Plus className="h-4 w-4 mr-2" />
-            New Application
-          </Link>
-        </div>
-        <div className="space-y-4">
-          <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-            <div>
-              <h3 className="font-medium text-gray-900">Adelaide Central Market</h3>
-              <p className="text-sm text-gray-600">Applied 2 days ago</p>
-            </div>
-            <span className="px-3 py-1 text-sm bg-yellow-100 text-yellow-800 rounded-full">
-              Pending
-            </span>
-          </div>
-          <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-            <div>
-              <h3 className="font-medium text-gray-900">Barossa Farmers Market</h3>
-              <p className="text-sm text-gray-600">Applied 1 week ago</p>
-            </div>
-            <span className="px-3 py-1 text-sm bg-green-100 text-green-800 rounded-full">
-              Approved
-            </span>
-          </div>
-        </div>
-      </div>
-
       {/* Quick Actions */}
       <div className="bg-white rounded-lg shadow p-6">
         <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
@@ -244,13 +234,13 @@ const StallholderDashboard = () => {
               <p className="text-sm text-gray-600">Discover new opportunities</p>
             </div>
           </Link>
-          <Link to="/analytics" className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-            <BarChart3 className="h-8 w-8 text-green-600 mr-4" />
+          <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+            <Plus className="h-8 w-8 text-green-600 mr-4" />
             <div>
-              <h3 className="font-medium text-gray-900">View Analytics</h3>
-              <p className="text-sm text-gray-600">Track your performance</p>
+              <h3 className="font-medium text-gray-900">Apply to Market</h3>
+              <p className="text-sm text-gray-600">Submit new application</p>
             </div>
-          </Link>
+          </button>
         </div>
       </div>
     </div>
@@ -258,9 +248,13 @@ const StallholderDashboard = () => {
 }
 
 // Organizer Dashboard Component
-const OrganizerDashboard = () => {
+const OrganizerDashboard = ({ user }) => {
   return (
     <div>
+      <div className="mb-4 p-4 bg-orange-50 border border-orange-200 rounded-lg">
+        <p className="text-orange-800 font-medium">✅ Organizer Dashboard Loaded</p>
+      </div>
+
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <div className="card">
@@ -309,52 +303,6 @@ const OrganizerDashboard = () => {
         </div>
       </div>
 
-      {/* Pending Applications */}
-      <div className="bg-white rounded-lg shadow p-6 mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-gray-900">Pending Applications</h2>
-          <Link to="/applications" className="text-primary-600 hover:text-primary-500">
-            View all
-          </Link>
-        </div>
-        <div className="space-y-4">
-          <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-            <div className="flex items-center">
-              <div className="w-10 h-10 bg-gray-200 rounded-full mr-4"></div>
-              <div>
-                <h3 className="font-medium text-gray-900">Sarah's Organic Produce</h3>
-                <p className="text-sm text-gray-600">Applied for Adelaide Central Market</p>
-              </div>
-            </div>
-            <div className="flex space-x-2">
-              <button className="px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700">
-                Approve
-              </button>
-              <button className="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700">
-                Reject
-              </button>
-            </div>
-          </div>
-          <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-            <div className="flex items-center">
-              <div className="w-10 h-10 bg-gray-200 rounded-full mr-4"></div>
-              <div>
-                <h3 className="font-medium text-gray-900">Handmade Crafts Co</h3>
-                <p className="text-sm text-gray-600">Applied for Barossa Farmers Market</p>
-              </div>
-            </div>
-            <div className="flex space-x-2">
-              <button className="px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700">
-                Approve
-              </button>
-              <button className="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700">
-                Reject
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Quick Actions */}
       <div className="bg-white rounded-lg shadow p-6">
         <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
@@ -366,20 +314,20 @@ const OrganizerDashboard = () => {
               <p className="text-sm text-gray-600">Add a new market listing</p>
             </div>
           </Link>
-          <Link to="/applications" className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+          <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
             <Users className="h-8 w-8 text-secondary-600 mr-4" />
             <div>
               <h3 className="font-medium text-gray-900">Manage Applications</h3>
               <p className="text-sm text-gray-600">Review stallholder requests</p>
             </div>
-          </Link>
-          <Link to="/analytics" className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+          </button>
+          <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
             <BarChart3 className="h-8 w-8 text-green-600 mr-4" />
             <div>
               <h3 className="font-medium text-gray-900">View Analytics</h3>
               <p className="text-sm text-gray-600">Market performance data</p>
             </div>
-          </Link>
+          </button>
         </div>
       </div>
     </div>

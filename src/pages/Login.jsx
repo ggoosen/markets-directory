@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Eye, EyeOff } from 'lucide-react'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { Eye, EyeOff, Loader2 } from 'lucide-react'
+import { useAuth } from '../contexts/AuthContext'
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false)
@@ -8,11 +9,22 @@ export default function Login() {
     email: '',
     password: ''
   })
+  
+  const { login, loading, error } = useAuth()
+  const navigate = useNavigate()
+  const location = useLocation()
+  
+  const from = location.state?.from?.pathname || '/dashboard'
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // TODO: Implement login with PocketBase
-    console.log('Login:', formData)
+    try {
+      await login(formData.email, formData.password)
+      navigate(from, { replace: true })
+    } catch (err) {
+      // Error is handled by AuthContext
+      console.error('Login failed:', err)
+    }
   }
 
   return (
@@ -26,7 +38,14 @@ export default function Login() {
             Sign in to your account
           </p>
         </div>
+        
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+              {typeof error === 'object' ? error.general || 'Login failed' : error}
+            </div>
+          )}
+          
           <div className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
@@ -41,8 +60,13 @@ export default function Login() {
                 placeholder="Enter your email"
                 value={formData.email}
                 onChange={(e) => setFormData({...formData, email: e.target.value})}
+                disabled={loading}
               />
+              {error?.email && (
+                <p className="mt-1 text-sm text-red-600">{error.email}</p>
+              )}
             </div>
+            
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
@@ -57,11 +81,13 @@ export default function Login() {
                   placeholder="Enter your password"
                   value={formData.password}
                   onChange={(e) => setFormData({...formData, password: e.target.value})}
+                  disabled={loading}
                 />
                 <button
                   type="button"
                   className="absolute inset-y-0 right-0 pr-3 flex items-center"
                   onClick={() => setShowPassword(!showPassword)}
+                  disabled={loading}
                 >
                   {showPassword ? (
                     <EyeOff className="h-5 w-5 text-gray-400" />
@@ -70,6 +96,9 @@ export default function Login() {
                   )}
                 </button>
               </div>
+              {error?.password && (
+                <p className="mt-1 text-sm text-red-600">{error.password}</p>
+              )}
             </div>
           </div>
 
@@ -94,8 +123,19 @@ export default function Login() {
           </div>
 
           <div>
-            <button type="submit" className="btn-primary w-full">
-              Sign in
+            <button 
+              type="submit" 
+              className="btn-primary w-full flex items-center justify-center"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Signing in...
+                </>
+              ) : (
+                'Sign in'
+              )}
             </button>
           </div>
 

@@ -1,10 +1,11 @@
-// src/App.jsx - ONLY this content (clean version)
+// src/App.jsx - Add CreateMarket route
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './contexts/AuthContext'
 import Layout from './components/layout/Layout'
 import Home from './pages/Home'
 import MarketList from './pages/MarketList'
 import MarketDetail from './pages/MarketDetail'
+import CreateMarket from './pages/CreateMarket'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
@@ -22,12 +23,19 @@ function App() {
             <Route path="/markets/:slug" element={<MarketDetail />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/database-test" element={<DatabaseTest />} />
             <Route 
               path="/dashboard" 
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/markets/create" 
+              element={
+                <ProtectedRoute requiredRole="organizer">
+                  <CreateMarket />
                 </ProtectedRoute>
               } 
             />
@@ -77,7 +85,7 @@ function App() {
                   </div>
                 </div>
               } 
-            />            
+            />
           </Routes>
         </Layout>
       </Router>

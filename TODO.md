@@ -670,3 +670,176 @@
 ---
 
 *This roadmap serves as a living document and should be updated as features are completed and priorities shift based on user feedback and business needs.*
+
+
+
+# Updated SA Markets Directory Roadmap
+
+## **✅ COMPLETED**
+- Authentication system with role-based access
+- Basic market listing and search
+- Market creation form (basic version)
+- Reviews collection setup
+- Role-specific dashboards
+
+## **🔧 IMMEDIATE PRIORITIES (This Week)**
+
+### **1. Enhanced Market Creation Form**
+- [x] Database schema updates (comprehensive fields)
+- [ ] **Apply database schema script** 
+- [ ] **Replace frequency selector** with flexible component
+- [ ] **Add time input validation** component
+- [ ] **Integrate Google Places API** for address lookup
+- [ ] **Add amenities selection** with proper storage
+- [ ] **Implement fee structure** (basic version)
+
+### **2. Google Maps Integration Setup**
+- [ ] **Add Google Maps API key** to environment variables
+- [ ] **Enable Places API** in Google Cloud Console
+- [ ] **Enable Geocoding API** for coordinates
+- [ ] **Test address lookup** functionality
+- [ ] **Add billing account** for Google Maps (required for production)
+
+### **3. Database Schema Management**
+- [ ] **Run schema update script** to add all new fields
+- [ ] **Backup existing data** before schema changes
+- [ ] **Test schema validation**
+- [ ] **Update existing markets** with new fields
+
+## **📋 SETUP STEPS FOR YOU**
+
+### **Step 1: Google Maps API Setup**
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create new project or select existing one
+3. Enable APIs:
+   - Places API
+   - Geocoding API
+   - Maps JavaScript API
+4. Create API key with restrictions:
+   - HTTP referrers: `localhost:5173`, your domain
+   - API restrictions: Places, Geocoding, Maps JavaScript
+5. Add to `.env`:
+   ```
+   VITE_GOOGLE_MAPS_API_KEY=your_api_key_here
+   ```
+
+### **Step 2: Run Database Schema Update**
+```bash
+# Save the database management script as scripts/manage-database.js
+node scripts/manage-database.js backup    # Backup first
+node scripts/manage-database.js update    # Apply all schema updates
+node scripts/manage-database.js validate  # Verify everything worked
+```
+
+### **Step 3: Test Enhanced Market Creation**
+1. Apply the new components to CreateMarket.jsx
+2. Test frequency selector (all patterns)
+3. Test time input validation
+4. Test Google Places address lookup
+5. Test amenities selection
+6. Create a test market with all new fields
+
+## **🚀 PHASE 3: CORE FEATURES (Week 2-3)**
+
+### **Stallholder Profile System**
+- [ ] Stallholder profile creation form
+- [ ] Business information management
+- [ ] Portfolio image uploads
+- [ ] Product category selection
+- [ ] ABN validation for Australian businesses
+- [ ] Insurance and certification tracking
+
+### **Application Workflow**
+- [ ] Market application form for stallholders
+- [ ] Application status tracking
+- [ ] Organizer application review interface
+- [ ] Application approval/rejection workflow
+- [ ] Email notifications (Resend integration)
+
+## **💰 PHASE 4: MONETIZATION (Week 4-5)**
+
+### **Enhanced Fee Structure**
+- [ ] Multiple stall size options
+- [ ] Tiered pricing system
+- [ ] Discount structures (bulk booking, early bird)
+- [ ] Additional fees (power, equipment rental)
+- [ ] Payment terms configuration
+
+### **Payment Integration**
+- [ ] Stripe integration setup
+- [ ] Subscription management for organizers/stallholders
+- [ ] Application fee processing
+- [ ] Invoice generation
+- [ ] Payment tracking and reminders
+
+## **🎨 PHASE 5: UX ENHANCEMENTS (Week 6-7)**
+
+### **Market Management**
+- [ ] Market editing and updating
+- [ ] Image upload for market galleries
+- [ ] Market schedule management
+- [ ] Capacity and stall management
+- [ ] Market analytics dashboard
+
+### **Advanced Search & Discovery**
+- [ ] Map view with markers
+- [ ] Distance-based search
+- [ ] Advanced filtering
+- [ ] Market recommendations
+- [ ] Saved searches and favorites
+
+## **📱 PHASE 6: MOBILE & PWA (Week 8-9)**
+
+### **Mobile Optimization**
+- [ ] Touch-optimized interface
+- [ ] Mobile navigation improvements
+- [ ] Progressive Web App features
+- [ ] Offline functionality (basic)
+- [ ] Push notifications
+
+## **🔐 PHASE 7: PRODUCTION READINESS (Week 10-12)**
+
+### **Security & Performance**
+- [ ] Security audit and hardening
+- [ ] Performance optimization
+- [ ] Error tracking (Sentry)
+- [ ] Monitoring and alerting
+- [ ] Backup and disaster recovery
+
+### **Legal & Compliance**
+- [ ] Terms of Service
+- [ ] Privacy Policy
+- [ ] GDPR compliance
+- [ ] Australian Privacy Act compliance
+- [ ] Cookie consent system
+
+## **📊 SUCCESS METRICS**
+
+### **Technical KPIs**
+- Platform uptime: >99.5%
+- Page load time: <2 seconds
+- Mobile responsiveness: >95%
+- Security score: >90%
+
+### **Business KPIs**
+- 50+ markets (Month 3)
+- 100+ stallholders (Month 3)
+- 1,000+ users (Month 3)
+- $1,000 MRR (Month 6)
+
+## **🔄 IMMEDIATE ACTION ITEMS**
+
+### **For You (Next 2 Days):**
+1. **Set up Google Maps API** (30 minutes)
+2. **Run database schema script** (15 minutes)
+3. **Test enhanced market creation** (1 hour)
+
+### **For Development (This Week):**
+1. **Enhanced market creation form** with all new components
+2. **Google Places integration** testing
+3. **Fee structure** implementation
+4. **Amenities system** completion
+
+---
+
+*This roadmap prioritizes the market creation enhancements first, then moves to stallholder profiles and application workflow - the core revenue-generating features of the platform.*

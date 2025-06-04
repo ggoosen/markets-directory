@@ -1,0 +1,1678 @@
+🚀 Starting SA Markets import...
+📂 Found categories: [
+  'Farmers Market',
+  'Community Market',
+  'Food Market',
+  'General Market'
+]
+📄 Reading CSV file...
+📊 CSV headers: [
+  'Market Name',
+  'Suburb',
+  'Address',
+  'Frequency',
+  'Time',
+  'Next Dates',
+  'URL',
+  'Contact',
+  'Additional Info',
+  ''
+]
+❌ Failed to import Aberfoyle Community Market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import Adelaide Farmers Market Wayville: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Rose Terrace: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Wayville SA 5034: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import January 12: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import January 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import January 26: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 9: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 23: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 9: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 23: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 30: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 13: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 27: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 4: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 11: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 18: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 25: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 1: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 8: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 22: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 29: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 13: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 27: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 3: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 10: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 17: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 24: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 31: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 14: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 21: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 28: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 5: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 12: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 26: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 9: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 23: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 30: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 14: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 21: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 28: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import https://adelaidefarmersmarket.com.au/: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import Adelaide Hills Farmers Market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import 3rd Saturday: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import January 18: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 1: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 1: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 5: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 3: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 17: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 21: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 5: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 4: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 18: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 1: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Alford Makers Market: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Angaston Country Market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import February 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 18: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 17: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 21: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 21: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import ​: {"code":400,"message":"Failed to create record.","data":{"name":{"code":"validation_min_text_constraint","message":"Must be at least 3 character(s)."},"slug":{"code":"validation_required","message":"Missing required value."}}}
+
+❌ Failed to import angastoncountrymarkets@gmail.com: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Artisans of Adelaide: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Banksia Markets: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import February 1: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 1: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 5: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 3: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 5: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 4: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 1: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import ttguc.org.au/banksia-markets: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Blackwood Craft Market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import March 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 4: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 1: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 3: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 5: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Blakes Crossing Markets: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import February 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 4: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 1: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 3: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 5: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Brighton Sunday Market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import 4th Sunday: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import January 26: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 9: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 23: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 9: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 23: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 13: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 27: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 11: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 25: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 8: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 22: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 13: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 27: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 10: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 24: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 14: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 28: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 12: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 26: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 9: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 23: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 14: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 28: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Club West Lakes Indoor market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import Club West Lakes Lakes Indoor Market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import 82421144: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Copper Coast Repair Cafe & Bazzar: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import March 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 4: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 8: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August ?: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Septemeber 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 5: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import 0400 601 525: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import kadinarepaircafe@gmail.com: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Craigmore community market: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Eudunda Community Market: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Eudanda Gardens Bruce Street: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import 0416253168 : {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Fullarton Market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import Fullartonmarket@gmail.com: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import stallmanager.com.au/apply/67324112607f96b34342f8.17638704: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Gathered market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import Gawler Makers Market: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import gawlermakersmarket@gmail.com: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Gilles at the Grounds: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import February 23: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 5: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 27: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 18: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Glenelg Sunset Markets: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import April 13: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Mobile: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import hello@adminmarkets.com.au: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Goolwa Wharf Markets: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import 3rd Sunday: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Every Sunday in Summer: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import January 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 4: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 18: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 1: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 3: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 17: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 21: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 5: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 21: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import ​: {"code":400,"message":"Failed to create record.","data":{"name":{"code":"validation_min_text_constraint","message":"Must be at least 3 character(s)."},"slug":{"code":"validation_required","message":"Missing required value."}}}
+
+❌ Failed to import Gumeracha Fifth Sunday Market: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Federation Park: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 29: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 31: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 30: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Hahndorf POP Market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import https://popmarket.net/: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Admin@popmarket.net: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Laura Markets: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Hughes Street: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import May 3: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 5: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 1: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 13: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Lauramarkets5480@gmail.com: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Limestone Coast Market: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Heavy Vehicle Rest Area Clay Wells Road: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import 12 Jan 2025: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import 19 Jan 2025: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import 9 Mar 2025: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import 20 April 2025: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import limestonecoastfood.com.au: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Macclesfield Market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import Magill Sunrise Market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import March 9: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 13: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 11: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 13: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 10: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 14: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 12: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 9: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 14: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import ​: {"code":400,"message":"Failed to create record.","data":{"name":{"code":"validation_min_text_constraint","message":"Must be at least 3 character(s)."},"slug":{"code":"validation_required","message":"Missing required value."}}}
+
+❌ Failed to import magillsunrisemarket@gmail.com: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import magillrotary.org.au/magill-rotary-market: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Magpie Market - Salisbury Football Club: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Maitland Markets: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Every Friday: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Make it mine market (Henley): {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import February 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 23: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 30: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 27: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 25: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 29: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import https://www.makeitminemarkets.com.au/?fbclid=IwZXh0bgNhZW0CMTAAAR3fwP6ae5OdtE62PMy-ELX6m7An-niFJaZGihTNxcAXNllBbFehgC4udTk_aem_iQ6dQkiaXACDrJPeBiHHiQ: {"code":400,"message":"Failed to create record.","data":{"name":{"code":"validation_max_text_constraint","message":"Must be less than 100 character(s)."}}}
+
+❌ Failed to import henley@makeitminemarkets.com.au: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Makers on Melrose: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import February 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 17: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 21: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 18: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Mannum Market: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Randell Street: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import Mardin Markets: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import January 11: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import January 18: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import January 25: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 1: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 8: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 22: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 1: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 8: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 22: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 29: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 5: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 12: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 26: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 3: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 10: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 17: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 24: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 31: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 14: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 21: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 28: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 5: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 12: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 26: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 9: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 23: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 30: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 13: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 27: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 4: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 11: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 18: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 25: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 1: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 8: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 22: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 29: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 13: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 27: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import mardenmarkets@hotmail.com: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Market in the Gardens (Gawler): {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import February 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import https://marketinthegardens.com.au/: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import hello@marketinthegardens.com.au: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Markets at the Mill: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import Info@mar: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 30: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import https://www.facebook.com/p/Markets-at-the-Mill-100087164242823/: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Markets in Prospect: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import Mclarwn vale craft market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import Meadows Market: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Mawson Road: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import Millicent Showgrounds Market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import March 1: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 5: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 3: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 5: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 4: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 1: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Twilight (TBA)  : {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Mind Body Pyschic Expo: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import May 25: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import bodymindpsychicexpo@gmail.com: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import bodymindpsychic.com: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Mount Pleasant Farmers Market: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Mount Torrens Seasonal Market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import February 23: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 23: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 27: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 25: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 22: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 27: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 24: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 28: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 26: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 23: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 28: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Murray Bridge Craft Crawl: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Mylor Market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import April 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 4: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 5: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import madgey20@bigpond.com: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Market Type:: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import If you make it: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Allows car boots of household items for sale.: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Exclusions:: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import No hot food: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import North East Community Day: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import nenh@tpg.com.au: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Oakbank Market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import February 8: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 8: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 12: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 10: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 14: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 12: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 9: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 13: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 11: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 8: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 13: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Old Spot Farmers Direct Market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import January 11: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import January 18: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import January 25: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 1: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 8: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 22: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 1: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 8: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 22: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 29: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 5: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 12: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 26: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 3: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 10: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 17: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 24: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 31: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 14: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 21: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 28: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 5: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 12: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 26: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 9: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 23: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 30: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 13: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 27: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 4: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 11: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 18: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 25: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 1: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 8: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 22: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 29: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 13: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 27: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import aldridgemark@bigpond.com: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import markmaldridge.com: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import One Planet Market: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import 374 Payneham Road Payneham: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import 10am - 1pm (Winter): {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 17: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 21: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 18: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import opm@sustainablecommunitiessa.org.au: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import sustainablecommunitiessa.org.au: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import One Tree Hill Market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import February 1: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 1: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 5: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 3: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 5: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 4: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 1: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import http://onetreehill.org.au/index.php/market?fbclid=IwZXh0bgNhZW0CMTAAAR0nHjV85n23eez7GXKNh4eTp7v3gLvHXCoVUZsK5fCRjrC0lS8yL6QXTR0_aem_cgt0obJG1dzZC29JhT-kRw: {"code":400,"message":"Failed to create record.","data":{"name":{"code":"validation_max_text_constraint","message":"Must be less than 100 character(s)."}}}
+
+❌ Failed to import market@onetreehill.org.au: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Onkaparinga Rotary Market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import February 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 17: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 21: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 18: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Orroroo Market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import Sunday July 27th 9am - 1pm: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Saturday September 27th 9am - 1pm 150 year’s celebrations: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Sunday November 9th 8-30am - 12-30pm: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Sunday March 30th 9am - 1pm: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Sunday July 27th 9am - 1pm: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Saturday September 27th 9am - 1pm 150 year’s celebrations: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Sunday November 9th 8-30am - 12-30pm: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Contact Joy 0427533628 or Orroroo Regional Tourism Group for more information: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Port Elliot Rotary Market: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import 3rd Saturday: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import January 18: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 1: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 1: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 5: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 3: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 17: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 21: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 5: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 4: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 18: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 1: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Prospect Markets: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import Vine St Market - 1 Feb 2025: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import https://linktr.ee/markets_in_prospect?fbclid=IwZXh0bgNhZW0CMTAAAR0fUhSFqZC9oeIoCIV2fms1LgLvB4L_m099uKO1RyTxGc3O2u74ziX6B28_aem_4RknbPvHkdONejDkvH90OA: {"code":400,"message":"Failed to create record.","data":{"name":{"code":"validation_max_text_constraint","message":"Must be less than 100 character(s)."}}}
+
+❌ Failed to import Queen of Wands Psychic Fair Market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import Quorn Markets: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Riverton Country Market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import SA Farmers Market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import January 12: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import January 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import January 26: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 9: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 23: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 9: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 23: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 30: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 13: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 27: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 4: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 11: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 18: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 25: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 1: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 8: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 22: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 29: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 13: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 27: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 3: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 10: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 17: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 24: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 31: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 14: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 21: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 28: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 5: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 12: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 26: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 9: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 23: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 30: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 14: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 21: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 28: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import https://www.saproducemarket.com.au/art-craft-stall-registrations-sa-farmers-market/: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Market Manager Salvy on +61 407 757 404: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Saddlewoth Country Market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import February 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 4: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 1: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 3: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 5: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Saint Luke's - Tailem Bend: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Second Valley Market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import fleurieusec@yahoo.com.au: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Semaphore Community Market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import February 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 4: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 1: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 3: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 5: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import SPIRIT OF PSYCHICS FAIR: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import 1 Holland St: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 27: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 22: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 17: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 28: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 26: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Spring Garden Festival: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import February 22: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 22: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 26: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 24: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 28: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 26: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 23: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 27: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 25: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 22: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 27: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Stansbury Seasid Markets: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import March 8: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Aprilg 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import tourism@stansburysa.com.au: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Stirling Laneways Market: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Stirling Markets: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import February 23: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 23: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 27: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 25: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 22: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 27: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 24: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 28: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 26: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 24: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Stirling North Progress Association Market Day: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Strathalbyn Market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import February 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 18: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 22: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 17: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 21: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 21: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Sunday Funday Markets: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import February 23: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 23: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 13: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 4: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Tanderra Craft Village: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import February 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 4: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 8: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 3: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 5: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import January 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 18: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 22: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 17: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 21: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 21: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import The Original Open Market Inc: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import 3rd Sunday: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import January 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 4: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 18: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 1: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 3: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 17: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 21: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 5: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 21: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import prosec1111@gmail.com: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import originalopenmarket.org.au: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Thugi Summer Markets: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import Uraidla Market: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import 3rd Sunday: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 4: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 8: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 3: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 5: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import January 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 18: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 22: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 17: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 21: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 21: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Urban Market Co: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import urban.marketco: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import urbanmarketco.com.au: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import VEGAN FOOD TRUCKS & MARKET: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import 1 Holland St: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 9: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 13: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 13: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 10: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 21: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 12: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 9: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Victor Harbor Artisan Market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import Check dates ->: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import January 11: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import January 18: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import January 25: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 2: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 8: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 16: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 6: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 20: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 4: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 18: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 7: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 15: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import manager@victorharborartisanmarket.com.au: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import victorharborartisanmarket.com.au: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Victor Harbor Beach-side Market: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import 4th Sunday: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import January 19: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import January 26: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 9: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import February 23: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 9: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 23: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 13: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 27: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 11: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 25: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 8: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 22: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 13: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 27: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 10: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 24: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 14: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 28: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 12: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 26: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 9: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 23: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 14: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 28: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Wallaroo Lions Market: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import Willunga Quarry Market: {"code":400,"message":"Failed to create record.","data":{"website":{"code":"validation_invalid_url","message":"Must be a valid url."}}}
+
+❌ Failed to import February 8: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import March 8: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import April 12: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import May 10: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import June 14: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import July 12: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import August 9: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import September 13: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import October 11: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import November 8: {"code":400,"message":"Failed to create record.","data":{}}
+
+❌ Failed to import December 13: {"code":400,"message":"Failed to create record.","data":{}}
+
+
+🎉 Import complete!
+✅ Successfully imported: 0 markets
+⚠️  Skipped: 827 entries

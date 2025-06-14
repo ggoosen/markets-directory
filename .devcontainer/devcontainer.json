@@ -1,0 +1,6 @@
+{"image":"mcr.microsoft.com/devcontainers/universal:2"}
+{
+  "name": "My Claude-Enabled Codespace",
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "postCreateCommand": "sudo npm install -g @anthropic-ai/claude-code"
+}
